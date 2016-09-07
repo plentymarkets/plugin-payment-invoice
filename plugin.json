@@ -1,0 +1,11 @@
+{
+  "version": 1.0,
+  "name": "Rechnung",
+  "description": "invoice plugin for plentymarkets",
+  "author": "plentymarkets GmbH",
+  "keywords": ["invoice", "Rechnung", "official", "plentymarkets", "payment"],
+  "type": "payment",
+  "namespace": "Invoice",
+  "require": [],
+  "serviceProvider": "Invoice\\Providers\\InvoiceServiceProvider"
+}
