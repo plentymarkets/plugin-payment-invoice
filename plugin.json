@@ -1,6 +1,6 @@
 {
   "version": 1.0,
-  "name": "Rechnung",
+  "name": "Invoice",
   "description": "invoice plugin for plentymarkets",
   "author": "plentymarkets GmbH",
   "keywords": ["invoice", "Rechnung", "official", "plentymarkets", "payment"],
