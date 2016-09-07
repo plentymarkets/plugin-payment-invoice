@@ -31,6 +31,6 @@
     "key": "url",
     "label": "Logo URL",
     "type": "text",
-    "default": "https://myelisa.com/manual_upload_zusatzseiten/zahlungsdetails/vorkasse.png"
+    "default": "http://www.videoprojektor24.de/Logos/per_Rechnung_logo.png"
   },
 ]
