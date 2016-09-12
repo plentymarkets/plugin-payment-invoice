@@ -3,7 +3,6 @@
 namespace Invoice\Helper;
 
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
-use Plenty\Modules\Payment\Contracts\PaymentRepositoryContract;
 use Plenty\Modules\Payment\Method\Models\PaymentMethod;
 
 class InvoiceHelper
@@ -31,7 +30,7 @@ class InvoiceHelper
     {
         $paymentMethods = $this->paymentMethodRepository->allForPlugin('plenty_invoice');
 
-        if(count($paymentMethods))
+        if( !is_null($paymentMethods) )
         {
             foreach($paymentMethods as $paymentMethod)
             {
