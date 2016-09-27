@@ -1,36 +1,141 @@
 [
   {
+    "tab": "Settings",
+    "key": "active",
+    "label": "Aktive",
+    "type": "checkbox",
+    "default": false
+  },
+  {
+    "tab": "Settings",
     "key": "name",
     "label": "Name",
     "type": "text",
     "default": "Rechnung"
   },
   {
+    "tab": "Settings",
+    "key": "infoPage.type",
+    "label": "Information page",
+    "type": "dropdown",
+    "possibleValues":
+    {
+      "0": "None",
+      "1": "External Content",
+      "2": "Internal Content"
+    },
+    "default": "0"
+  },
+  {
+    "tab": "Settings",
+    "key": "infoPage.intern",
+    "label": "Internal Information Page",
+    "type": "category_select"
+  },
+  {
+    "tab": "Settings",
+    "key": "infoPage.extern",
+    "label": "External Information Page",
+    "type": "text",
+    "default": ""
+  },
+  {
+    "tab": "Settings",
+    "key": "shippingCountry",
+    "label": "Shipping Country",
+    "type": "multi_select",
+    "possibleValues": {
+      "shippingCountry.de": "Deutschland",
+      "shippingCountry.at": "Östereich",
+      "shippingCountry.ch": "Schweiz",
+      "shippingCountry.es": "Spanien",
+      "shippingCountry.uk": "Großbritanien",
+      "shippingCountry.fr": "Frankreich",
+      "shippingCountry.gr": "Griechenland",
+      "shippingCountry.it": "Italien"
+    },
+    "default": ""
+  },
+  {
+    "tab": "Settings",
     "key": "logo",
     "label": "Logo",
     "type": "dropdown",
     "possibleValues":
     {
-      "0": "Default-Logo",
-      "1": "Without-Logo"
+      "0": "Ohne Logo",
+      "1": "Logo Url"
     },
     "default": "0"
   },
   {
-    "key": "active",
-    "label": "Aktiv",
-    "type": "dropdown",
-    "possibleValues":
-    {
-      "0": "Nein",
-      "1": "Ja"
-    },
-    "default": "0"
-  },
-  {
-    "key": "url",
+    "tab": "Settings",
+    "key": "logo.url",
     "label": "Logo URL",
     "type": "text",
-    "default": "http://www.videoprojektor24.de/Logos/per_Rechnung_logo.png"
+    "default": ""
   },
+  {
+    "tab": "Interface",
+    "key": "fee.domestic",
+    "label": "Aufpreis Inland",
+    "type": "text",
+    "default": "0,00"
+  },
+  {
+    "tab": "Interface",
+    "key": "fee.foreign",
+    "label": "Aufpreis Ausland",
+    "type": "text",
+    "default": "0,00"
+  },
+  {
+    "tab": "Interface",
+    "key": "showBankData",
+    "label": "Bankdaten anzeigen",
+    "type": "checkbox",
+    "default": false
+  },
+  {
+    "tab": "Interface",
+    "key": "showBookingText",
+    "label": "Verwendungszweck anzeigen",
+    "type": "checkbox",
+    "default": false
+  },
+  {
+    "tab": "Interface",
+    "key": "invoiceAddressEqualShippingAddress",
+    "label": "Rechnungsadresse gleich Lieferadresse",
+    "type": "checkbox",
+    "default": false
+  },
+  {
+    "tab": "Interface",
+    "key": "disallowInvoiceForGuest",
+    "label": "Kauf auf Rechnung für Gastbestellungen verbieten",
+    "type": "checkbox",
+    "default": false
+  },
+  {
+    "tab": "Interface",
+    "key": "quorumOrders",
+    "label": "Mindestanzahl an Bestellungen",
+    "type": "text",
+    "default": "0"
+  },
+  {
+    "tab": "Interface",
+    "key": "minimumAmount",
+    "label": "Minimalbetrag für Kauf auf Rechnung in Euro",
+    "type": "text",
+    "default": "0,00"
+  },
+  {
+    "tab": "Interface",
+    "key": "maximumAmount",
+    "label": "Maximalbetrag für Kauf auf Rechnung in Euro",
+    "type": "text",
+    "default": "0,00"
+  }
 ]

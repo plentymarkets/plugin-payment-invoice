@@ -1,4 +1,4 @@
-<?hh // strict
+<?php //strict
 
 namespace Invoice\Providers;
 
@@ -18,13 +18,13 @@ use Invoice\Helper\InvoiceHelper;
  */
  class InvoiceServiceProvider extends ServiceProvider
  {
-     public function register():void
+     public function register()
      {
 
      }
 
      public function boot(InvoiceHelper $paymentHelper,
-                          PaymentMethodContainer $payContainer):void
+                          PaymentMethodContainer $payContainer)
      {
        $paymentHelper->createMopIfNotExists();
 
