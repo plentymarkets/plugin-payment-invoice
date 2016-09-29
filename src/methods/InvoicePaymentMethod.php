@@ -14,6 +14,9 @@ use Plenty\Modules\Basket\Models\Basket;
 class InvoicePaymentMethod extends PaymentMethodService
 {
     /**
+     * check the configuration if the payment method is active
+     * return true if active or return false if not
+     *
      * @param ConfigRepository $config
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return bool
@@ -21,13 +24,17 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function isActive( ConfigRepository $config,
                               BasketRepositoryContract $basketRepositoryContract):bool
     {
+        /** @var bool $active */
         $active = false;
+
         /**
          * Check the active flag
          */
-        if($config->get('Invoice.active') == 1)
+        if($config->get('Invoice.active') == 'true')
         {
             $active = true;
+
+            /** @var Basket $basket */
             $basket = $basketRepositoryContract->load();
 
             /**
@@ -70,6 +77,8 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
+     * return the fee for the payment method
+     *
      * @param ConfigRepository $config
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return float
@@ -89,6 +98,8 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
+     * return an icon for the payment method
+     *
      * @param ConfigRepository $config
      * @return string
      */
@@ -102,6 +113,8 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
+     * return a description for the payment method
+     *
      * @param ConfigRepository $config
      * @return string
      */

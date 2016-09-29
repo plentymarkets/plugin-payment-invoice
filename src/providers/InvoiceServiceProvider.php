@@ -2,15 +2,17 @@
 
 namespace Invoice\Providers;
 
+use Plenty\Modules\Payment\Events\Checkout\GetPaymentMethodContent;
 use Plenty\Plugin\ServiceProvider;
-use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
-use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
-use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
-use Plenty\Plugin\Events\Dispatcher;
-use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
-use Invoice\Methods\InvoicePaymentMethod;
 use Invoice\Helper\InvoiceHelper;
+use Plenty\Modules\Payment\Method\Contracts\PaymentMethodContainer;
+use Plenty\Plugin\Events\Dispatcher;
 
+use Invoice\Methods\InvoicePaymentMethod;
+
+use Plenty\Modules\Basket\Events\Basket\AfterBasketChanged;
+use Plenty\Modules\Basket\Events\BasketItem\AfterBasketItemAdd;
+use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
 
 /**
  * Class InvoiceServiceProvider
@@ -23,13 +25,36 @@ use Invoice\Helper\InvoiceHelper;
 
      }
 
-     public function boot(InvoiceHelper $paymentHelper,
-                          PaymentMethodContainer $payContainer)
+     /**
+      * boot function called if the plugin is aktive
+      *
+      *
+      * @param InvoiceHelper $paymentHelper
+      * @param PaymentMethodContainer $payContainer
+      * @param Dispatcher $eventDispatcher
+      * @param PaymentService $paymentService
+      */
+     public function boot(  InvoiceHelper $paymentHelper,
+                            PaymentMethodContainer $payContainer,
+                            Dispatcher $eventDispatcher)
      {
-       $paymentHelper->createMopIfNotExists();
+         $paymentHelper->createMopIfNotExists();
 
-       $payContainer->register('plenty_invoice::INVOICE', InvoicePaymentMethod::class,
-           [ \Plenty\Modules\Basket\Events\Basket\AfterBasketChanged::class,
-             \Plenty\Modules\Basket\Events\Basket\AfterBasketCreate::class]);
+         $payContainer->register('plenty_invoice::INVOICE', InvoicePaymentMethod::class,
+                                [ AfterBasketChanged::class, AfterBasketItemAdd::class, AfterBasketCreate::class ]
+         );
+
+         // Listen for the event that gets the payment method content
+         $eventDispatcher->listen(GetPaymentMethodContent::class,
+                 function(GetPaymentMethodContent $event) use( $paymentHelper)
+                 {
+                     if($event->getMop() == $paymentHelper->getMop())
+                     {
+
+                         $event->setValue('');
+                         $event->setType('continue');
+                     }
+                 });
+
      }
  }

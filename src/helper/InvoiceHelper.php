@@ -12,24 +12,38 @@ class InvoiceHelper
      */
     private $paymentMethodRepository;
 
+    /**
+     * InvoiceHelper constructor.
+     *
+     * @param PaymentMethodRepositoryContract $paymentMethodRepository
+     */
     public function __construct(PaymentMethodRepositoryContract $paymentMethodRepository)
     {
         $this->paymentMethodRepository = $paymentMethodRepository;
     }
 
+    /**
+     * Create a payment method if not exists
+     */
     public function createMopIfNotExists()
     {
         if($this->getMop() == 'no_paymentmethod_found')
         {
             $paymentMethodData = array( 'pluginKey' => 'plenty_invoice',
-                'paymentKey' => 'INVOICE',
-                'name' => 'Rechnung');
+                                        'paymentKey' => 'INVOICE',
+                                        'name' => 'Rechnung');
 
             $this->paymentMethodRepository->createPaymentMethod($paymentMethodData);
         }
     }
 
-    public function getMop():string
+    /**
+     * load the method of payment id for the given plugin key
+     * return the id for the payment method
+     *
+     * @return string|int
+     */
+    public function getMop()
     {
         $paymentMethods = $this->paymentMethodRepository->allForPlugin('plenty_invoice');
 
