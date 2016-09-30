@@ -1,17 +1,10 @@
 [
   {
     "tab": "Settings",
-    "key": "active",
-    "label": "Aktive",
-    "type": "checkbox",
-    "default": false
-  },
-  {
-    "tab": "Settings",
     "key": "name",
     "label": "Name",
     "type": "text",
-    "default": "Rechnung"
+    "default": "Invoice"
   },
   {
     "tab": "Settings",

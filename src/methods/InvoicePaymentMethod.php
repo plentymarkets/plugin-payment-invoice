@@ -17,97 +17,107 @@ class InvoicePaymentMethod extends PaymentMethodService
      * check the configuration if the payment method is active
      * return true if active or return false if not
      *
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return bool
      */
-    public function isActive( ConfigRepository $config,
+    public function isActive( ConfigRepository $configRepository,
                               BasketRepositoryContract $basketRepositoryContract):bool
     {
         /** @var bool $active */
-        $active = false;
+        $active = true;
+
+        /** @var Basket $basket */
+        $basket = $basketRepositoryContract->load();
 
         /**
-         * Check the active flag
+         * Check the minimum amount
          */
-        if($config->get('Invoice.active') == 'true')
+        if( $configRepository->get('Invoice.minimumAmount') > 0.00 &&
+            $basket->basketAmount < $configRepository->get('Invoice.minimumAmount'))
         {
-            $active = true;
+            $active = false;
+        }
 
-            /** @var Basket $basket */
-            $basket = $basketRepositoryContract->load();
+        /**
+         * Check the maximum amount
+         */
+        if( $configRepository->get('Invoice.maximumAmount') > 0.00 &&
+            $configRepository->get('Invoice.maximumAmount') < $basket->basketAmount)
+        {
+            $active = false;
+        }
 
-            /**
-             * Check the minimum amount
-             */
-            if( $config->get('Invoice.minimumAmount') > 0.00 &&
-                $basket->basketAmount < $config->get('Invoice.minimumAmount'))
-            {
-                $active = false;
-            }
+        /**
+         * Check if the invoice address is the same as the shipping address
+         */
+        if( $configRepository->get('Invoice.invoiceAddressEqualShippingAddress') == 1)
+        {
+            $active = false;
+        }
 
-            /**
-             * Check the maximum amount
-             */
-            if( $config->get('Invoice.maximumAmount') > 0.00 &&
-                $config->get('Invoice.maximumAmount') < $basket->basketAmount)
-            {
-                $active = false;
-            }
-
-            /**
-             * Check if the invoice address is the same as the shipping address
-             */
-             if( $config->get('Invoice.invoiceAddressEqualShippingAddress') == 1)
-             {
-                 $active = false;
-             }
-
-             /**
-              * Check if the user is logged in
-              */
-              if( $config->get('Invoice.disallowInvoiceForGuest') == 1)
-              {
-                  $active = false;
-              }
-
+        /**
+        * Check if the user is logged in
+        */
+        if( $configRepository->get('Invoice.disallowInvoiceForGuest') == 1)
+        {
+            $active = false;
         }
 
         return $active;
     }
 
     /**
+     * return the name for the payment method
+     *
+     * @param ConfigRepository $configRepository
+     * @return string
+     */
+    public function getName( ConfigRepository $configRepository ):string
+    {
+        $name = $configRepository->get('Invoice.name');
+
+        if(!strlen($name))
+        {
+            $name = 'Invoice';
+        }
+
+        return $name;
+
+    }
+
+    /**
      * return the fee for the payment method
      *
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return float
      */
-    public function getFee( ConfigRepository $config,
+    public function getFee( ConfigRepository $configRepository,
                             BasketRepositoryContract $basketRepositoryContract):float
     {
         $basket = $basketRepositoryContract->load();
         if($basket->shippingCountryId == 1)
         {
-            return $config->get('Invoice.fee.domestic');
+            return $configRepository->get('Invoice.fee.domestic');
         }
         else
         {
-            return $config->get('Invoice.fee.foreign');
+            return $configRepository->get('Invoice.fee.foreign');
         }
     }
 
     /**
      * return an icon for the payment method
      *
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getIcon( ConfigRepository $config ):string
+    public function getIcon( ConfigRepository $configRepository ):string
     {
-        if($config->get('Invoice.logo') == 1)
+        if($configRepository->get('Invoice.logo') == 1)
         {
-            return $config->get('Invoice.logo.url');
+            return $configRepository->get('Invoice.logo.url');
         }
         return '';
     }
@@ -115,18 +125,18 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * return a description for the payment method
      *
-     * @param ConfigRepository $config
+     * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getDescription( ConfigRepository $config ):string
+    public function getDescription( ConfigRepository $configRepository ):string
     {
-        if($config->get('Invoice.infoPage.type') == 1)
+        if($configRepository->get('Invoice.infoPage.type') == 1)
         {
-            return $config->get('Invoice.infoPage.intern');
+            return $configRepository->get('Invoice.infoPage.intern');
         }
-        elseif ($config->get('Invoice.infoPage.type') == 2)
+        elseif ($configRepository->get('Invoice.infoPage.type') == 2)
         {
-            return $config->get('Invoice.infoPage.extern');;
+            return $configRepository->get('Invoice.infoPage.extern');
         }
         else
         {

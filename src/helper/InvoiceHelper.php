@@ -5,6 +5,11 @@ namespace Invoice\Helper;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodRepositoryContract;
 use Plenty\Modules\Payment\Method\Models\PaymentMethod;
 
+/**
+ * Class InvoiceHelper
+ *
+ * @package Invoice\Helper
+ */
 class InvoiceHelper
 {
     /**
@@ -27,7 +32,7 @@ class InvoiceHelper
      */
     public function createMopIfNotExists()
     {
-        if($this->getMop() == 'no_paymentmethod_found')
+        if($this->getPaymentMethod() == 'no_paymentmethod_found')
         {
             $paymentMethodData = array( 'pluginKey' => 'plenty_invoice',
                                         'paymentKey' => 'INVOICE',
@@ -43,7 +48,7 @@ class InvoiceHelper
      *
      * @return string|int
      */
-    public function getMop()
+    public function getPaymentMethod()
     {
         $paymentMethods = $this->paymentMethodRepository->allForPlugin('plenty_invoice');
 
@@ -60,5 +65,4 @@ class InvoiceHelper
 
         return 'no_paymentmethod_found';
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace Invoice\Providers;
 
+use Plenty\Modules\Payment\Events\Checkout\ExecutePayment;
 use Plenty\Modules\Payment\Events\Checkout\GetPaymentMethodContent;
 use Plenty\Plugin\ServiceProvider;
 use Invoice\Helper\InvoiceHelper;
@@ -28,11 +29,9 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
      /**
       * boot function called if the plugin is aktive
       *
-      *
       * @param InvoiceHelper $paymentHelper
       * @param PaymentMethodContainer $payContainer
       * @param Dispatcher $eventDispatcher
-      * @param PaymentService $paymentService
       */
      public function boot(  InvoiceHelper $paymentHelper,
                             PaymentMethodContainer $payContainer,
@@ -48,13 +47,22 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
          $eventDispatcher->listen(GetPaymentMethodContent::class,
                  function(GetPaymentMethodContent $event) use( $paymentHelper)
                  {
-                     if($event->getMop() == $paymentHelper->getMop())
+                     if($event->getMop() == $paymentHelper->getPaymentMethod())
                      {
-
                          $event->setValue('');
                          $event->setType('continue');
                      }
                  });
 
+         // Listen for the event that gets the payment method content
+         $eventDispatcher->listen(ExecutePayment::class,
+             function(ExecutePayment $event) use( $paymentHelper)
+             {
+                 if($event->getMop() == $paymentHelper->getPaymentMethod())
+                 {
+                     $event->setValue('<h1>Rechungskauf<h1>');
+                     $event->setType('htmlContent');
+                 }
+             });
      }
  }
