@@ -14,8 +14,8 @@ use Plenty\Modules\Basket\Models\Basket;
 class InvoicePaymentMethod extends PaymentMethodService
 {
     /**
-     * check the configuration if the payment method is active
-     * return true if active or return false if not
+     * Check the configuration if the payment method is active
+     * Return true if the payment method is active, else return false
      *
      * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
@@ -49,7 +49,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         }
 
         /**
-         * Check if the invoice address is the same as the shipping address
+         * Check whether the invoice address is the same as the shipping address
          */
         if( $configRepository->get('Invoice.invoiceAddressEqualShippingAddress') == 1)
         {
@@ -57,7 +57,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         }
 
         /**
-        * Check if the user is logged in
+        * Check whether the user is logged in
         */
         if( $configRepository->get('Invoice.disallowInvoiceForGuest') == 1)
         {
@@ -68,7 +68,7 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * return the name for the payment method
+     * Get the name of the payment method. The name can be entered in the config.json.
      *
      * @param ConfigRepository $configRepository
      * @return string
@@ -87,7 +87,7 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * return the fee for the payment method
+     * Get additional costs for the payment method. Additional costs can be entered in the config.json.
      *
      * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
@@ -108,7 +108,7 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * return an icon for the payment method
+     * Get the path of the icon
      *
      * @param ConfigRepository $configRepository
      * @return string
@@ -123,7 +123,7 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * return a description for the payment method
+     * Get the description of the payment method. The description can be entered in the config.json.
      *
      * @param ConfigRepository $configRepository
      * @return string

@@ -27,7 +27,7 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
      }
 
      /**
-      * boot function called if the plugin is aktive
+      * Boot additional services for the payment method
       *
       * @param InvoiceHelper $paymentHelper
       * @param PaymentMethodContainer $payContainer
@@ -37,8 +37,10 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
                             PaymentMethodContainer $payContainer,
                             Dispatcher $eventDispatcher)
      {
+         // Create the ID of the payment method if it doesn't exist yet
          $paymentHelper->createMopIfNotExists();
 
+         // Register the Invoice payment method in the payment method container
          $payContainer->register('plenty_invoice::INVOICE', InvoicePaymentMethod::class,
                                 [ AfterBasketChanged::class, AfterBasketItemAdd::class, AfterBasketCreate::class ]
          );
@@ -54,7 +56,7 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
                      }
                  });
 
-         // Listen for the event that gets the payment method content
+         // Listen for the event that executes the payment
          $eventDispatcher->listen(ExecutePayment::class,
              function(ExecutePayment $event) use( $paymentHelper)
              {

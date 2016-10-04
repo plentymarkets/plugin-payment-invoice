@@ -11,35 +11,34 @@
     "key": "infoPage.type",
     "label": "Information page",
     "type": "dropdown",
-    "possibleValues":
-    {
+    "possibleValues": {
       "0": "None",
-      "1": "External Content",
-      "2": "Internal Content"
+      "1": "External content",
+      "2": "Internal content"
     },
     "default": "0"
   },
   {
     "tab": "Settings",
     "key": "infoPage.intern",
-    "label": "Internal Information Page",
+    "label": "Internal information page",
     "type": "category_select"
   },
   {
     "tab": "Settings",
     "key": "infoPage.extern",
-    "label": "External Information Page",
+    "label": "External information page",
     "type": "text",
     "default": ""
   },
   {
     "tab": "Settings",
     "key": "shippingCountry",
-    "label": "Shipping Country",
+    "label": "Shipping country",
     "type": "multi_select",
     "possibleValues": {
       "shippingCountry.de": "Deutschland",
-      "shippingCountry.at": "Östereich",
+      "shippingCountry.at": "Österreich",
       "shippingCountry.ch": "Schweiz",
       "shippingCountry.es": "Spanien",
       "shippingCountry.uk": "Großbritanien",
@@ -54,17 +53,16 @@
     "key": "logo",
     "label": "Logo",
     "type": "dropdown",
-    "possibleValues":
-    {
+    "possibleValues": {
       "0": "Ohne Logo",
-      "1": "Logo Url"
+      "1": "Logo-Url"
     },
     "default": "0"
   },
   {
     "tab": "Settings",
     "key": "logo.url",
-    "label": "Logo URL",
+    "label": "Logo-URL",
     "type": "text",
     "default": ""
   },
