@@ -30,4 +30,4 @@ Visit our forum and find the latest news and updates in our [Changelog](https://
 
 ## License
 
-This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE.md](/LICENSE.md) file for details.
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENCE.md](/LICENCE.md) file for details.
