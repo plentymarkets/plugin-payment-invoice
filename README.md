@@ -2,11 +2,11 @@
 
 # Invoice plugin for plentymarkets 7.x
 
-This is the official invoice plugin developed by plentymarkets. Integrate the payment method Invoice in your plentymarkets 7 online store.
+This is the official **Invoice** plugin developed by plentymarkets. Integrate the payment method **Invoice** in your plentymarkets 7 online store.
 
 ## Requirements
 
-This is a plugin for [plentymarkets 7](https://www.plentymarkets.com). A layout plugin is required in order to integrate PayPal in your online store. We recommend using the plentymarkets plugin [Callisto 4](https://github.com/plentymarkets/callisto-4).
+This is a plugin for [plentymarkets 7](https://www.plentymarkets.com). A layout plugin is required in order to integrate this payment method in your online store. We recommend using the plentymarkets plugin [Callisto 4](https://github.com/plentymarkets/callisto-4).
 
 ## Installing
 
