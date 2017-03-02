@@ -24,8 +24,21 @@ Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen
 		</th>
 	</thead>
 	<tbody>
-		<tr>
-		<td class="th" align=CENTER colspan="2">Allgemein</td>
+        <tr>
+			<td>
+				<b>Sprache</b>
+			</td>
+			<td>
+				Sprache wählen. Die übrigen Einstellungen, z.B. Name, Infoseite etc., werden sprachabhängig gespeichert.
+			</td>
+		</tr>
+        <tr>
+			<td>
+				<b>Name</b>
+			</td>
+			<td>
+				Die Bezeichnung, die in der Übersicht der Zahlungsarten in der Kaufabwicklung für diese Zahlungsart angezeigt wird.
+			</td>
 		</tr>
 		<tr>
 			<td>
@@ -37,47 +50,33 @@ Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen
 		</tr>
 		<tr>
 			<td>
-				<b>Anzeigename</b>
-			</td>
-			<td>
-				Die Bezeichnung, die in der Übersicht der Zahlungsarten in der Kaufabwicklung für die Zahlung per Rechnung angezeigt wird.
-			</td>
-		</tr>
-		<tr>
-			<td>
 				<b>Logo</b>
 			</td>
 			<td>
 			Eine https-URL, die zum Logo-Bild führt. Gültige Dateiformate sind .gif, .jpg oder .png. Die Maximalgröße beträgt 190 Pixel in der Breite und 60 Pixel in der Höhe.
 			</td>
 		</tr>
+        <tr>
+			<td>
+				<b>Aufpreis Inland</b>
+			</td>
+			<td>
+Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.
+		</tr>
 		<tr>
-		<td class="th" align=CENTER colspan="2">Weitere Einstellungen</td>
+			<td>
+				<b>Aufpreis Ausland</b>
+			</td>
+			<td>
+Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen nicht das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.
 		</tr>
 		<tr>
 			<td>
 				<b>Lieferländer</b>
 			</td>
 			<td>
-				Nur für die hier eingestellten Lieferländer ist diese Zahlungsar freigegeben.
+				Nur für die hier eingestellten Lieferländer ist diese Zahlungsart freigegeben.
 			</td>
-		</tr>
-		<tr>
-			<td>
-				<b>Aufpreis Webshop</b>
-			</td>
-			<td>
-Wenn bei der Zahlung mit dieser Zahlungsart zusätzliche Kosten berechnet werden, den Prozentwert oder Pauschalwert gemäß der Vertragskonditionen eingeben.<br />
-     
-<strong>Inland (Pauschal):</strong> Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.<br />
-
-<strong>Inland (Prozentual):</strong> Prozentualen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen das Systemland gewählt wurde.<br />
-   
-<strong>Ausland (Pauschal):</strong> Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen nicht das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.<br />
-
-<strong>Ausland (Prozentual):</strong> Prozentualen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen nicht das Systemland gewählt wurde.<br />
-
-<strong><i>Wichtig:</i></strong> Nicht in beide Felder (Pauschal und Prozentual) einen Wert eingeben.
 		</tr>
 	</tbody>
 </table>
