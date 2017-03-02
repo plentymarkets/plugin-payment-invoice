@@ -1,11 +1,30 @@
 {
-  "version": 1.0,
-  "name": "Invoice",
-  "description": "invoice plugin for plentymarkets",
-  "author": "plentymarkets GmbH",
-  "keywords": ["invoice", "Rechnung", "official", "plentymarkets", "payment"],
-  "type": "payment",
-  "namespace": "Invoice",
-  "require": [],
-  "serviceProvider": "Invoice\\Providers\\InvoiceServiceProvider"
+    "version"           : "1.0.0",
+    "name"              : "Invoice",
+    "license"           : "AGPL-3.0",
+    "pluginIcon"        : "icon_plugin_xs.png",
+    "price"             : 0.00,
+    "description"       : "Invoice plugin for plentymarkets online stores",
+    "shortDescription"  : {"de": "Zahlungsart Rechnung für plentymarkets Webshops","en": "Payment method invoice for plentymarkets online stores"},
+    "categories"        : ["3519"],
+    "author"            : "plentymarkets GmbH",
+    "authorIcon"        : "icon_author_xs.png",
+    "email"             : "sales@plentymarkets.com",
+    "phone"             : "+49 561 98 681 100",
+    "keywords"          : ["invoice", "Rechnung", "official", "plentymarkets", "payment"],
+    "type"              : "payment",
+    "namespace"         : "Invoice",
+    "serviceProvider"   : "Invoice\\Providers\\InvoiceServiceProvider"
+    "javaScriptFiles"   : [],
+    "containers"        : [],
+    "dataProviders"     :
+    [
+        {
+            "key"           :"Invoice\\Containers\\IconContainer",
+            "name"          :"Invoice icon",
+            "description"   :"Display the icon for this payment method"
+        }
+    ],
+    "dependencies"      : [],
+    "runOnBuild"        : []
 }
