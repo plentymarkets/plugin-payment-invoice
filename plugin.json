@@ -14,7 +14,7 @@
     "keywords"          : ["invoice", "Rechnung", "official", "plentymarkets", "payment"],
     "type"              : "payment",
     "namespace"         : "Invoice",
-    "serviceProvider"   : "Invoice\\Providers\\InvoiceServiceProvider"
+    "serviceProvider"   : "Invoice\\Providers\\InvoiceServiceProvider",
     "javaScriptFiles"   : [],
     "containers"        : [],
     "dataProviders"     :
