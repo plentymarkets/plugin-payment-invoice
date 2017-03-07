@@ -134,7 +134,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         {
             return $this->settings->getSetting('logoUrl', $this->session->getLang());
         }
-        return 'layout/plugins/production/prepayment/images/icon.png';
+        return 'layout/plugins/production/invoice/images/icon.png';
     }
 
     /**
