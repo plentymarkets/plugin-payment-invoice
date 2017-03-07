@@ -65,7 +65,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
          * Check whether the invoice address is the same as the shipping address
          */
-        if( $this->settings->getSetting('invoiceAddressEqualShippingAddress',$lang) == 1)
+        if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
         {
             $active = false;
         }
