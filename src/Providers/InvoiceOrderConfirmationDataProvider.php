@@ -16,19 +16,14 @@ use Invoice\Services\SettingsService;
  */
 class InvoiceOrderConfirmationDataProvider
 {
-    public function call(   Twig $twig,
-                            SettingsService $settings,
-                            BasketRepositoryContract $basketRepositoryContract,
-                            InvoiceHelper $invoiceHelper,
-                            SessionStorageService $service,
-                            $args)
+    public function call(   Twig $twig, SettingsService $settings, InvoiceHelper $invoiceHelper,
+                            SessionStorageService $service, $args)
     {
-        /** @var Basket $basket */
-        $basket = $basketRepositoryContract->load();
+        $mop = $service->getOrderMopId();
 
         $content = '';
 
-        if($basket->methodOfPaymentId == 0)
+        if($mop ==$invoiceHelper->getInvoiceMopId())
         {
             $lang = $service->getLang();
             if($settings->getSetting('showBankData', $lang))

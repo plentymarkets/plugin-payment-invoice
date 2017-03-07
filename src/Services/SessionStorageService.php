@@ -45,6 +45,25 @@ class SessionStorageService
 	}
 
     /**
+     * Get Order Payment Method Id
+     *
+     * @return int
+     */
+    public function getOrderMopId()
+    {
+        /** @var array  $order*/
+        $order = $this->sessionStorage->getOrder()->toArray();
+        $mop = $order['methodOfPayment'];
+
+        if(!empty($mop))
+        {
+            return $mop;
+        }
+
+        return 0;
+    }
+
+    /**
      * Get the language from session
      * @return string|null
      */
