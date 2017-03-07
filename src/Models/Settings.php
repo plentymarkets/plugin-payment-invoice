@@ -42,7 +42,7 @@ class Settings extends Model
                                              "minimumAmount"                    => "float"   ,
                                              "maximumAmount"                    => "float"   );
 
-    const SETTINGS_DEFAULT_VALUES = array(   "name"                             => "Vorkasse"         ,
+    const SETTINGS_DEFAULT_VALUES = array(   "name"                             => "Rechnung"         ,
                                              "infoPageType"                     => "0"                ,
                                              "infoPageIntern"                   => ""                 ,
                                              "infoPageExtern"                   => ""                 ,
