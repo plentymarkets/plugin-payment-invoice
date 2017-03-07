@@ -49,7 +49,7 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
          $eventDispatcher->listen(GetPaymentMethodContent::class,
                  function(GetPaymentMethodContent $event) use( $paymentHelper)
                  {
-                     if($event->getMop() == $paymentHelper->getPaymentMethod())
+                     if($event->getMop() == $paymentHelper->getInvoiceMopId())
                      {
                          $event->setValue('');
                          $event->setType('continue');
@@ -60,7 +60,7 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
          $eventDispatcher->listen(ExecutePayment::class,
              function(ExecutePayment $event) use( $paymentHelper)
              {
-                 if($event->getMop() == $paymentHelper->getPaymentMethod())
+                 if($event->getMop() == $paymentHelper->getInvoiceMopId())
                  {
                      $event->setValue('<h1>Rechungskauf<h1>');
                      $event->setType('htmlContent');

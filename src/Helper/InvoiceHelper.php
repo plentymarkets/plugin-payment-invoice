@@ -33,7 +33,7 @@ class InvoiceHelper
     public function createMopIfNotExists()
     {
         // Check whether the ID of the Invoice payment method has been created
-        if($this->getPaymentMethod() == 'no_paymentmethod_found')
+        if($this->getInvoiceMopId() == 'no_paymentmethod_found')
         {
             $paymentMethodData = array( 'pluginKey' => 'plenty_invoice',
                                         'paymentKey' => 'INVOICE',
@@ -49,7 +49,7 @@ class InvoiceHelper
      *
      * @return string|int
      */
-    public function getPaymentMethod()
+    public function getInvoiceMopId()
     {
         $paymentMethods = $this->paymentMethodRepository->allForPlugin('plenty_invoice');
 

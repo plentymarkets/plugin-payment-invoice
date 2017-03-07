@@ -6,15 +6,15 @@
  * Time: 15:54
  */
 
-namespace PrePayment\Migrations;
+namespace Invoice\Migrations;
 
 use Plenty\Modules\Plugin\DataBase\Contracts\Migrate;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 
 use Plenty\Modules\System\Models\Webstore;
-use PrePayment\Models\Settings;
-use PrePayment\Services\SettingsService;
+use Invoice\Models\Settings;
+use Invoice\Services\SettingsService;
 
 
 class CreateSettings_1_0_0
