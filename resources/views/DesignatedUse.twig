@@ -1,0 +1,8 @@
+{% set lang           = invoice.sessionStorage.getLang() %}
+{% set designatedUse  = invoice.settings.getSetting('designatedUse', lang) %}
+<hr>
+<div class="row">
+    <strong class="col-xs-6 col-sm-5">{{ trans("Invoice::PaymentMethod.designatedUse") }}</strong>
+    <span class="col-xs-6 col-sm-7">{{ trans("Invoice::PaymentMethod.designatedUseText") }}<br /> <b>{{ designatedUse }}</b></span>
+</div>
+

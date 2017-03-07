@@ -2,6 +2,8 @@
 
 namespace Invoice\Methods;
 
+use Invoice\Services\SessionStorageService;
+use Invoice\Services\SettingsService;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
@@ -13,16 +15,26 @@ use Plenty\Modules\Basket\Models\Basket;
  */
 class InvoicePaymentMethod extends PaymentMethodService
 {
+    /** @var SettingsService */
+    private $settings;
+
+    /** @var  SessionStorageService */
+    private $session;
+
+    public function __construct(SettingsService $settings, SessionStorageService $session)
+    {
+        $this->settings = $settings;
+        $this->session  = $session;
+    }
+
     /**
      * Check the configuration if the payment method is active
      * Return true if the payment method is active, else return false
      *
-     * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return bool
      */
-    public function isActive( ConfigRepository $configRepository,
-                              BasketRepositoryContract $basketRepositoryContract):bool
+    public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
         /** @var bool $active */
         $active = true;
@@ -30,11 +42,13 @@ class InvoicePaymentMethod extends PaymentMethodService
         /** @var Basket $basket */
         $basket = $basketRepositoryContract->load();
 
+        $lang = $this->session->getLang();
+
         /**
          * Check the minimum amount
          */
-        if( $configRepository->get('Invoice.minimumAmount') > 0.00 &&
-            $basket->basketAmount < $configRepository->get('Invoice.minimumAmount'))
+        if( $this->settings->getSetting('minimumAmount',$lang) > 0.00 &&
+            $basket->basketAmount < $this->settings->getSetting('minimumAmount'))
         {
             $active = false;
         }
@@ -42,8 +56,8 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
          * Check the maximum amount
          */
-        if( $configRepository->get('Invoice.maximumAmount') > 0.00 &&
-            $configRepository->get('Invoice.maximumAmount') < $basket->basketAmount)
+        if( $this->settings->getSetting('maximumAmount',$lang) > 0.00 &&
+            $this->settings->getSetting('maximumAmount',$lang) < $basket->basketAmount)
         {
             $active = false;
         }
@@ -51,7 +65,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
          * Check whether the invoice address is the same as the shipping address
          */
-        if( $configRepository->get('Invoice.invoiceAddressEqualShippingAddress') == 1)
+        if( $this->settings->getSetting('invoiceAddressEqualShippingAddress',$lang) == 1)
         {
             $active = false;
         }
@@ -59,7 +73,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
         * Check whether the user is logged in
         */
-        if( $configRepository->get('Invoice.disallowInvoiceForGuest') == 1)
+        if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1)
         {
             $active = false;
         }
@@ -70,17 +84,21 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get the name of the payment method. The name can be entered in the config.json.
      *
-     * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getName( ConfigRepository $configRepository ):string
+    public function getName( ):string
     {
-        $name = $configRepository->get('Invoice.name');
+        $lang = $this->session->getLang();
 
-        if(!strlen($name))
+        if(!empty($lang))
         {
-            $name = 'Invoice';
+            $name = $this->settings->getSetting('name', $lang);
         }
+        else
+        {
+            $name = $this->settings->getSetting('name');
+        }
+
 
         return $name;
 
@@ -89,35 +107,32 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get additional costs for the payment method. Additional costs can be entered in the config.json.
      *
-     * @param ConfigRepository $configRepository
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return float
      */
-    public function getFee( ConfigRepository $configRepository,
-                            BasketRepositoryContract $basketRepositoryContract):float
+    public function getFee( BasketRepositoryContract $basketRepositoryContract):float
     {
         $basket = $basketRepositoryContract->load();
         if($basket->shippingCountryId == 1)
         {
-            return $configRepository->get('Invoice.fee.domestic');
+            return $this->settings->getSetting('feeDomestic', $this->session->getLang());
         }
         else
         {
-            return $configRepository->get('Invoice.fee.foreign');
+            return $this->settings->getSetting('feeForeign', $this->session->getLang());
         }
     }
 
     /**
      * Get the path of the icon
      *
-     * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getIcon( ConfigRepository $configRepository ):string
+    public function getIcon( ):string
     {
-        if($configRepository->get('Invoice.logo') == 1)
+        if($this->settings->getSetting('logo', $this->session->getLang()) == 1)
         {
-            return $configRepository->get('Invoice.logo.url');
+            return $this->settings->getSetting('logoUrl', $this->session->getLang());
         }
         return '';
     }
@@ -125,22 +140,15 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get the description of the payment method. The description can be entered in the config.json.
      *
-     * @param ConfigRepository $configRepository
      * @return string
      */
-    public function getDescription( ConfigRepository $configRepository ):string
+    public function getDescription(  ):string
     {
-        if($configRepository->get('Invoice.infoPage.type') == 1)
+        switch($this->settings->getSetting('infoPageType', $this->session->getLang()))
         {
-            return $configRepository->get('Invoice.infoPage.intern');
-        }
-        elseif ($configRepository->get('Invoice.infoPage.type') == 2)
-        {
-            return $configRepository->get('Invoice.infoPage.extern');
-        }
-        else
-        {
-          return '';
+            case  1:    return $this->settings->getSetting('infoPageIntern', $this->session->getLang());
+            case  2:    return $this->settings->getSetting('infoPageExtern', $this->session->getLang());
+            default:    return '';
         }
     }
 }

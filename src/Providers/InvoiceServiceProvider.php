@@ -23,7 +23,7 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
  {
      public function register()
      {
-
+         $this->getApplication()->register(InvoiceRouteServiceProvider::class);
      }
 
      /**
