@@ -59,7 +59,7 @@ class SettingsService
             return $this->loadedSettings[$name];
         }
 
-        throw new ValidationException('No such setting found!');
+        throw new ValidationException('No such setting found: ' . $name);
     }
 
     /**
