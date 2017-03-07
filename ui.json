@@ -1,0 +1,12 @@
+{
+  "defaultEntryPoint": "index.html",
+  "namespace": "Invoice",
+  "menuEntries": [
+    {
+      "label": "Rechnung",
+      "menu": "settings/orders",
+      "urlKey": "invoice",
+      "entryPoint": "index.html"
+    }
+  ]
+}
