@@ -31,7 +31,7 @@
   "cancel": "Abbrechen",
   "itemCategory": "Artikelkategorie:",
   "quorumOrders": "Mindestanzahl an Bestellungen",
-  "minimumAmount": "Minimalbetrag für Kauf auf Rechnung in Euro",
+  "minimumAmount": "Mindestbetrag für Kauf auf Rechnung in Euro",
   "maximumAmount": "Maximalbetrag für Kauf auf Rechnung in Euro",
   "invoiceAddressEqualShippingAddress": "Rechnungsadresse gleich Lieferadresse",
   "disallowInvoiceForGuest": "Kauf auf Rechnung für Gastbestellungen verbieten"
