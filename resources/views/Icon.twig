@@ -1,0 +1,3 @@
+{% set lang  = invoice.sessionStorage.getLang() %}
+{% set name  = invoice.settings.getSetting('name', lang) %}
+<img src="{{ plugin_path("Invoice") }}/images/icon.png" title="{{ name }}">

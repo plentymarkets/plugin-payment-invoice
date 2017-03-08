@@ -8,9 +8,9 @@
 
 namespace Invoice\Services;
 
-use Illuminate\Database\Eloquent\Collection;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
+use Plenty\Modules\Plugin\DataBase\Contracts\Query;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\System\Models\Webstore;
 use Plenty\Plugin\Application;
@@ -74,6 +74,8 @@ class SettingsService
     public function getSettingsForPlentyId($plentyId, $lang, bool $convertToArray = true)
     {
 
+        $lang = $this->checkLanguage($lang);
+
         /** @var Settings $settings */
         $settings = $this->loadClientSettings($plentyId, $lang);
 
@@ -123,19 +125,21 @@ class SettingsService
 
         if(count($data) > 0 && !empty($pid))
         {
+            $settingsToSave = $this->convertSettingsToCorrectFormat($data, Settings::AVAILABLE_SETTINGS);
+
             /** @var Settings[] $settings */
             $settings = $this->loadClientSettings($pid, $lang);
 
             /** @var Settings $setting */
             foreach ($settings as $setting)
             {
-                if (array_key_exists($setting->name, $data))
+                if (array_key_exists($setting->name, $settingsToSave))
                 {
-                    if (is_array($data[$setting->name]))
+                    if (is_array($settingsToSave[$setting->name]))
                     {
-                        $data[$setting->name] = implode('-/-', $data[$setting->name]);
+                        $settingsToSave[$setting->name] = implode('-/-', $settingsToSave[$setting->name]);
                     }
-                    $setting->value     = (string)$data[$setting->name];
+                    $setting->value     = (string)$settingsToSave[$setting->name];
                     $setting->updatedAt = date('Y-m-d H:i:s');
 
                     $this->db->save($setting);
@@ -149,29 +153,166 @@ class SettingsService
     }
 
     /**
+     * Creates initial settings by plentyId and language
+     *
+     * @param $plentyId
+     * @param $lang
+     *
+     * @return array
+     * @throws ValidationException
+     */
+    public function createInitialSettingsForPlentyId($plentyId, $lang)
+    {
+        $generatedSettings    = $this->createLangIndependentInitialSettings($plentyId);
+
+        foreach( Settings::AVAILABLE_SETTINGS as $setting => $type)
+        {
+            if($setting != 'plentyId' && $setting != 'lang' && !in_array($setting, Settings::LANG_INDEPENDENT_SETTINGS))
+            {
+                /** @var Settings $newSetting */
+                $newSetting            = pluginApp(Settings::class);
+                $newSetting->plentyId  = $plentyId;
+                $newSetting->lang      = $lang;
+                $newSetting->name      = $setting;
+
+                if(array_key_exists($lang, Settings::SETTINGS_DEFAULT_VALUES))
+                {
+                    $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[$lang][$setting];
+                }
+                elseif(array_key_exists(Settings::DEFAULT_LANGUAGE, Settings::SETTINGS_DEFAULT_VALUES))
+                {
+                    $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[Settings::DEFAULT_LANGUAGE][$setting];
+                }
+                else
+                {
+                    throw new ValidationException('No such default values for language: ' . $lang);
+                }
+
+                $newSetting->updatedAt = date('Y-m-d H:i:s');
+
+                $generatedSettings[] = $this->db->save($newSetting);
+            }
+        }
+
+        return $generatedSettings;
+    }
+
+    /**
+     * Create initial language independent settings
+     *
+     * @param $plentyId
+     *
+     * @return array
+     */
+    private function createLangIndependentInitialSettings($plentyId)
+    {
+        $generatedSettings = array();
+
+        /** @var Settings[] $storedSettings */
+        $storedSettings = $this->db->query(Settings::MODEL_NAMESPACE)->where('plentyId', '=', $plentyId)
+            ->where('lang', '=', '')->get();
+
+        $settingIds = array();
+        /** @var Settings $storedSetting */
+        foreach($storedSettings as $storedSetting)
+        {
+            $settingIds[$storedSetting->name] = $storedSetting->id;
+        }
+
+        foreach(Settings::LANG_INDEPENDENT_SETTINGS as $setting)
+        {
+            if($setting != 'plentyId' && $setting != 'lang')
+            {
+                /** @var Settings $newSetting */
+                $newSetting            = pluginApp(Settings::class);
+                if(array_key_exists($setting, $settingIds) && !empty($settingIds[$setting]))
+                {
+                    $newSetting->id = $settingIds[$setting];
+                }
+
+                $newSetting->plentyId  = $plentyId;
+                $newSetting->lang      = '';
+                $newSetting->name      = $setting;
+                $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[$setting];
+                $newSetting->updatedAt = date('Y-m-d H:i:s');
+
+                $generatedSettings[] = $this->db->save($newSetting);
+            }
+        }
+
+        return $generatedSettings;
+    }
+
+    /**
+     * Get available clients of the system
+     *
+     * @return array
+     */
+    public function getClients()
+    {
+        /** @var WebstoreRepositoryContract $wsRepo */
+        $wsRepo = pluginApp(WebstoreRepositoryContract::class);
+
+        $clients    = array();
+
+        /** @var Webstore[] $result */
+        $result = $wsRepo->loadAll();
+
+        /** @var Webstore $record */
+        foreach($result as $record)
+        {
+
+            $clients[] = $record->storeIdentifier;
+        }
+
+        return $clients;
+    }
+
+
+    /**
+     * Checks if input language is valid language, instead return default language
+     *
+     * @param $lang
+     *
+     * @return string
+     */
+    private function checkLanguage($lang)
+    {
+        if(!in_array($lang, Settings::AVAILABLE_LANGUAGES))
+        {
+            $lang = Settings::DEFAULT_LANGUAGE;
+        }
+        return $lang;
+    }
+
+    /**
      * Load settings for specified system clients by plentyId and language
      *
      * @param $plentyId
      * @param $lang
      *
-     * @return \Invoice\Models\Settings[]
+     * @return Settings[]
      * @throws ValidationException
      */
     private function loadClientSettings($plentyId, $lang)
     {
+
+        /** @var Query $query */
+        $query = $this->db->query(Settings::MODEL_NAMESPACE);
+        $query->where('plentyId', '=', $plentyId);
+        if(!empty($lang))
+        {
+            $query->where('lang', '=', $lang);
+        }
+        $query->orWhere('lang',   '=', '');
+
         /** @var Settings[] $clientSettings */
-        $clientSettings = $this->db->query(Settings::MODEL_NAMESPACE)
-            ->where('plentyId', '=', $plentyId)
-            ->where('lang',     '=', $lang)
-            ->get();
+        $clientSettings = $query->get();
 
         if( !count($clientSettings) > 0)
         {
             $this->updateClients();
-            $clientSettings = $this->db->query(Settings::MODEL_NAMESPACE)
-                ->where('plentyId', '=', $plentyId)
-                ->where('lang',     '=', $lang)
-                ->get();
+            $clientSettings = $query->get();
         }
 
         if(!count($clientSettings) > 0)
@@ -255,62 +396,6 @@ class SettingsService
         return $storedLanguages;
     }
 
-    /**
-     * Creates initial settings by plentyId and language
-     *
-     * @param $plentyId
-     * @param $lang
-     *
-     * @return array
-     */
-    public function createInitialSettingsForPlentyId($plentyId, $lang)
-    {
-        $generatedSettings    = array();
-
-        foreach( Settings::AVAILABLE_SETTINGS as $setting => $type)
-        {
-            if($setting != 'plentyId' && $setting != 'lang')
-            {
-                /** @var Settings $newSetting */
-                $newSetting            = pluginApp(Settings::class);
-                $newSetting->plentyId  = $plentyId;
-                $newSetting->lang      = $lang;
-                $newSetting->name      = $setting;
-                $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[$setting];
-                $newSetting->updatedAt = date('Y-m-d H:i:s');
-
-                $generatedSettings[] = $this->db->save($newSetting);
-            }
-        }
-
-        return $generatedSettings;
-    }
-
-
-    /**
-     * Get available clients of the system
-     *
-     * @return array
-     */
-    public function getClients()
-    {
-        /** @var WebstoreRepositoryContract $wsRepo */
-        $wsRepo = pluginApp(WebstoreRepositoryContract::class);
-
-        $clients    = array();
-
-        /** @var Webstore[] $result */
-        $result = $wsRepo->loadAll();
-
-        /** @var Webstore $record */
-        foreach($result as $record)
-        {
-
-            $clients[] = $record->storeIdentifier;
-        }
-
-        return $clients;
-    }
 
     /**
      * Convert settings of type string to the correct format defined in Settings.php
@@ -332,7 +417,7 @@ class SettingsService
             }
             else
             {
-                if($settings[$setting] != "")
+                if( is_string($settings[$setting]) && $settings[$setting] != "") //Check if the field is a string to convert it to array.
                 {
                     $settingArray = explode('-/-', $settings[$setting]);
                     $arrayType    = array();
@@ -341,7 +426,16 @@ class SettingsService
                 }
                 else
                 {
-                    $convertedSettings[$setting] = array();
+                    if(!empty($settings[$setting]) && is_array($settings[$setting]))
+                    {
+                        $arrayType    = array();
+                        for($x = 0; $x < count($settings[$setting]); $x++){ $arrayType[] = $type[0]; }
+                        $convertedSettings[$setting] = $this->convertSettingsToCorrectFormat($settings[$setting], $arrayType);
+                    }
+                    else
+                    {
+                        $convertedSettings[$setting] = array();
+                    }
                 }
             }
 
