@@ -55,7 +55,7 @@ class Settings extends Model
                                              "de"  => array( "name"                => "Rechnung"         ,
                                                              "infoPageIntern"      => ""                 ,
                                                              "infoPageExtern"      => ""                 ,
-                                                             "logo"                => "0"                ,
+                                                             "logo"                => "2"                ,
                                                              "logoUrl"             => ""                 ,
                                                              "designatedUse"       => "Verwendungszweck" ,
                                                              "showDesignatedUse"   => "0"                ),
