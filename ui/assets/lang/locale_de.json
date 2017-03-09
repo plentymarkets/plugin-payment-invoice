@@ -18,7 +18,6 @@
   "successSaveSettings": "Einstellungen gespeichert.",
   "settings": "Einstellungen",
   "name": "Name",
-  "withoutLogo": "Ohne Logo",
   "interface": "Anzeigedaten",
   "markupDomestic": "Aufpreis Inland",
   "markupForeign": "Aufpreis Ausland",
@@ -34,5 +33,6 @@
   "minimumAmount": "Mindestbetrag für Kauf auf Rechnung in Euro",
   "maximumAmount": "Maximalbetrag für Kauf auf Rechnung in Euro",
   "invoiceAddressEqualShippingAddress": "Rechnungsadresse gleich Lieferadresse",
-  "disallowInvoiceForGuest": "Kauf auf Rechnung für Gastbestellungen verbieten"
+  "disallowInvoiceForGuest": "Kauf auf Rechnung für Gastbestellungen verbieten",
+  "defaultLogo": "Standard-Logo"
 }
