@@ -4,8 +4,8 @@ namespace Invoice\Methods;
 
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
-use Plenty\Plugin\ConfigRepository;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 
@@ -21,10 +21,15 @@ class InvoicePaymentMethod extends PaymentMethodService
     /** @var  SessionStorageService */
     private $session;
 
-    public function __construct(SettingsService $settings, SessionStorageService $session)
+    /** @var  Checkout */
+    private $checkout;
+
+
+    public function __construct(SettingsService $settings, SessionStorageService $session, Checkout $checkout)
     {
         $this->settings = $settings;
         $this->session  = $session;
+        $this->checkout = $checkout;
     }
 
     /**
@@ -36,8 +41,6 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
-        /** @var bool $active */
-        $active = true;
 
         /** @var Basket $basket */
         $basket = $basketRepositoryContract->load();
@@ -50,7 +53,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         if( $this->settings->getSetting('minimumAmount',$lang) > 0.00 &&
             $basket->basketAmount < $this->settings->getSetting('minimumAmount'))
         {
-            $active = false;
+            return false;
         }
 
         /**
@@ -59,7 +62,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         if( $this->settings->getSetting('maximumAmount',$lang) > 0.00 &&
             $this->settings->getSetting('maximumAmount',$lang) < $basket->basketAmount)
         {
-            $active = false;
+            return false;
         }
 
         /**
@@ -67,7 +70,7 @@ class InvoicePaymentMethod extends PaymentMethodService
          */
         if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
         {
-            $active = false;
+            return false;
         }
 
         /**
@@ -75,10 +78,15 @@ class InvoicePaymentMethod extends PaymentMethodService
         */
         if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1)
         {
-            $active = false;
+            return false;
         }
 
-        return $active;
+        if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getSetting('shippingCountries')))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -130,11 +138,16 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getIcon( ):string
     {
-        if($this->settings->getSetting('logo', $this->session->getLang()) == 1)
+        if( $this->settings->getSetting('logo') == 1)
         {
-            return $this->settings->getSetting('logoUrl', $this->session->getLang());
+            return $this->settings->getSetting('logoUrl');
         }
-        return 'layout/plugins/production/invoice/images/icon.png';
+        elseif($this->settings->getSetting('logo') == 2)
+        {
+            return 'layout/plugins/production/prepayment/images/icon.png';
+        }
+
+        return '';
     }
 
     /**

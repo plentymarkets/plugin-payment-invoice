@@ -20,6 +20,11 @@
     "dataProviders"     :
     [
         {
+            "key"           :"Invoice\\Providers\\Icon\\IconProvider",
+            "name"          :"Invoice icon",
+            "description"   :"Display the icon for this payment method"
+        },
+        {
             "key"           :"Invoice\\Providers\\InvoiceOrderConfirmationDataProvider",
             "name"          :"Invoice bank details",
             "description"   :"Display the bank details on the order confirmation page"

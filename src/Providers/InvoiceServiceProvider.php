@@ -2,6 +2,7 @@
 
 namespace Invoice\Providers;
 
+use Invoice\Extensions\InvoiceTwigServiceProvider;
 use Plenty\Modules\Payment\Events\Checkout\ExecutePayment;
 use Plenty\Modules\Payment\Events\Checkout\GetPaymentMethodContent;
 use Plenty\Plugin\ServiceProvider;
@@ -14,6 +15,7 @@ use Invoice\Methods\InvoicePaymentMethod;
 use Plenty\Modules\Basket\Events\Basket\AfterBasketChanged;
 use Plenty\Modules\Basket\Events\BasketItem\AfterBasketItemAdd;
 use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
+use Plenty\Plugin\Templates\Twig;
 
 /**
  * Class InvoiceServiceProvider
@@ -29,14 +31,19 @@ use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
      /**
       * Boot additional services for the payment method
       *
+      * @param Twig $twig
       * @param InvoiceHelper $paymentHelper
       * @param PaymentMethodContainer $payContainer
       * @param Dispatcher $eventDispatcher
       */
-     public function boot(  InvoiceHelper $paymentHelper,
+     public function boot(  Twig $twig,
+                            InvoiceHelper $paymentHelper,
                             PaymentMethodContainer $payContainer,
                             Dispatcher $eventDispatcher)
      {
+
+         $twig->addExtension(InvoiceTwigServiceProvider::class);
+
          // Create the ID of the payment method if it doesn't exist yet
          $paymentHelper->createMopIfNotExists();
 
