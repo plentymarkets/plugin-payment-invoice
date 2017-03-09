@@ -34,5 +34,6 @@
   "minimumAmount": "Minimum amount for purchase by invoice in Euro",
   "maximumAmount": "Maximum amount for purchase by invoice in Euro ",
   "invoiceAddressEqualShippingAddress": "Invoice address equals delivery address",
-  "disallowInvoiceForGuest": "Disallow purchase by invoice for guest accounts"
+  "disallowInvoiceForGuest": "Disallow purchase by invoice for guest accounts",
+  "defaultLogo": "Default logo"
 }
