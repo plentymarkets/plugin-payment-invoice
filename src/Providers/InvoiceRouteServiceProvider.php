@@ -27,8 +27,6 @@ class InvoiceRouteServiceProvider extends RouteServiceProvider
                 $routerApi->get('payment/invoice/settings/{plentyId}/{lang}', ['uses' => 'Invoice\Controllers\SettingsController@loadSettings']);
                 $routerApi->put('payment/invoice/settings', ['uses' => 'Invoice\Controllers\SettingsController@saveSettings']);
             });
-        // $router->get('payment/invoice/settings/{plentyId}/{lang}',   'Invoice\Controllers\SettingsController@loadSettings');
-        // $router->put('payment/invoice/settings',                     'Invoice\Controllers\SettingsController@saveSettings');
     }
 
 }
