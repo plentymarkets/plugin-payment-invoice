@@ -138,11 +138,16 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getIcon( ):string
     {
-        if($this->settings->getSetting('logo', $this->session->getLang()) == 1)
+        if( $this->settings->getSetting('logo') == 1)
         {
-            return $this->settings->getSetting('logoUrl', $this->session->getLang());
+            return $this->settings->getSetting('logoUrl');
         }
-        return 'layout/plugins/production/invoice/images/icon.png';
+        elseif($this->settings->getSetting('logo') == 2)
+        {
+            return 'layout/plugins/production/prepayment/images/icon.png';
+        }
+
+        return '';
     }
 
     /**
