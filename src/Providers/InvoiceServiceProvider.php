@@ -44,9 +44,6 @@ use Plenty\Plugin\Templates\Twig;
 
          $twig->addExtension(InvoiceTwigServiceProvider::class);
 
-         // Create the ID of the payment method if it doesn't exist yet
-         $paymentHelper->createMopIfNotExists();
-
          // Register the Invoice payment method in the payment method container
          $payContainer->register('plenty_invoice::INVOICE', InvoicePaymentMethod::class,
                                 [ AfterBasketChanged::class, AfterBasketItemAdd::class, AfterBasketCreate::class ]

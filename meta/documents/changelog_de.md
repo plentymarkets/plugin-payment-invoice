@@ -1,6 +1,13 @@
 # Release Notes für Kauf auf Rechnung
 
-## v1.0.0 (2017-03-10)
+## 1.0.1 (2017-03-14)
+
+### UPDATE
+
+- Es wird die ID der Zahlungsart "Rechnung" aus dem System verwendet.
+
+
+## 1.0.0 (2017-03-10)
 
 ### Funktionen
 

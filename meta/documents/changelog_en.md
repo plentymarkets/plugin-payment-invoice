@@ -1,6 +1,12 @@
 # Release Notes for Invoice
 
-## v1.0.0 (2017-03-10)
+## 1.0.1 (2017-03-14)
+
+### UPDATE
+
+- Use the payment method id from the system
+
+## 1.0.0 (2017-03-10)
 
 ### Features
 
