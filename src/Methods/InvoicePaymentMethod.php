@@ -164,4 +164,24 @@ class InvoicePaymentMethod extends PaymentMethodService
             default:    return '';
         }
     }
+    
+    /**
+     * Check if it is allowed to switch to this payment method
+     *
+     * @return bool
+     */
+    public function switchTo()
+    {
+        return false;
+    }
+    
+    /**
+     * Check if it is allowed to switch from this payment method
+     *
+     * @return bool
+     */
+    public function switchFrom()
+    {
+        return true;
+    }
 }
