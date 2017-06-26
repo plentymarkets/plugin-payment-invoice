@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.0.3 (2017-06-26)
+
+### Fixed
+
+- The correct path for displaying the icon of the payment method is now used.
+
 ## 1.0.2 (2017-03-15)
 
 ### Fixed

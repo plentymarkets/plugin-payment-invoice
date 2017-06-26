@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.0.3 (2017-06-26)
+
+### Gefixt
+
+- Es wird nun der korrekte Pfad für die Anzeige des Logos der Zahlungsart verwendet.
+
 ## 1.0.2 (2017-03-15)
 
 ### Gefixt
