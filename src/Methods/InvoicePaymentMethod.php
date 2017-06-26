@@ -4,6 +4,7 @@ namespace Invoice\Methods;
 
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
@@ -144,7 +145,10 @@ class InvoicePaymentMethod extends PaymentMethodService
         }
         elseif($this->settings->getSetting('logo') == 2)
         {
-            return 'layout/plugins/production/prepayment/images/icon.png';
+            $app = pluginApp(Application::class);
+                $icon = $app->getUrlPath('invoice').'/images/icon.png';
+
+                return $icon;
         }
 
         return '';
