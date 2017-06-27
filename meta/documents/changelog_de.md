@@ -1,15 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.0.3 (2017-06-22)
+## 1.0.3 (2017-06-26)
 
-### Hinzugefügt
+### Gefixt
 
-- für das Festlegen, ob der Kunde von einer Zahlart auf eine andere wechsel darf wurde eine Methode isSwitchableFrom hinzugefügt
-- für das Festlegen, ob auf eine Zahlart gewechselt werden darf, wurde eine Methode hinzugefügt: isSwitchableTo
-
-### Bekannte Probleme
-
-- Die Einstellungen für **Aufpreise** haben derzeit noch keine Funktion bei der Preisberechnung in der Kaufabwicklung (Checkout)
+- Es wird nun der korrekte Pfad für die Anzeige des Logos der Zahlungsart verwendet.
 
 ## 1.0.2 (2017-03-15)
 
