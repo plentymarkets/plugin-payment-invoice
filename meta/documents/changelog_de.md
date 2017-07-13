@@ -1,6 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.0.3 (2017-06-26)
+## 1.0.3 (2017-07-13)
+
+### Hinzugefügt
+
+- Es wurde eine Methode hinzugefügt, um festzulegen, ob ein Kunde von dieser Zahlungsart auf eine andere wechseln kann.
+- Es wurde eine Methode hinzugefügt, um festzulegen, ob ein Kunde von einer anderen Zahlungsart auf diese wechseln kann.
 
 ### Gefixt
 
