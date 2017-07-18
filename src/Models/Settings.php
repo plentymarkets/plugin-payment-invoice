@@ -31,6 +31,7 @@ class Settings extends Model
                                              "shippingCountries"                => ['int']   ,
                                              "logo"                             => "int"     ,
                                              "logoUrl"                          => "string"  ,
+                                             "description"                      => "string"  ,
                                              "feeDomestic"                      => "float"   ,
                                              "feeForeign"                       => "float"   ,
                                              "showBankData"                     => "bool"    ,
@@ -42,7 +43,7 @@ class Settings extends Model
                                              "minimumAmount"                    => "float"   ,
                                              "maximumAmount"                    => "float"   );
 
-    const SETTINGS_DEFAULT_VALUES = array(   "infoPageType"                     => "0"                ,
+    const SETTINGS_DEFAULT_VALUES = array(   "infoPageType"                     => "2"                ,
                                              "shippingCountries"                => ""                 ,
                                              "feeDomestic"                      => "0.00"             ,
                                              "feeForeign"                       => "0.00"             ,
@@ -57,6 +58,7 @@ class Settings extends Model
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "2"                ,
                                                              "logoUrl"             => ""                 ,
+                                                             "description"         => ""                 ,
                                                              "designatedUse"       => "Verwendungszweck" ,
                                                              "showDesignatedUse"   => "0"                ),
                                              "en"  => array( "name"                => "Invoice"   ,
@@ -64,6 +66,7 @@ class Settings extends Model
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
                                                              "logoUrl"             => ""                 ,
+                                                             "description"         => ""                 ,
                                                              "designatedUse"       => "Designated use"   ,
                                                              "showDesignatedUse"   => "0"                ),
                                              "fr"  => array( "name"                => "Facture d'achat"  ,
@@ -71,6 +74,7 @@ class Settings extends Model
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
                                                              "logoUrl"             => ""                 ,
+                                                             "description"         => ""                 ,
                                                              "designatedUse"       => "Concept" ,
                                                              "showDesignatedUse"   => "0"                ),
                                              "es"  => array( "name"                => "Pago por factura" ,
@@ -78,6 +82,7 @@ class Settings extends Model
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
                                                              "logoUrl"             => ""                 ,
+                                                             "description"         => ""                 ,
                                                              "designatedUse"       => "Concepto" ,
                                                              "showDesignatedUse"   => "0"                ) );
 

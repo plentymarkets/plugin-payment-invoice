@@ -9,6 +9,7 @@ use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
+use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 
 /**
  * Class InvoicePaymentMethod
@@ -108,9 +109,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             $name = $this->settings->getSetting('name');
         }
 
-
         return $name;
-
     }
 
     /**
@@ -146,27 +145,52 @@ class InvoicePaymentMethod extends PaymentMethodService
         elseif($this->settings->getSetting('logo') == 2)
         {
             $app = pluginApp(Application::class);
-                $icon = $app->getUrlPath('invoice').'/images/icon.png';
+            $icon = $app->getUrlPath('invoice').'/images/icon.png';
 
-                return $icon;
+            return $icon;
         }
 
         return '';
     }
 
     /**
+    +     * Get InvoiceSourceUrl
+    +     *
+    +     * @return string
+    +     */
+    public function getSourceUrl()
+    {
+        /** @var FrontendSessionStorageFactoryContract $session */
+        $session = pluginApp(FrontendSessionStorageFactoryContract::class);
+        $lang = $session->getLocaleSettings()->language;
+
+        $infoPageType = $this->settings->getSetting('infoPageType');
+
+        switch ($infoPageType)
+        {
+            case 1:
+                // internal
+                return $this->settings->getSetting('infoPageIntern', $lang);
+            case 2:
+                // external
+                return $this->settings->getSetting('infoPageExtern', $lang);
+            default:
+                return '';
+        }
+    }
+
+
+    /**
      * Get the description of the payment method. The description can be entered in the config.json.
      *
      * @return string
      */
-    public function getDescription(  ):string
+    public function getDescription():string
     {
-        switch($this->settings->getSetting('infoPageType', $this->session->getLang()))
-        {
-            case  1:    return $this->settings->getSetting('infoPageIntern', $this->session->getLang());
-            case  2:    return $this->settings->getSetting('infoPageExtern', $this->session->getLang());
-            default:    return '';
-        }
+        /** @var FrontendSessionStorageFactoryContract $session */
+        $session = pluginApp(FrontendSessionStorageFactoryContract::class);
+        $lang = $session->getLocaleSettings()->language;
+        return $this->settings->getSetting('description', $lang);
     }
     
     /**
