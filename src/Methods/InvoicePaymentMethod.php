@@ -4,6 +4,7 @@ namespace Invoice\Methods;
 
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -170,7 +171,14 @@ class InvoicePaymentMethod extends PaymentMethodService
         {
             case 1:
                 // internal
-                return $this->settings->getSetting('infoPageIntern', $lang);
+                $categoryId = (int) $this->settings->getSetting('infoPageIntern', $lang);
+                if($categoryId  > 0)
+                {
+                    /** @var CategoryRepositoryContract $categoryContract */
+                    $categoryContract = pluginApp(CategoryRepositoryContract::class);
+                    return $categoryContract->getUrl($categoryId, $lang);
+                }
+                return '';
             case 2:
                 // external
                 return $this->settings->getSetting('infoPageExtern', $lang);
@@ -198,7 +206,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isSwitchableTo()
+    public function isSwitchableTo():bool
     {
         return false;
     }
@@ -208,7 +216,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isSwitchableFrom()
+    public function isSwitchableFrom():bool
     {
         return true;
     }
