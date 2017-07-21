@@ -1,5 +1,16 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.0.4 (UNKNOWN)
+
+### Hinzugefügt
+
+- Einstellungen für **Infoseite** wurden hinzugefügt.
+- Einstellungen für **Beschreibung** wurden hinzugefügt.
+
+### Geändert
+
+- Aufpreise der Zahlungsart wurden entfernt.
+
 ## 1.0.3 (2017-07-13)
 
 ### Hinzugefügt
