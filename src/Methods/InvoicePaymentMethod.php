@@ -156,10 +156,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-    +     * Get InvoiceSourceUrl
-    +     *
-    +     * @return string
-    +     */
+    * Get InvoiceSourceUrl
+    *
+    * @return string
+    */
     public function getSourceUrl()
     {
         /** @var FrontendSessionStorageFactoryContract $session */
