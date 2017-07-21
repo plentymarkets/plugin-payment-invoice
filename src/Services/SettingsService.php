@@ -97,7 +97,7 @@ class SettingsService
             }
 
             $outputArray['plentyId']    = $settings[0]->plentyId;
-            $outputArray['lang']        = $settings[0]->lang;
+            $outputArray['lang']        = $settings[count($settings) - 1]->lang;
 
             $outputArray = $this->convertSettingsToCorrectFormat($outputArray,$availableSettings);
 
