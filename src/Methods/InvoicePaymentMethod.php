@@ -121,6 +121,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getFee( BasketRepositoryContract $basketRepositoryContract):float
     {
+        return 0.00;
         $basket = $basketRepositoryContract->load();
         if($basket->shippingCountryId == 1)
         {
