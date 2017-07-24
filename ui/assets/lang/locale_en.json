@@ -15,6 +15,7 @@
   "externalInfoPage": "Info page (external)",
   "errorLoadSettings": "Settings not loaded.",
   "errorLoadShippingCountries": "Shipping countries not loaded.",
+  "errorLoadCategories": "Categories not loaded.",
   "errorSaveSettings": "Settings not saved.",
   "successSaveSettings": "Settings saved.",
   "settings": "Settings",
