@@ -1,6 +1,6 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.0.4 (UNKNOWN)
+## 1.1 (UNKNOWN)
 
 ### Hinzugefügt
 

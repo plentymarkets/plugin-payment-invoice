@@ -1,6 +1,6 @@
 # Release Notes for Invoice
 
-## 1.0.4 (UNKNOWN)
+## 1.1 (UNKNOWN)
 
 ### Added
 
