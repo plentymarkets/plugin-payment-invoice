@@ -42,7 +42,7 @@ class Settings extends Model
                                              "minimumAmount"                    => "float"   ,
                                              "maximumAmount"                    => "float"   );
 
-    const SETTINGS_DEFAULT_VALUES = array(   "infoPageType"                     => "0"                ,
+    const SETTINGS_DEFAULT_VALUES = array(
                                              "shippingCountries"                => ""                 ,
                                              "feeDomestic"                      => "0.00"             ,
                                              "feeForeign"                       => "0.00"             ,
@@ -53,13 +53,15 @@ class Settings extends Model
                                              "minimumAmount"                    => "0"                ,
                                              "maximumAmount"                    => "0"                ,
                                              "de"  => array( "name"                => "Rechnung"         ,
+                                                             "infoPageType"        => "2"                ,
                                                              "infoPageIntern"      => ""                 ,
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "2"                ,
                                                              "logoUrl"             => ""                 ,
                                                              "designatedUse"       => "Verwendungszweck" ,
                                                              "showDesignatedUse"   => "0"                ),
-                                             "en"  => array( "name"                => "Invoice"   ,
+                                             "en"  => array( "name"                => "Invoice"          ,
+                                                             "infoPageType"        => "2"                ,
                                                              "infoPageIntern"      => ""                 ,
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
@@ -67,6 +69,7 @@ class Settings extends Model
                                                              "designatedUse"       => "Designated use"   ,
                                                              "showDesignatedUse"   => "0"                ),
                                              "fr"  => array( "name"                => "Facture d'achat"  ,
+                                                             "infoPageType"        => "2"                ,
                                                              "infoPageIntern"      => ""                 ,
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
@@ -74,6 +77,7 @@ class Settings extends Model
                                                              "designatedUse"       => "Concept" ,
                                                              "showDesignatedUse"   => "0"                ),
                                              "es"  => array( "name"                => "Pago por factura" ,
+                                                             "infoPageType"        => "2"                ,
                                                              "infoPageIntern"      => ""                 ,
                                                              "infoPageExtern"      => ""                 ,
                                                              "logo"                => "0"                ,
@@ -81,8 +85,7 @@ class Settings extends Model
                                                              "designatedUse"       => "Concepto" ,
                                                              "showDesignatedUse"   => "0"                ) );
 
-    const LANG_INDEPENDENT_SETTINGS = array(    "infoPageType"                  ,
-                                                "shippingCountries"             ,
+    const LANG_INDEPENDENT_SETTINGS = array(    "shippingCountries"             ,
                                                 "feeDomestic"                   ,
                                                 "feeForeign"                    ,
                                                 "showBankData"                  ,
