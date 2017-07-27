@@ -4,7 +4,7 @@
 
 ### Added
 
-- Settings for **Infoseite** were added.
+- Settings for **Info page** were added.
 - Settings for **Description** were added.
 
 ### Changed
