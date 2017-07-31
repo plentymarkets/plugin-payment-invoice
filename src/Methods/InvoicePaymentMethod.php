@@ -4,11 +4,13 @@ namespace Invoice\Methods;
 
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
+use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 
 /**
  * Class InvoicePaymentMethod
@@ -108,9 +110,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             $name = $this->settings->getSetting('name');
         }
 
-
         return $name;
-
     }
 
     /**
@@ -121,6 +121,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getFee( BasketRepositoryContract $basketRepositoryContract):float
     {
+        return 0.00;
         $basket = $basketRepositoryContract->load();
         if($basket->shippingCountryId == 1)
         {
@@ -146,27 +147,59 @@ class InvoicePaymentMethod extends PaymentMethodService
         elseif($this->settings->getSetting('logo') == 2)
         {
             $app = pluginApp(Application::class);
-                $icon = $app->getUrlPath('invoice').'/images/icon.png';
+            $icon = $app->getUrlPath('invoice').'/images/icon.png';
 
-                return $icon;
+            return $icon;
         }
 
         return '';
     }
 
     /**
+    * Get InvoiceSourceUrl
+    *
+    * @return string
+    */
+    public function getSourceUrl()
+    {
+        /** @var FrontendSessionStorageFactoryContract $session */
+        $session = pluginApp(FrontendSessionStorageFactoryContract::class);
+        $lang = $session->getLocaleSettings()->language;
+
+        $infoPageType = $this->settings->getSetting('infoPageType', $lang);
+
+        switch ($infoPageType)
+        {
+            case 1:
+                // internal
+                $categoryId = (int) $this->settings->getSetting('infoPageIntern', $lang);
+                if($categoryId  > 0)
+                {
+                    /** @var CategoryRepositoryContract $categoryContract */
+                    $categoryContract = pluginApp(CategoryRepositoryContract::class);
+                    return $categoryContract->getUrl($categoryId, $lang);
+                }
+                return '';
+            case 2:
+                // external
+                return $this->settings->getSetting('infoPageExtern', $lang);
+            default:
+                return '';
+        }
+    }
+
+
+    /**
      * Get the description of the payment method. The description can be entered in the config.json.
      *
      * @return string
      */
-    public function getDescription(  ):string
+    public function getDescription():string
     {
-        switch($this->settings->getSetting('infoPageType', $this->session->getLang()))
-        {
-            case  1:    return $this->settings->getSetting('infoPageIntern', $this->session->getLang());
-            case  2:    return $this->settings->getSetting('infoPageExtern', $this->session->getLang());
-            default:    return '';
-        }
+        /** @var FrontendSessionStorageFactoryContract $session */
+        $session = pluginApp(FrontendSessionStorageFactoryContract::class);
+        $lang = $session->getLocaleSettings()->language;
+        return $this->settings->getSetting('description', $lang);
     }
     
     /**
@@ -174,7 +207,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isSwitchableTo()
+    public function isSwitchableTo():bool
     {
         return false;
     }
@@ -184,7 +217,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      *
      * @return bool
      */
-    public function isSwitchableFrom()
+    public function isSwitchableFrom():bool
     {
         return true;
     }

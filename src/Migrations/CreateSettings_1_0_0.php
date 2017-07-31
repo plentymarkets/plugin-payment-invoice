@@ -20,10 +20,15 @@ class CreateSettings_1_0_0
 
     public function run(Migrate $migrate)
     {
-
-        $migrate->createTable(Settings::class);
-
-        $this->setInitialSettings();
+        try
+        {
+            $migrate->createTable(Settings::class);
+            $this->setInitialSettings();
+        }
+        catch(\Exception $e)
+        {
+            echo $e->getMessage();
+        }
 
     }
 

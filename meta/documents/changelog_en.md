@@ -1,5 +1,16 @@
 # Release Notes for Invoice
 
+## 1.1.0 (UNKNOWN)
+
+### Added
+
+- Settings for **Info page** were added.
+- Settings for **Description** were added.
+
+### Changed
+
+- Removed surcharges for the payment method.
+
 ## 1.0.3 (2017-07-13)
 
 ### Added
