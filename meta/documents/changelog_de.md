@@ -1,6 +1,6 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.1.0 (UNKNOWN)
+## 1.1.0 (2017-07-31)
 
 ### Hinzugefügt
 
