@@ -23,11 +23,12 @@ class CreateSettings_1_0_0
         try
         {
             $migrate->createTable(Settings::class);
+            $this->setInitialSettings();
         }
         catch(\Exception $e)
-        { echo $e->getMessage(); }
-
-        $this->setInitialSettings();
+        {
+            echo $e->getMessage();
+        }
 
     }
 
