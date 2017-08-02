@@ -209,7 +209,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isSwitchableTo():bool
     {
-        return false;
+        return true;
     }
     
     /**
@@ -219,6 +219,6 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isSwitchableFrom():bool
     {
-        return true;
+        return false;
     }
 }
