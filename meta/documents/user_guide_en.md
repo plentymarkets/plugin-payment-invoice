@@ -52,7 +52,7 @@ In order to make this payment method available in your online store, you have to
 			<td>
 				<b>Info page internal/<br />Info page external</b>
 			</td>
-			<td>In the description of the payment method, a link to the <strong>details</strong> of the payment method is displayed.<br /><strong>Infopage (internal):</strong> By entering the category ID or using the selector, pick a category page of the type <strong>content</strong> to provide additional information on the payment method.<br /><strong>Info page (external):</strong> Enter the URL of an external information page. <strong><i>Note:</i></strong>Use either http:// or https://.<br />If no input is made, no link will be shown.
+			<td>In the description of the payment method, a link to the <strong>details</strong> of the payment method is displayed.<br /><strong>Infopage (internal):</strong> By entering the category ID or using the selector, pick a category page of the type <strong>content</strong> to provide additional information on the payment method.<br /><strong>Info page (external):</strong> Enter the URL of an external information page. <strong><i>Important:</i></strong>Use either http:// or https://.<br />If no input is made, no link will be shown.
 			</td>
 		</tr>
         <tr>
@@ -60,7 +60,7 @@ In order to make this payment method available in your online store, you have to
 				<b>Logo</b>
 			</td>
 			<td>
-			Select if the <strong>Standard logo</strong> of the payment method or an individual logo is displayed.
+			Select if the <strong>Standard logo</strong> of the payment method provided by the plugin or an individual logo is displayed.
 			</td>
 		</tr>				
 		<tr>
@@ -76,7 +76,7 @@ In order to make this payment method available in your online store, you have to
 				<b>Description</b>
 			</td>
 			<td>
-				Enter a description for the payment method to inform the customer in the checkout.
+				Enter a description for the payment method to inform the customer in the checkout. The text will be cut with an ellipsis after 150 characters.
 			</td>
 		</tr>
 		<tr>
