@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 1.1.1 (2017-08-30)
+
+### Fixed
+- The check if the payment method can be changed is working properly again.
+
 ## 1.1.0 (2017-07-31)
 
 ### Added

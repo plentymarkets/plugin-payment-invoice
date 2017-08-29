@@ -1,9 +1,9 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.1.1(unknown)
+## 1.1.1 (2017-08-30)
 
 ### Gefixt
-- Ob die Zahlungsart gewechselt werden darf funktioniert wieder korrekt.
+- Prüfung, ob die Zahlungsart gewechselt werden darf, funktioniert wieder korrekt.
 
 ## 1.1.0 (2017-07-31)
 
