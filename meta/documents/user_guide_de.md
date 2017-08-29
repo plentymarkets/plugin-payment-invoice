@@ -40,35 +40,42 @@ Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen
 				Die Bezeichnung, die in der Übersicht der Zahlungsarten in der Kaufabwicklung für diese Zahlungsart angezeigt wird.
 			</td>
 		</tr>
-		<!--tr>
+		<tr>
 			<td>
 				<b>Infoseite</b>
 			</td>
-			<td>
-				Als <a href="https://www.plentymarkets.eu/handbuch/payment/bankdaten-verwalten/#2-2"><strong>Information zur Zahlungsart</strong></a> eine Kategorieseite vom Typ <strong>Content</strong> anlegen oder die URL einer Webseite eingeben.
+			<td>Wählen, ob als <a href="https://knowledge.plentymarkets.com/auftragsabwicklung/payment/bankdaten-verwalten#40"><strong>Information zur Zahlungsart</strong></a> eine Kategorieseite oder eine externe Webseite angezeigt wird.
 			</td>
-		</tr-->
+		</tr>
 		<tr>
+			<td>
+				<b>Infoseite intern/<br />Infoseite extern</b>
+			</td>
+			<td>In der Beschreibung der Zahlungsart wird ein Link zu den <strong>Details</strong> der Zahlungsart angezeigt.<br /><strong>Infoseite intern:</strong> Über Eingabe der Kategorie-ID oder das Auswahlfeld eine Kategorieseite vom Typ <strong>Content</strong> wählen, die weitere Informationen zur Zahlungsart bietet.<br /><strong>Infoseite extern:</strong> Die URL einer externen Informationsseite eingeben. <strong><i>Wichtig:</i></strong>Entweder http:// oder https:// verwenden.<br />Wird keine Eingabe vorgenommen, wird kein Link angezeigt.
+			</td>
+        <tr>
 			<td>
 				<b>Logo</b>
 			</td>
 			<td>
-			Kein Logo, <strong>Standard-Logo</strong> oder <strong>Logo-URL</strong> wählen.<br /><strong>Standard-Logo</strong>: Das Standard-Logo der Zahlungsart wird in der Kaufabwicklung angezeigt.<br /><strong>Logo-URL:</strong>: Eine https-URL, die zum Logo-Bild führt, angeben. Gültige Dateiformate sind .gif, .jpg oder .png. Die Maximalgröße beträgt 190 Pixel in der Breite und 60 Pixel in der Höhe.
+			Wählen, ob das im Plugin hinterlegte <strong>Standard-Logo</strong> der Zahlungsart oder ein eigenes Logo angezeigt wird.
 			</td>
 		</tr>
         <tr>
 			<td>
-				<b>Aufpreis Inland</b>
+				<b>Logo-URL</b>
 			</td>
 			<td>
-Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.
+			Eine https-URL, die zum Logo-Bild führt. Gültige Dateiformate sind .gif, .jpg oder .png. Die Maximalgröße beträgt 190 Pixel in der Breite und 60 Pixel in der Höhe.
+			</td>
 		</tr>
 		<tr>
 			<td>
-				<b>Aufpreis Ausland</b>
+				<b>Beschreibung</b>
 			</td>
 			<td>
-Pauschalen Wert eingeben, der bei Aufträgen berücksichtigt wird, bei denen nicht das Systemland gewählt wurde. Diese Kosten werden im Bestellvorgang bei der Wahl der Zahlungsart zum Auftrag addiert. Der Betrag fließt in die Gesamtsumme des Auftrags ein und wird nicht einzeln ausgewiesen.
+				Eine Beschreibung der Zahlungsart eingeben, die dem Kunden in der Kaufabwicklung angezeigt wird. Der Text wird nach 150 Zeichen mit Ellipse abgeschnitten.
+			</td>
 		</tr>
 		<tr>
 			<td>
