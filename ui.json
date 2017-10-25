@@ -4,7 +4,7 @@
   "menuEntries": [
     {
       "label": "Rechnung",
-      "menu": "settings/orders",
+      "menu": "settings/orders/payment/invoice",
       "urlKey": "invoice",
       "entryPoint": "index.html"
     }
