@@ -1,8 +1,14 @@
 # Release Notes for Invoice
 
+## 1.1.3 (2017-11-14)
+
+### Changed
+
+- Update changelog
+
 ## 1.1.2 (2017-10-26)
 
-### Geändert
+### Changed
 
 - The entry point in the system tree is now **System » Orders » Payment » Invoice » Invoice**.
 

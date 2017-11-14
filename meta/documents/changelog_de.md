@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.1.3 (2017-11-14)
+
+### Geändert
+
+- Changelog wurde aktualisiert 
+
 ## 1.1.2 (2017-10-26)
 
 ### Geändert
