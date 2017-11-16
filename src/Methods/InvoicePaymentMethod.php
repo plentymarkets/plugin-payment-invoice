@@ -93,24 +93,25 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * Get the name of the payment method. The name can be entered in the config.json.
+     * Get shown name
      *
+     * @param $lang
      * @return string
      */
-    public function getName( ):string
+    public function getName($lang = '')
     {
-        $lang = $this->session->getLang();
+        if($lang == '')
+        {
+            /** @var FrontendSessionStorageFactoryContract $session */
+            $session = pluginApp(FrontendSessionStorageFactoryContract::class);
+            $lang = $session->getLocaleSettings()->language;
+        }
 
         if(!empty($lang))
         {
-            $name = $this->settings->getSetting('name', $lang);
+            return $this->settings->getSetting('name', $lang);
         }
-        else
-        {
-            $name = $this->settings->getSetting('name');
-        }
-
-        return $name;
+        return $this->settings->getSetting('name');
     }
 
     /**
