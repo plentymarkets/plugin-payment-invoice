@@ -100,7 +100,12 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getName($lang = 'de')
     {
-        return $this->settings->getSetting('name', $lang);
+        $name = $this->settings->getSetting('name', $lang);
+        if(!strlen($name) > 0)
+        {
+            return 'Kauf auf Rechnung';
+        }
+        return $name;
     }
 
     /**
