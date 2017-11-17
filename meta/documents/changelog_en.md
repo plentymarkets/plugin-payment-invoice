@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.1.4 (2017-11-17)
+
+### Fixed
+
+- The `$MethodOfPaymentName` variable will now be displayed in the respective language in email templates.
+
 ## 1.1.3 (2017-11-14)
 
 ### Changed
