@@ -93,23 +93,18 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-     * Get the name of the payment method. The name can be entered in the config.json.
+     * Get shown name
      *
+     * @param $lang
      * @return string
      */
-    public function getName( ):string
+    public function getName($lang = 'de')
     {
-        $lang = $this->session->getLang();
-
-        if(!empty($lang))
+        $name = $this->settings->getSetting('name', $lang);
+        if(!strlen($name) > 0)
         {
-            $name = $this->settings->getSetting('name', $lang);
+            return 'Kauf auf Rechnung';
         }
-        else
-        {
-            $name = $this->settings->getSetting('name');
-        }
-
         return $name;
     }
 

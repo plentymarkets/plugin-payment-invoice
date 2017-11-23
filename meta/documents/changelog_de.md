@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.1.5 (2017-11-23)
+
+### Gefixt
+
+- Die Variable `$MethodOfPaymentName` in E-Mail-Vorlagen wird nun sprachabhängig ausgegeben.
+
 ## 1.1.4 (2017-17-22)
 
 ### Geändert
