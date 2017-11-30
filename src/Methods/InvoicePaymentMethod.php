@@ -5,6 +5,8 @@ namespace Invoice\Methods;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
+use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
+use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -27,12 +29,16 @@ class InvoicePaymentMethod extends PaymentMethodService
     /** @var  Checkout */
     private $checkout;
 
+    /** @var AccountService */
+    private $accountService;
 
-    public function __construct(SettingsService $settings, SessionStorageService $session, Checkout $checkout)
+
+    public function __construct(SettingsService $settings, SessionStorageService $session, Checkout $checkout, AccountService $accountService)
     {
         $this->settings = $settings;
         $this->session  = $session;
         $this->checkout = $checkout;
+        $this->accountService = $accountService;
     }
 
     /**
@@ -68,18 +74,25 @@ class InvoicePaymentMethod extends PaymentMethodService
             return false;
         }
 
+
         /**
          * Check whether the invoice address is the same as the shipping address
          */
         if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
         {
-            return false;
+            $invoiceAddresId = $basket->customerInvoiceAddressId;
+            $shippingAddressId = $basket->customerShippingAddressId;
+
+            if($shippingAddressId != null && $invoiceAddresId != $shippingAddressId)
+            {
+                return false;
+            }
         }
 
         /**
-        * Check whether the user is logged in
-        */
-        if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1)
+         * Check whether the user is logged in
+         */
+        if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
         {
             return false;
         }
@@ -151,10 +164,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     }
 
     /**
-    * Get InvoiceSourceUrl
-    *
-    * @return string
-    */
+     * Get InvoiceSourceUrl
+     *
+     * @return string
+     */
     public function getSourceUrl()
     {
         /** @var FrontendSessionStorageFactoryContract $session */
@@ -196,7 +209,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         $lang = $session->getLocaleSettings()->language;
         return $this->settings->getSetting('description', $lang);
     }
-    
+
     /**
      * Check if it is allowed to switch to this payment method
      *
@@ -206,7 +219,7 @@ class InvoicePaymentMethod extends PaymentMethodService
     {
         return true;
     }
-    
+
     /**
      * Check if it is allowed to switch from this payment method
      *

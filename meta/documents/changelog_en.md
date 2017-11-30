@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.1.6 (2017-11-30)
+
+### Fixed
+
+- In the checkout, the settings `Disallow purchase by invoice for guest accounts`and `Invoice address equals delivery address` are validated correctly.
+
 ## 1.1.5 (2017-11-23)
 
 ### Fixed

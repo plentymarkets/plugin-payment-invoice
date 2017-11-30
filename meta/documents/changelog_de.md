@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.1.6 (2017-11-30)
+
+### Gefixt
+
+- Die Einstellungen `Kauf auf Rechnung für Gastbestellungen verbieten` und `Rechnungsadresse gleich Lieferadresse` werden nun im Checkout korrekt überprüft.
+
 ## 1.1.5 (2017-11-23)
 
 ### Gefixt
