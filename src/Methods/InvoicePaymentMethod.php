@@ -80,10 +80,10 @@ class InvoicePaymentMethod extends PaymentMethodService
          */
         if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
         {
-            $invoiceAddresId = $basket->customerInvoiceAddressId;
+            $invoiceAddressId = $basket->customerInvoiceAddressId;
             $shippingAddressId = $basket->customerShippingAddressId;
 
-            if($shippingAddressId != null && $invoiceAddresId != $shippingAddressId)
+            if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
             {
                 return false;
             }
