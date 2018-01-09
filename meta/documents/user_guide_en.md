@@ -174,7 +174,7 @@ Proceed as follows to display the bank details that are saved in the system as w
 
 ##### Displaying bank details:
 
-1. Go to **System&nbsp;» Orders&nbsp;» Payment » Invoice » Invoice**. 
+1. Go to **System&nbsp;» Orders&nbsp;» Payment » Plugins » Invoice**. 
 2. Select a Client (store). 
 3. Enter the **Designated use** in the **Display data** area. 
 4. Activate the option **Show designated use**. 

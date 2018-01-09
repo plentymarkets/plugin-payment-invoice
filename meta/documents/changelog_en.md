@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.1.7 (2018-01-09)
+
+### Changed
+
+- New menu path **System&nbsp;» Orders&nbsp;» Payment » Plugins » Invoice**.
+
 ## 1.1.6 (2017-11-30)
 
 ### Fixed

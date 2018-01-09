@@ -4,7 +4,7 @@
 
 ### Geändert
 
-- Menüpfad geändert.
+- Neuer Menüpfad **System&nbsp;» Aufträge&nbsp;» Zahlung » Plugins » Rechnung**.
 
 ## 1.1.6 (2017-11-30)
 
