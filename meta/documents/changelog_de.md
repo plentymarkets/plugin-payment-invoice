@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.1.7 (2018-01-09)
+
+### Geändert
+
+- Menüpfad geändert.
+
 ## 1.1.6 (2017-11-30)
 
 ### Gefixt
@@ -28,7 +34,7 @@
 
 ### Geändert
 
-- Der Einhängepunkt im Systembaum ist nun **System » Aufträge » Zahlung » Invoice » Rechnung**.
+- Der Einhängepunkt im Systembaum ist nun **System » Aufträge » Zahlung » Rechnung**.
 
 ## 1.1.1 (2017-08-30)
 

@@ -28,7 +28,7 @@
 
 ### Changed
 
-- The entry point in the system tree is now **System » Orders » Payment » Invoice » Invoice**.
+- The entry point in the system tree is now **System » Orders » Payment » Invoice**.
 
 ## 1.1.1 (2017-08-30)
 
