@@ -4,7 +4,7 @@ With this plugin, you integrate the payment method **Invoice** into your online 
 
 ## Setting up a payment method
 
-In order to make this payment method available in your online store, you have to carry out the settings in the plentymarkets back end.
+In order to make this payment method available in your online store, you have to carry out the settings in the plentymarkets back end. In addition, check the settings for Permitted payment methods in the <strong><a href="https://knowledge.plentymarkets.com/en/order-processing/payment/managing-payment-methods#30" target="_blank">customer classes</a></strong> and for Blocked payment methods in the <strong><a href="https://knowledge.plentymarkets.com/en/order-processing/fulfilment/preparing-the-shipment#1000" target="_blank">shipping profiles</a></strong>.
 
 ##### Setting up a payment method:
 

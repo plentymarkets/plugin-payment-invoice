@@ -4,7 +4,7 @@ Mit diesem Plugin binden Sie die Zahlungsart **Rechnung** in Ihren Webshop ein.
 
 ## Zahlungsart einrichten
 
-Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen in Ihrem plentymarkets Backend vornehmen.
+Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen in Ihrem plentymarkets Backend vornehmen. Prüfen Sie zudem die Einstellungen für **Erlaubte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/auftragsabwicklung/payment/zahlungsarten-verwalten#30" target="_blank">Kundenklassen</a></strong> und für **Gesperrte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/auftragsabwicklung/fulfillment/versand-vorbereiten#1000" target="_blank">Versandprofilen</a></strong>.
 
 ##### Zahlungsart einrichten:
 

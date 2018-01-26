@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 1.1.8 (unknown)
+
+### Changed
+- Expanded user guide.
+
 ## 1.1.7 (2018-01-09)
 
 ### Changed

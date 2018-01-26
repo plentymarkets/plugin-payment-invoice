@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.1.8 (unknown)
+
+### Geändert
+- User guide erweitert.
+
 ## 1.1.7 (2018-01-09)
 
 ### Geändert
