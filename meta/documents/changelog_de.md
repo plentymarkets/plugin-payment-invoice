@@ -1,6 +1,12 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.1.8 (unknown)
+## 1.2.0 (2018-04-20)
+
+### Hinzugefügt
+
+- "Rechnung erlauben" am Kundenstamm wird nun im Checkout berücksichtigt.
+
+## 1.1.8 (2018-01-26)
 
 ### Geändert
 - User guide erweitert.

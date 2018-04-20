@@ -2,8 +2,12 @@
 
 namespace Invoice\Methods;
 
+use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
+use Plenty\Modules\Account\Contact\Models\Contact;
+use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
@@ -21,24 +25,32 @@ use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFact
 class InvoicePaymentMethod extends PaymentMethodService
 {
     /** @var SettingsService */
-    private $settings;
+    protected $settings;
 
     /** @var  SessionStorageService */
-    private $session;
+    protected $session;
 
     /** @var  Checkout */
-    private $checkout;
+    protected $checkout;
 
     /** @var AccountService */
-    private $accountService;
+    protected $accountService;
 
+    /** @var InvoiceHelper  */
+    protected $invoiceHelper;
 
-    public function __construct(SettingsService $settings, SessionStorageService $session, Checkout $checkout, AccountService $accountService)
-    {
+    public function __construct(
+        SettingsService $settings,
+        SessionStorageService $session,
+        Checkout $checkout,
+        AccountService $accountService,
+        InvoiceHelper $invoiceHelper
+    ) {
         $this->settings = $settings;
         $this->session  = $session;
         $this->checkout = $checkout;
         $this->accountService = $accountService;
+        $this->invoiceHelper = $invoiceHelper;
     }
 
     /**
@@ -55,6 +67,24 @@ class InvoicePaymentMethod extends PaymentMethodService
         $basket = $basketRepositoryContract->load();
 
         $lang = $this->session->getLang();
+
+        if($basket->customerId > 0) {
+            /** @var ContactRepositoryContract $contactRepository */
+            $contactRepository = pluginApp(ContactRepositoryContract::class);
+            $contact = $contactRepository->findContactById($basket->customerId);
+            if(!is_null($contact) && $contact instanceof Contact) {
+                $allowed = $contact->allowedMethodsOfPayment->first(function($method) {
+                   if($method instanceof ContactAllowedMethodOfPayment) {
+                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId()) {
+                           return true;
+                       }
+                   }
+                });
+                if($allowed) {
+                    return true;
+                }
+            }
+        }
 
         /**
          * Check the minimum amount
