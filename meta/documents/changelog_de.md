@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.2.1 (2018-04-23)
+
+### Gefixt
+
+- Die Einstellungen `Mindestanzahl an Bestellungen` wird nun im Checkout korrekt überprüft.
+
 ## 1.2.0 (2018-04-20)
 
 ### Hinzugefügt

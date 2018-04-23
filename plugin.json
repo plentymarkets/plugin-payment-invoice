@@ -1,5 +1,5 @@
 {
-    "version"           : "1.2.0",
+    "version"           : "1.2.1",
     "name"              : "Invoice",
     "marketplaceName"   : {"de":"Kauf auf Rechnung","en":"Invoice"},
     "license"           : "AGPL-3.0",

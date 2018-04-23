@@ -83,6 +83,10 @@ class InvoicePaymentMethod extends PaymentMethodService
                 if($allowed) {
                     return true;
                 }
+
+                if($this->settings->getSetting('quorumOrders') > 0 && $contact->orderSummary->orderCount <= $this->settings->getSetting('quorumOrders')) {
+                    return false;
+                }
             }
         }
 

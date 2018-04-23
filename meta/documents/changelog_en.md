@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.2.1 (2018-04-23)
+
+### Fixed
+
+- In the checkout, the setting `Minimum number of orders` are validated correctly.
+
 ## 1.2.0 (2018-04-20)
 
 ### Added
