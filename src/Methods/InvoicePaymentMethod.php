@@ -68,7 +68,7 @@ class InvoicePaymentMethod extends PaymentMethodService
 
         $lang = $this->session->getLang();
 
-        if($basket->customerId > 0) {
+        if($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0) {
             /** @var ContactRepositoryContract $contactRepository */
             $contactRepository = pluginApp(ContactRepositoryContract::class);
             $contact = $contactRepository->findContactById($basket->customerId);
