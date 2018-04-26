@@ -84,10 +84,12 @@ class InvoicePaymentMethod extends PaymentMethodService
                     return true;
                 }
 
-                if($this->settings->getSetting('quorumOrders') > 0 && $contact->orderSummary->orderCount <= $this->settings->getSetting('quorumOrders')) {
+                if((int)$this->settings->getSetting('quorumOrders') > 0 && $contact->orderSummary->orderCount < $this->settings->getSetting('quorumOrders')) {
                     return false;
                 }
             }
+        } elseif ((int)$this->settings->getSetting('quorumOrders') > 0 && !$this->accountService->getIsAccountLoggedIn()) {
+            return false;
         }
 
         /**
