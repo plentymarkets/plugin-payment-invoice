@@ -5,6 +5,7 @@
 ### Gefixt
 
 - Die Einstellungen `Mindestanzahl an Bestellungen` wird nun im Checkout korrekt überprüft.
+- Problem nach dem Ausloggen tritt nicht mehr auf.
 
 ## 1.2.0 (2018-04-20)
 

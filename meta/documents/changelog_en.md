@@ -5,6 +5,8 @@
 ### Fixed
 
 - In the checkout, the setting `Minimum number of orders` are validated correctly.
+- Issue after logout not longer occurs.
+
 
 ## 1.2.0 (2018-04-20)
 
