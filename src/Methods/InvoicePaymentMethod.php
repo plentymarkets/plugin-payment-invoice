@@ -75,7 +75,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             if(!is_null($contact) && $contact instanceof Contact) {
                 $allowed = $contact->allowedMethodsOfPayment->first(function($method) {
                    if($method instanceof ContactAllowedMethodOfPayment) {
-                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId()) {
+                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
                            return true;
                        }
                    }
