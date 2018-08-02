@@ -1,10 +1,10 @@
 # Release Notes for Invoice
 
-## 1.2.2 (2018-08-02)
+## 1.2.3 (2018-08-02)
 
 ### Added
 
-- Language-dependent texts can now be adapted via the multilingual interface.
+- Language-dependent texts can now be edited via the multilingualism interface.
 
 ## 1.2.1 (2018-04-23)
 

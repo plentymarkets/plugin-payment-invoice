@@ -1,6 +1,6 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.2.2 (2018-08-02)
+## 1.2.3 (2018-08-02)
 
 ### Hinzugefügt
 
