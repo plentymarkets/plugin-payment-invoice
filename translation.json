@@ -1,0 +1,21 @@
+{
+  "sections":
+  [
+    {
+      "name": "MultilingualismConfig.paymentMethod",
+      "prefix": "paymentMethod"
+    },
+    {
+      "name": "MultilingualismConfig.bankData",
+      "prefix": "bank"
+    },
+    {
+      "name": "MultilingualismConfig.designatedUse",
+      "prefix": "designatedUse"
+    }
+  ],
+  "ignoredTranslationFiles":
+  [
+    "MultilingualismConfig.properties"
+  ]
+}

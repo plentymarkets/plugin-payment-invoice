@@ -1,12 +1,17 @@
 # Release Notes for Invoice
 
+## 1.2.2 (2018-08-02)
+
+### Added
+
+- Language-dependent texts can now be adapted via the multilingual interface.
+
 ## 1.2.1 (2018-04-23)
 
 ### Fixed
 
 - In the checkout, the setting `Minimum number of orders` are validated correctly.
 - Issue after logout not longer occurs.
-
 
 ## 1.2.0 (2018-04-20)
 

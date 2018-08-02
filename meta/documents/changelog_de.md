@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.2.2 (2018-08-02)
+
+### Hinzugefügt
+
+- Sprachabhängige Texte können nun über das Mehrsprachigkeits-Interface angepasst werden.
+
 ## 1.2.1 (2018-04-23)
 
 ### Gefixt
