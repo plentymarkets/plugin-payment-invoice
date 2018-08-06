@@ -130,6 +130,8 @@ class SettingsService
             /** @var Settings[] $settings */
             $settings = $this->loadClientSettings($pid, $lang);
 
+            $newLang = true;
+
             /** @var Settings $setting */
             foreach ($settings as $setting)
             {
@@ -144,6 +146,23 @@ class SettingsService
 
                     $this->db->save($setting);
 
+                    if($setting->name == 'name'){
+                        $newLang = false;
+                    }
+                }
+            }
+            if($newLang){
+                foreach ($settingsToSave as $name => $value) {
+                    if(!in_array($name,['shippingCountries','feeDomestic','feeForeign','showBankData','plentyId','lang',
+                                        'invoiceEqualsShippingAddress','disallowInvoiceForGuest','quorumOrders','minimumAmount','maximumAmount'])){
+                        $newSetting = pluginApp(Settings::class);
+                        $newSetting->plentyId = $pid;
+                        $newSetting->lang = $lang;
+                        $newSetting->name = $name;
+                        $newSetting->value = $value;
+                        $newSetting->updatedAt = date('Y-m-d H:i:s');
+                        $this->db->save($newSetting);
+                    }
                 }
             }
             return 1;
@@ -304,7 +323,7 @@ class SettingsService
         {
             $query->where('lang', '=', $lang);
         }
-        $query->orWhere('lang',   '=', '');
+        $query->orWhere('lang',   '=', '')->where('plentyId', '=', $plentyId);
 
         /** @var Settings[] $clientSettings */
         $clientSettings = $query->get();

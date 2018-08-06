@@ -152,11 +152,6 @@ class InvoicePaymentMethod extends PaymentMethodService
         $name = $this->settings->getSetting('name', $lang);
         if(!strlen($name) > 0)
         {
-            $trans = pluginApp(\Plenty\Plugin\Translation\Translator::class);
-            $paymentMethodName = $trans->trans('Invoice::PaymentMethod.paymentMethodName');
-            if(strlen($paymentMethodName)){
-                return $paymentMethodName;
-            }
             return 'Kauf auf Rechnung';
         }
         return $name;

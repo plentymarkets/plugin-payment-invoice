@@ -1,9 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
-## 1.2.3 (2018-08-02)
+## 1.2.4 (2018-08-06)
 
 ### Hinzugefügt
 
+- Weitere Sprachen für die Plugin-UI wurden hinzugefügt.
 - Sprachabhängige Texte können nun über das Mehrsprachigkeits-Interface angepasst werden.
 
 ## 1.2.1 (2018-04-23)
