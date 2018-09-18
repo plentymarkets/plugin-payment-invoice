@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.3.0 (2018-09-18)
+
+### Added
+
+- The order ID can now be displayed in the designated use. To do so, use the placeholder **%s** in the respective text area in the plugin settings.
+
 ## 1.2.4 (2018-08-06)
 
 ### Added

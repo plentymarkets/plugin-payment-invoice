@@ -117,7 +117,7 @@ Mindestanzahl an Bestellungen eingeben, die ein Kunde mit einer anderen Zahlungs
 				<b>Verwendungszweck</b>
 			</td>  
 			<td>
-			Verwendungszweck für den Kauf auf Rechnung eingeben.
+			Verwendungszweck für den Kauf auf Rechnung eingeben. Mit dem Platzhalter <code>%s</code> kann die Auftrags-ID angezeigt werden.
 			</td>
 		</tr>
 		<tr>

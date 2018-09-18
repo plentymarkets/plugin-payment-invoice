@@ -119,7 +119,7 @@ Enter a minimum number of orders to be completed by the customer with a differen
 				<b>Designated use</b>
 			</td>  
 			<td>
-			Enter designated use for purchase on invoice.
+			Enter designated use for purchase on invoice. Use the placeholder <code>%s</code> to display the order ID.
 			</td>
 		</tr>
 		<tr>

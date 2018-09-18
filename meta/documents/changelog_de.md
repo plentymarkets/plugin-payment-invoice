@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.3.0 (2018-09-18)
+
+### Hinzugefügt
+
+- Die Auftrags-ID kann direkt im Verwendungszweck angezeigt werden. Dafür muss der Platzhalter **%s** im Textfeld der Plugin-Einstellungen eingegeben werden.
+
 ## 1.2.4 (2018-08-06)
 
 ### Hinzugefügt
