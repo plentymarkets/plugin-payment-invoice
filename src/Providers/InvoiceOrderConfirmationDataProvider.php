@@ -33,7 +33,7 @@ class InvoiceOrderConfirmationDataProvider
 
             if($settings->getSetting('showDesignatedUse', $lang))
             {
-                $content .=  $twig->render('Invoice::DesignatedUse', array());
+                $content .=  $twig->render('Invoice::DesignatedUse', ['order'=>$args[0]]);
             }
         }
 
