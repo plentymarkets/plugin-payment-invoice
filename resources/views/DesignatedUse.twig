@@ -3,6 +3,6 @@
 <hr>
 <div class="row">
     <strong class="col-xs-6 col-sm-5">{{ trans("Invoice::PaymentMethod.designatedUse") }}</strong>
-    <span class="col-xs-6 col-sm-7">{{ trans("Invoice::PaymentMethod.designatedUseText") }}<br /> <b>{{ designatedUse | format(order.id) }}</b></span>
+    <span class="col-xs-6 col-sm-7">{{ trans("Invoice::PaymentMethod.designatedUseText") }}<br /> <b>{{ designatedUse | format(orderId) }}</b></span>
 </div>
 

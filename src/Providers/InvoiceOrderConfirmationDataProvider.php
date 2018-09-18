@@ -2,9 +2,7 @@
 
 namespace Invoice\Providers;
 
-use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
-use Plenty\Modules\Basket\Models\Basket;
-use Plenty\Plugin\ConfigRepository;
+use Plenty\Modules\Order\Models\Order;
 use Plenty\Plugin\Templates\Twig;
 
 use Invoice\Helper\InvoiceHelper;
@@ -20,8 +18,30 @@ class InvoiceOrderConfirmationDataProvider
                             SessionStorageService $service, $args)
     {
         $mop = $service->getOrderMopId();
-
+        $orderId = null;
         $content = '';
+
+        /*
+         * Load the method of payment id from the order
+         */
+        $order = $args[0];
+        if($order instanceof Order) {
+            $orderId = $order->id;
+            foreach ($order->properties as $property) {
+                if($property->typeId == 3) {
+                    $mop = $property->value;
+                    break;
+                }
+            }
+        } elseif(is_array($order)) {
+            $orderId = $order['id'];
+            foreach ($order['properties'] as $property) {
+                if($property['typeId'] == 3) {
+                    $mop = $property['value'];
+                    break;
+                }
+            }
+        }
 
         if($mop ==$invoiceHelper->getInvoiceMopId())
         {
@@ -33,7 +53,7 @@ class InvoiceOrderConfirmationDataProvider
 
             if($settings->getSetting('showDesignatedUse', $lang))
             {
-                $content .=  $twig->render('Invoice::DesignatedUse', ['order'=>$args[0]]);
+                $content .=  $twig->render('Invoice::DesignatedUse', ['orderId'=>$orderId]);
             }
         }
 
