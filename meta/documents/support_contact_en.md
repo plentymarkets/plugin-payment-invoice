@@ -1,1 +1,1 @@
-[https://www.plentymarkets.co.uk/](https://www.plentymarkets.co.uk/)
+[Support Forum](https://forum.plentymarkets.com/c/payment/plugin-kauf-auf-rechnung)
