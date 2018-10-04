@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.3.1 (2018-10-04)
+
+### Geändert
+
+- Support Informationen ergänzt
+
 ## 1.3.0 (2018-09-18)
 
 ### Hinzugefügt
