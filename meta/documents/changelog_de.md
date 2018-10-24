@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.3.2 (2018-10-23)
+
+### Gefixt
+
+- Ein eventuell auftretendes Problem beim Bereitstellen des Plugins wurde behoben.
+
 ## 1.3.1 (2018-10-04)
 
 ### Geändert

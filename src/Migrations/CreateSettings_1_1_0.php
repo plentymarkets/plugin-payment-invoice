@@ -120,7 +120,7 @@ class CreateSettings_1_1_0
             }
             else
             {
-                $newSetting->value = Settings::SETTINGS_DEFAULT_VALUES[$lang]['infoPageType'];
+                $newSetting->value = Settings::SETTINGS_DEFAULT_VALUES[$lang]['infoPageType']?:2;
             }
 
             $newSetting->lang       = $lang;
@@ -161,7 +161,7 @@ class CreateSettings_1_1_0
                 $newSetting = pluginApp(Settings::class);
                 $newSetting->plentyId   = $plentyId;
                 $newSetting->name       = "infoPageType";
-                $newSetting->value      = Settings::SETTINGS_DEFAULT_VALUES[$lang]['infoPageType'];
+                $newSetting->value      = Settings::SETTINGS_DEFAULT_VALUES[$lang]['infoPageType']?:2;
                 $newSetting->lang       = $lang;
                 $newSetting->updatedAt  = date('Y-m-d H:i:s');
 
