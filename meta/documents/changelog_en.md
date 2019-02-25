@@ -4,7 +4,7 @@
 
 ### Changed
 
-- The shipping countries settings have been moved.
+- The settings for shipping countries have been optimized.
 
 ## 1.3.2 (2018-10-23)
 

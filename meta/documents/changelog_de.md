@@ -4,7 +4,7 @@
 
 ### Geändert
 
-- Die Lieferlandeinstellungen wurden ausgelagert.
+- Die Einstellungen für Lieferländer wurden optimiert.
 
 ## 1.3.2 (2018-10-23)
 
