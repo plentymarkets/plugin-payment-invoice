@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 1.3.3 (2018-02-25)
+
+### Changed
+
+- The shipping countries settings have been moved.
+
 ## 1.3.2 (2018-10-23)
 
 ### Fixed

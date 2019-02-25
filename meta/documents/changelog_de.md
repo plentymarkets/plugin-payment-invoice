@@ -1,5 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
+## 1.3.3 (2019-02-25)
+
+### Geändert
+
+- Die Lieferlandeinstellungen wurden ausgelagert.
+
 ## 1.3.2 (2018-10-23)
 
 ### Gefixt
