@@ -35,6 +35,7 @@
     "runOnBuild"        : [
         "Invoice\\Migrations\\CreateSettings_1_0_0",
         "Invoice\\Migrations\\CreateSettings_1_1_0",
-        "Invoice\\Migrations\\CreateShippingCountrySettings_1_0"
+        "Invoice\\Migrations\\CreateShippingCountrySettings_1_0",
+        "Invoice\\Migrations\\MigrateShippingCountries_1_0"
     ]
 }
