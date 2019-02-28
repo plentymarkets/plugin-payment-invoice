@@ -28,7 +28,6 @@ class MigrateShippingCountries_1_0
             $this->getLogger(__CLASS__.'::'.__FUNCTION__)->debug('Invoice::PaymentMethod.paymentMethodName', $ex->getMessage().' - '.$ex->getTraceAsString());
             $this->getLogger(__CLASS__.'::'.__FUNCTION__)->error('Invoice::PaymentMethod.paymentMethodName', $ex->getMessage().' - '.$ex->getTraceAsString());
         }
-
     }
 
     private function migrateShippingCountries() {
