@@ -4,11 +4,13 @@ Mit diesem Plugin binden Sie die Zahlungsart **Rechnung** in Ihren Webshop ein.
 
 ## Zahlungsart einrichten
 
-Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie Einstellungen in Ihrem plentymarkets Backend vornehmen. Prüfen Sie zudem die Einstellungen für **Erlaubte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/auftragsabwicklung/payment/zahlungsarten-verwalten#30" target="_blank">Kundenklassen</a></strong> und für **Gesperrte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/auftragsabwicklung/fulfillment/versand-vorbereiten#1000" target="_blank">Versandprofilen</a></strong>.
+Bevor die Zahlungsart in Ihrem Webshop verfügbar ist, müssen Sie zuerst einige Einstellungen in Ihrem plentymarkets Backend vornehmen. Stellen Sie sicher, dass die Zahlungsart unter dem Punkt **Erlaubte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/crm/kontakte-verwalten#15" target="_blank">Kundenklassen</a></strong> vorhanden ist und nicht im Bereich **Gesperrte Zahlungsarten** in den <strong><a href="https://knowledge.plentymarkets.com/auftragsabwicklung/fulfillment/versand-vorbereiten#1000" target="_blank">Versandprofilen</a></strong> aufgeführt ist.
+
+Zudem müssen Sie die Zahlungsart einmalig im Menü **System » Systemeinstellungen » Aufträge » Zahlung » Zahlungsarten** aktivieren. Weitere Informationen dazu finden Sie auf der Handbuchseite <strong><a href="https://knowledge.plentymarkets.com/payment/zahlungsarten-verwalten#20" target="_blank">Zahlungsarten verwalten</a></strong>.
 
 ##### Zahlungsart einrichten:
 
-1. Öffnen Sie das Menü **System&nbsp;» Aufträge&nbsp;» Zahlung » Plugins » Rechnung**.
+1. Öffnen Sie das Menü **System&nbsp;» Systemeinstellungen » Aufträge&nbsp;» Zahlung » Plugins » Rechnung**.
 2. Wählen Sie einen Mandanten.
 3. Nehmen Sie die Einstellungen vor. Beachten Sie dazu die Erläuterungen in Tabelle 1.
 4. **Speichern** Sie die Einstellungen.
@@ -103,7 +105,7 @@ Mindestanzahl an Bestellungen eingeben, die ein Kunde mit einer anderen Zahlungs
 			<td>
 			Betrag eingeben, der beim Kauf auf Rechnung nicht unterschritten werden darf.
 			</td>
-		</tr> 
+		</tr>
 		<tr>
 			<td>
 				<b>Maximalbetrag für Kauf auf Rechnung</b>
@@ -151,7 +153,7 @@ Mindestanzahl an Bestellungen eingeben, die ein Kunde mit einer anderen Zahlungs
 			<td>
 			Aktivieren, um den Kauf auf Rechnung nur für angemeldete Kunden zu erlauben.
 			</td>
-		</tr> 
+		</tr>
 	</tbody>
 </table>
 
@@ -161,7 +163,7 @@ Das Template-Plugin **Ceres** bietet Ihnen auf der Startseite einen Template-Con
 
 ##### Logo mit Template-Container verknüpfen:
 
-1. Gehen Sie zu **Plugins » Content**. 
+1. Gehen Sie zu **Plugins » Content**.
 3. Wählen Sie den Bereich **Invoice icon**.
 4. Aktivieren Sie den Container **Homepage: Payment method container**.
 5. **Speichern** Sie die Einstellungen.<br />→ Das Logo der Zahlungsart wird auf der Startseite des Webshops angezeigt.
@@ -183,7 +185,7 @@ Nachdem Sie die Einstellungen vorgenommen haben, verknüpfen Sie die Bankdaten m
 
 ##### Bankdaten mit Template-Container verknüpfen:
 
-1. Gehen Sie zu **Plugins » Content**. 
+1. Gehen Sie zu **Plugins » Content**.
 3. Wählen Sie den Bereich **Invoice bank details**.
 4. Aktivieren Sie den Container **Order confirmation: Additional payment information**.
 5. **Speichern** Sie die Einstellungen.<br />→ Die Bankdaten werden auf der Bestellbestätigungsseite angezeigt.
@@ -193,5 +195,5 @@ Nachdem Sie die Einstellungen vorgenommen haben, verknüpfen Sie die Bankdaten m
 Erfahren Sie, wie Sie [Vorlagen für Rechnungsdokumente](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#2-2) anlegen. Rechnungen erstellen Sie [manuell](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#3-1) oder lassen diese [automatisch über eine Ereignisaktion](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#3-2) erzeugen.
 
 ## Lizenz
- 
+
 Das gesamte Projekt unterliegt der GNU AFFERO GENERAL PUBLIC LICENSE – weitere Informationen finden Sie in der [LICENSE.md](https://github.com/plentymarkets/plugin-payment-invoice/blob/master/LICENSE.md).
