@@ -168,9 +168,9 @@ The template plugin **Ceres** allows you to display the logo of your payment met
 ##### Linking the logo with a template container:
 
 1. Go to **CMS » Container links**.
-3. Click on **Invoice icon**.
-4. Activate the container **Homepage: Payment method container**.
-5. **Save** the settings.<br />→ The logo of the payment method will be displayed on the homepage of the online store.
+2. Click on **Invoice icon**.
+3. Activate the container **Homepage: Payment method container**.
+4. **Save** the settings.<br />→ The logo of the payment method will be displayed on the homepage of the online store.
 
 ## Displaying the bank details on the order confirmation page <a id="10." name="10."></a>
 
