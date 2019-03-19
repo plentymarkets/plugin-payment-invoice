@@ -194,7 +194,7 @@ Nachdem Sie die Einstellungen vorgenommen haben, verknüpfen Sie die Bankdaten m
 
 ## Rechnungsdokumente erstellen
 
-Erfahren Sie, wie Sie [Vorlagen für Rechnungsdokumente](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#2-2) anlegen. Rechnungen erstellen Sie [manuell](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#3-1) oder lassen diese [automatisch über eine Ereignisaktion](https://www.plentymarkets.eu/handbuch/mandant-shop/standard/dokumente/rechnung/#3-2) erzeugen.
+Erfahren Sie, wie Sie [Vorlagen für Rechnungsdokumente](https://knowledge.plentymarkets.com/auftraege/auftragsdokumente#300) anlegen. Rechnungen erstellen Sie [manuell](https://knowledge.plentymarkets.com/auftraege/auftragsdokumente/rechnungen-erzeugen#200) oder lassen diese [automatisch über eine Ereignisaktion](https://knowledge.plentymarkets.com/automatisierung/best-practices-automatisierung#_rechnung_erzeugen_und_versenden) erzeugen.
 
 ## Lizenz
 
