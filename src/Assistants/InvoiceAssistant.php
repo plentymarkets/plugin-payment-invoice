@@ -3,6 +3,7 @@ namespace Invoice\Assistants;
 
 use Invoice\Assistants\SettingsHandlers\InvoiceAssistantSettingsHandler;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
+use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\Wizard\Services\WizardProvider;
 use Plenty\Plugin\Application;
 
@@ -14,9 +15,20 @@ class InvoiceAssistant extends WizardProvider
     private $language;
 
     /**
+     * @var WebstoreRepositoryContract
+     */
+    private $webstoreRepository;
+
+    /**
      * @var array
      */
     private $deliveryCountries;
+
+    public function __construct(
+        WebstoreRepositoryContract $webstoreRepository
+    ) {
+        $this->webstoreRepository = $webstoreRepository;
+    }
 
     protected function structure()
     {
@@ -28,7 +40,18 @@ class InvoiceAssistant extends WizardProvider
             "translationNamespace" => "Invoice",
             "key" => "payment-invoice-assistant",
             "topics" => ["payment"],
-            "priority" => 500,
+            "priority" => 990,
+            "options" => [
+                "config_name" => [
+                    "type" => 'select',
+                    "defaultValue" => 0,
+                    "options" => [
+                        "name" => 'invoiceAssistant.storeName',
+                        'required' => true,
+                        'listBoxValues' => $this->getWebstoreListForm(),
+                    ],
+                ],
+            ],
             "steps" => [
                 "stepOne" => [
                     "title" => "invoiceAssistant.stepOneTitle",
@@ -37,7 +60,7 @@ class InvoiceAssistant extends WizardProvider
                             "title" => 'invoiceAssistant.shippingCountriesTitle',
                             "description" => 'invoiceAssistant.shippingCountriesDescription',
                             "form" => [
-                                "countries" => [
+                                "shippingCountries" => [
                                     'type' => 'checkboxGroup',
                                     'defaultValue' => [],
                                     'options' => [
@@ -61,22 +84,10 @@ class InvoiceAssistant extends WizardProvider
                             ],
                         ],
                         [
-                            "title" => 'invoiceAssistant.showBankDataTitle',
-                            "form" => [
-                                "showBankData" => [
-                                    'type' => 'checkbox',
-                                    'defaultValue' => false,
-                                    'options' => [
-                                        'name' => 'invoiceAssistant.showBankData'
-                                    ]
-                                ],
-                            ],
-                        ],
-                        [
                             "title" => 'invoiceAssistant.invoiceAddressEqualShippingAddressTitle',
                             "description" => '',
                             "form" => [
-                                "showBankData" => [
+                                "invoiceEqualsShippingAddress" => [
                                     'type' => 'checkbox',
                                     'defaultValue' => false,
                                     'options' => [
@@ -215,6 +226,28 @@ class InvoiceAssistant extends WizardProvider
                 "stepTwo" => [
                     "title" => "invoiceAssistant.stepTwoTitle",
                     "sections" => [
+/*                        [
+                            "title" => 'invoiceAssistant.nameTitle',
+                            "form" => [
+                                "name" => [
+                                    'type' => 'text',
+                                    'options' => [
+                                        'name' => 'invoiceAssistant.name',
+                                    ]
+                                ],
+                            ],
+                        ],
+                        [
+                            "title" => 'invoiceAssistant.descriptionTitle',
+                            "form" => [
+                                "name" => [
+                                    'type' => 'text',
+                                    'options' => [
+                                        'name' => 'invoiceAssistant.description',
+                                    ]
+                                ],
+                            ],
+                        ],*/
                         [
                             "title" => 'invoiceAssistant.infoPageTitle',
                             "form" => [
@@ -233,18 +266,18 @@ class InvoiceAssistant extends WizardProvider
                             "form" => [
                                 "info_page_type" => [
                                     'type' => 'select',
-                                    'defaultValue' => 'internal',
+                                    'defaultValue' => '1',
                                     'options' => [
                                         "required" => false,
                                         'name' => 'invoiceAssistant.infoPageTypeName',
                                         'listBoxValues' => [
                                             [
                                                 "caption" => 'invoiceAssistant.infoPageInternal',
-                                                "value" => 'internal',
+                                                "value" => '1',
                                             ],
                                             [
                                                 "caption" => 'invoiceAssistant.infoPageExternal',
-                                                "value" => 'external',
+                                                "value" => '2',
                                             ],
                                         ],
                                     ],
@@ -254,12 +287,12 @@ class InvoiceAssistant extends WizardProvider
                         [
                             "title" => '',
                             "description" => 'invoiceAssistant.infoPageNameInternal',
-                            "condition" => 'info_page_toggle && info_page_type == "internal"',
+                            "condition" => 'info_page_toggle && info_page_type == 1',
                             "form" => [
                                 "internal_info_page" => [
                                     "type" => 'category',
                                     'defaultValue' => '',
-                                    'isVisible' => "info_page_toggle == true && info_page_type == 'internal'",
+                                    'isVisible' => "info_page_toggle == true && info_page_type == 1",
                                     "displaySearch" => true,
                                     "options" => [
                                         "name" => "invoiceAssistant.infoPageNameInternal"
@@ -270,7 +303,7 @@ class InvoiceAssistant extends WizardProvider
                         [
                             "title" => '',
                             "description" => '',
-                            "condition" => 'info_page_toggle && info_page_type == "external"',
+                            "condition" => 'info_page_toggle && info_page_type == 2',
                             "form" => [
                                 "external_info_page" => [
                                     'type' => 'text',
@@ -317,7 +350,7 @@ class InvoiceAssistant extends WizardProvider
                             "title" => 'invoiceAssistant.sectionPaymentMethodIconTitle',
                             "description" => 'invoiceAssistant.sectionPaymentMethodIconDescription',
                             "form" => [
-                                "debitPaymentMethodIcon" => [
+                                "invoicePaymentMethodIcon" => [
                                     'type' => 'checkbox',
                                     'defaultValue' => 'false',
                                     'options' => [
@@ -331,6 +364,18 @@ class InvoiceAssistant extends WizardProvider
                 "stepFour" => [
                     "title" => 'invoiceAssistant.interface',
                     "sections" => [
+                        [
+                            "title" => 'invoiceAssistant.showBankDataTitle',
+                            "form" => [
+                                "showBankData" => [
+                                    'type' => 'checkbox',
+                                    'defaultValue' => false,
+                                    'options' => [
+                                        'name' => 'invoiceAssistant.showBankData'
+                                    ]
+                                ],
+                            ],
+                        ],
                         [
                             "title" => "invoiceAssistant.infoPageLimitInputTitle",
                             "form" => [
@@ -392,6 +437,7 @@ class InvoiceAssistant extends WizardProvider
                             "form" => [
                                 "showDesignatedUse" => [
                                     'type' => 'toggle',
+                                    'defaultValue' => true,
                                     'options' => [
                                         'name' => 'invoiceAssistant.showDesignatedUse'
                                     ]
@@ -399,13 +445,13 @@ class InvoiceAssistant extends WizardProvider
                             ],
                         ],
                         [
-                            "title" => 'invoiceAssistant.designatedUse',
+                            "title" => 'invoiceAssistant.designatedUseTitle',
                             "condition" => 'showDesignatedUse',
-                            "description" => '',
+                            "description" => 'invoiceAssistant.designatedUseDescription',
                             "form" => [
                                 "designatedUse" => [
                                     'type' => 'text',
-                                    'defaultValue' => "",
+                                    'defaultValue' => "%s",
                                     'options' => [
                                         'name' => 'invoiceAssistant.designatedUse',
                                     ],
@@ -442,6 +488,27 @@ class InvoiceAssistant extends WizardProvider
         }
 
         return $app->getUrlPath('invoice').'/images/icon.png';
+    }
+
+    /**
+     * @return array
+     */
+    private function getWebstoreListForm()
+    {
+        $webstores = $this->webstoreRepository->loadAll();
+        /** @var Webstore $webstore */
+        foreach ($webstores as $webstore) {
+            $values[] = [
+                "caption" => $webstore->name,
+                "value" => $webstore->id,
+            ];
+        }
+
+        usort($values, function ($a, $b) {
+            return ($a['value'] <=> $b['value']);
+        });
+
+        return $values;
     }
 
     /**
