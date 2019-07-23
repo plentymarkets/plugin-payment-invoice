@@ -85,7 +85,7 @@ class InvoiceAssistant extends WizardProvider
                         ],
                         [
                             "title" => 'invoiceAssistant.invoiceAddressEqualShippingAddressTitle',
-                            "description" => '',
+                            "description" => 'invoiceAssistant.invoiceEqualsShippingAddressDescription',
                             "form" => [
                                 "invoiceEqualsShippingAddress" => [
                                     'type' => 'checkbox',
@@ -97,164 +97,17 @@ class InvoiceAssistant extends WizardProvider
                             ],
                         ],
                     ],
-/*                    "sections" => [
-                        [
-                            "title" => "Sprache",
-                            "form" => [
-                                "lang" => [
-                                    "type" => "select",
-                                    "options" => [
-                                        "name" => "invoiceAssistant.language",
-                                        "listBoxValues" => [
-                                            [
-                                                "value" =>   'de',
-                                                "caption" => 'invoiceAssistant.german',
-                                            ],
-                                            [
-                                                "value" =>   'en',
-                                                "caption" => 'invoiceAssistant.english'
-                                            ],
-                                            [
-                                                "value" =>   'bg',
-                                                "caption" => 'invoiceAssistant.bulgarian',
-                                            ],
-                                            [
-                                                "value" =>   'fr',
-                                                "caption" => 'invoiceAssistant.french'
-                                            ],
-                                            [
-                                                "value" =>   'it',
-                                                "caption" => 'invoiceAssistant.italian'
-                                            ],
-                                            [
-                                                "value" =>   'es',
-                                                "caption" => 'invoiceAssistant.spanish'
-                                            ],
-                                            [
-                                                "value" =>   'tr',
-                                                "caption" => 'invoiceAssistant.turkish'
-                                            ],
-                                            [
-                                                "value" =>   'nl',
-                                                "caption" => 'invoiceAssistant.dutch'
-                                            ],
-                                            [
-                                                "value" =>   'pl',
-                                                "caption" => 'invoiceAssistant.polish',
-                                            ],
-                                            [
-                                                "value" =>   'pt',
-                                                "caption" => 'invoiceAssistant.portuguese'
-                                            ],
-                                            [
-                                                "value" =>   'nn',
-                                                "caption" => 'invoiceAssistant.norwegian'
-                                            ],
-                                            [
-                                                "value" =>   'da',
-                                                "caption" => 'invoiceAssistant.danish'
-                                            ],
-                                            [
-                                                "value" =>   'se',
-                                                "caption" => 'invoiceAssistant.swedish'
-                                            ],
-                                            [
-                                                "value" =>   'cz',
-                                                "caption" => 'invoiceAssistant.czech'
-                                            ],
-                                            [
-                                                "value" =>   'ro',
-                                                "caption" => 'invoiceAssistant.romanian'
-                                            ],
-                                            [
-                                                "value" =>   'ru',
-                                                "caption" => 'invoiceAssistant.russian'
-                                            ],
-                                            [
-                                                "value" =>   'sk',
-                                                "caption" => 'invoiceAssistant.slovak'
-                                            ],
-                                            [
-                                                "value" =>   'cn',
-                                                "caption" => 'invoiceAssistant.chinese'
-                                            ],
-                                            [
-                                                "value" =>   'vn',
-                                                "caption" => 'invoiceAssistant.vietnamese'
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "title" => "Name",
-                            "description" => "",
-                            "form" => [
-                                "name" => [
-                                    "type" => "text"
-                                ]
-                            ]
-                        ],
-                        [
-                            "title" => "Infoseite",
-                            "form" => [
-                                "infoPage" => [
-                                    "type" => "select",
-                                    "options" => [
-                                        "name" => "invoiceAssistant.infoPage",
-                                        "listBoxValues" => [
-                                            [
-                                                "value" =>   0,
-                                                "caption" => '',
-                                            ],
-                                            [
-                                                "value" =>   1,
-                                                "caption" => 'invoiceAssistant.internalInfoPage',
-                                            ],
-                                            [
-                                                "value" =>   2,
-                                                "caption" => 'invoiceAssistant.externalInfoPage'
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                    ]*/
                 ],
                 "stepTwo" => [
                     "title" => "invoiceAssistant.stepTwoTitle",
                     "sections" => [
-/*                        [
-                            "title" => 'invoiceAssistant.nameTitle',
-                            "form" => [
-                                "name" => [
-                                    'type' => 'text',
-                                    'options' => [
-                                        'name' => 'invoiceAssistant.name',
-                                    ]
-                                ],
-                            ],
-                        ],
-                        [
-                            "title" => 'invoiceAssistant.descriptionTitle',
-                            "form" => [
-                                "name" => [
-                                    'type' => 'text',
-                                    'options' => [
-                                        'name' => 'invoiceAssistant.description',
-                                    ]
-                                ],
-                            ],
-                        ],*/
                         [
                             "title" => 'invoiceAssistant.infoPageTitle',
                             "form" => [
                                 "info_page_toggle" => [
                                     'type' => 'toggle',
                                     'options' => [
-                                        'name' => 'invoiceAssistant.infoPageCategoryInput',
+                                        'name' => 'invoiceAssistant.infoPageToggle',
                                     ]
                                 ],
                             ],
@@ -366,6 +219,8 @@ class InvoiceAssistant extends WizardProvider
                     "sections" => [
                         [
                             "title" => 'invoiceAssistant.showBankDataTitle',
+                            "description" => 'invoiceAssistant.showBankDataDescription',
+                            "showFullDescription" => true,
                             "form" => [
                                 "showBankData" => [
                                     'type' => 'checkbox',
@@ -381,6 +236,7 @@ class InvoiceAssistant extends WizardProvider
                             "form" => [
                                 "limit_toggle" => [
                                     'type' => 'toggle',
+                                    'defaultValue' => false,
                                     'options' => [
                                         'name' => 'invoiceAssistant.infoPageLimitInput',
                                     ]
@@ -389,7 +245,7 @@ class InvoiceAssistant extends WizardProvider
                         ],
                         [
                             "title" => 'invoiceAssistant.quorumOrders',
-                            "description" => '',
+                            "description" => 'invoiceAssistant.quorumOrdersDescription',
                             "condition" => "limit_toggle",
                             "form" => [
                                 "quorumOrders" => [
@@ -403,7 +259,7 @@ class InvoiceAssistant extends WizardProvider
                         ],
                         [
                             "title" => 'invoiceAssistant.minimumAmount',
-                            "description" => '',
+                            "description" => 'invoiceAssistant.minimumAmountDescription',
                             "condition" => "limit_toggle",
                             "form" => [
                                 "minimumAmount" => [
@@ -419,7 +275,7 @@ class InvoiceAssistant extends WizardProvider
                         [
                             "title" => 'invoiceAssistant.maximumAmount',
                             "condition" => "limit_toggle",
-                            "description" => '',
+                            "description" => 'invoiceAssistant.maximumAmountDescription',
                             "form" => [
                                 "maximumAmount" => [
                                     'type' => 'double',
@@ -438,6 +294,7 @@ class InvoiceAssistant extends WizardProvider
                                 "showDesignatedUse" => [
                                     'type' => 'toggle',
                                     'defaultValue' => true,
+                                    'description' => "test",
                                     'options' => [
                                         'name' => 'invoiceAssistant.showDesignatedUse'
                                     ]
