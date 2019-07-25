@@ -39,7 +39,7 @@ class AssistantDataSource extends BaseWizardDataSource
     private function getEntities()
     {
         $data = [];
-        $pids = $this->settingsService->getClients();
+        $pids = $this->settingsService->getInvoiceClients();
         foreach($pids as $pid)
         {
             $data[$pid]['config_name'] = $pid;
@@ -76,7 +76,7 @@ class AssistantDataSource extends BaseWizardDataSource
         //Must be passed otherwise the tiles have no data.
         $tileConfig = [];
 
-        $pids = $this->settingsService->getClients();
+        $pids = $this->settingsService->getInvoiceClients();
         foreach ($pids as $pid) {
             $tileConfig[$pid] =
                 [

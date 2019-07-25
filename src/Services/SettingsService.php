@@ -8,6 +8,7 @@
 
 namespace Invoice\Services;
 
+use Aws\CloudFront\Exception\Exception;
 use Plenty\Exceptions\ValidationException;
 use Plenty\Modules\Plugin\DataBase\Contracts\DataBase;
 use Plenty\Modules\Plugin\DataBase\Contracts\Query;
@@ -307,6 +308,39 @@ class SettingsService
         {
             if($record->storeIdentifier > 0)
                 $clients[] = $record->storeIdentifier;
+        }
+
+        return $clients;
+    }
+
+    /**
+     * Get available clients of the system
+     *
+     * @return array
+     */
+    public function getInvoiceClients()
+    {
+        /** @var WebstoreRepositoryContract $wsRepo */
+        $wsRepo = pluginApp(WebstoreRepositoryContract::class);
+
+        $clients    = array();
+
+        /** @var Webstore[] $result */
+        $result = $wsRepo->loadAll();
+
+        /** @var Webstore $record */
+        foreach($result as $record)
+        {
+            if($record->storeIdentifier > 0){
+                try{
+                    $settings = $this->loadClientSettings($record->storeIdentifier, null);
+                    $clients[] = $record->storeIdentifier;
+                }
+                catch(\Exception $e){
+
+                }
+            }
+
         }
 
         return $clients;
