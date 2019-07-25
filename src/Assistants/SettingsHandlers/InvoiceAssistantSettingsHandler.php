@@ -27,11 +27,17 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
     public function handle(array $parameter)
     {
         $data = $parameter['data'];
-        if (!$this->isValidUUIDv4($parameter['optionId'])) {
+        $webstoreId = $data['config_name'];
+/*        if (!$this->isValidUUIDv4($parameter['optionId'])) {
             $webstoreId = $parameter['optionId'];
         } else {
-            $webstoreId = $data['config_name'];
+            $webstoreId = $data['plentyId'];
+        }*/
+
+        if(!is_numeric($webstoreId) || $webstoreId <= 0){
+            $webstoreId = $this->getWebstore($webstoreId)->storeIdentifier;
         }
+
         $this->saveInvoiceSettings($webstoreId, $data);
         $this->createContainer($webstoreId, $data);
         return true;
@@ -43,8 +49,6 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
      */
     private function saveInvoiceSettings($webstoreId, $data)
     {
-        $webstore = $this->getWebstore($webstoreId);
-
         $settings = [
             'name' => $data['name'],
             'infoPageType' => $data['info_page_type'],
@@ -55,7 +59,7 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
             'description' => $data['description'],
             'designatedUse' => $data['designatedUse'],
             'showDesignatedUse' => $data['showDesignatedUse'],
-            'plentyId' => $webstore->storeIdentifier,
+            'plentyId' => $webstoreId,
             'showBankData' => $data['showBankData'],
             'invoiceEqualsShippingAddress' => $data['invoiceEqualsShippingAddress'],
             'disallowInvoiceForGuest' => (int) !$data['allowInvoiceForGuest'],
@@ -80,7 +84,7 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
         if ($this->webstore === null) {
             /** @var WebstoreRepositoryContract $webstoreRepository */
             $webstoreRepository = pluginApp(WebstoreRepositoryContract::class);
-            $this->webstore = $webstoreRepository->findById($webstoreId);
+            $this->webstore = $webstoreRepository->findByStoreIdentifier($webstoreId);
         }
 
         return $this->webstore;

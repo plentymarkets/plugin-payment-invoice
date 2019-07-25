@@ -1,7 +1,9 @@
 <?php
 namespace Invoice\Assistants;
 
+use Invoice\Assistants\DataSources\AssistantDataSource;
 use Invoice\Assistants\SettingsHandlers\InvoiceAssistantSettingsHandler;
+use Invoice\Services\SettingsService;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\Wizard\Services\WizardProvider;
@@ -9,6 +11,8 @@ use Plenty\Plugin\Application;
 
 class InvoiceAssistant extends WizardProvider
 {
+    /** @var SettingsService */
+    protected $settings;
     /**
      * @var string
      */
@@ -25,9 +29,11 @@ class InvoiceAssistant extends WizardProvider
     private $deliveryCountries;
 
     public function __construct(
-        WebstoreRepositoryContract $webstoreRepository
+        WebstoreRepositoryContract $webstoreRepository,
+        SettingsService $settings
     ) {
         $this->webstoreRepository = $webstoreRepository;
+        $this->settings = $settings;
     }
 
     protected function structure()
@@ -37,14 +43,18 @@ class InvoiceAssistant extends WizardProvider
             "shortDescription" => 'invoiceAssistant.assistantShortDescription',
             "iconPath" => $this->getIcon(),
             "settingsHandlerClass" => InvoiceAssistantSettingsHandler::class,
+            'dataSource' => AssistantDataSource::class,
             "translationNamespace" => "Invoice",
             "key" => "payment-invoice-assistant",
             "topics" => ["payment"],
             "priority" => 990,
             "options" => [
+                'data' => [
+                    'name'
+                ],
                 "config_name" => [
                     "type" => 'select',
-                    "defaultValue" => 0,
+                    'defaultValue' => $this->getMainWebstore(),
                     "options" => [
                         "name" => 'invoiceAssistant.storeName',
                         'required' => true,
@@ -338,13 +348,27 @@ class InvoiceAssistant extends WizardProvider
      */
     private function getIcon()
     {
-        $app = pluginApp(Application::class);
+        if( $this->settings->getSetting('logo') == 1)
+        {
+            return $this->settings->getSetting('logoUrl');
+        }
+        elseif($this->settings->getSetting('logo') == 2)
+        {
+            $app = pluginApp(Application::class);
+            $icon = $app->getUrlPath('invoice').'/images/icon.png';
 
-        if ($this->getLanguage() != 'de') {
-            return $app->getUrlPath('invoice').'/images/icon_en.png';
+            return $icon;
         }
 
-        return $app->getUrlPath('invoice').'/images/icon.png';
+    }
+
+    private function getMainWebstore(){
+        /** @var WebstoreRepositoryContract $webstoreRepository */
+        $webstoreRepository = pluginApp(WebstoreRepositoryContract::class);
+
+        $webstore = $webstoreRepository->findById(0);
+
+        return $webstore->storeIdentifier;
     }
 
     /**
