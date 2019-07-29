@@ -49,9 +49,6 @@ class InvoiceAssistant extends WizardProvider
             "topics" => ["payment"],
             "priority" => 990,
             "options" => [
-                'data' => [
-                    'name'
-                ],
                 "config_name" => [
                     "type" => 'select',
                     'defaultValue' => $this->getMainWebstore(),
@@ -348,18 +345,10 @@ class InvoiceAssistant extends WizardProvider
      */
     private function getIcon()
     {
-        if( $this->settings->getSetting('logo') == 1)
-        {
-            return $this->settings->getSetting('logoUrl');
-        }
-        elseif($this->settings->getSetting('logo') == 2)
-        {
-            $app = pluginApp(Application::class);
-            $icon = $app->getUrlPath('invoice').'/images/icon.png';
+        $app = pluginApp(Application::class);
+        $icon = $app->getUrlPath('invoice').'/images/icon.png';
 
-            return $icon;
-        }
-
+        return $icon;
     }
 
     private function getMainWebstore(){
@@ -381,7 +370,7 @@ class InvoiceAssistant extends WizardProvider
         foreach ($webstores as $webstore) {
             $values[] = [
                 "caption" => $webstore->name,
-                "value" => $webstore->id,
+                "value" => $webstore->storeIdentifier,
             ];
         }
 

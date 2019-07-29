@@ -21,6 +21,11 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
     private $ceresPlugin;
 
     /**
+     * @var Plugin
+     */
+    private $language;
+
+    /**
      * @param array $parameter
      * @return bool
      */
@@ -72,7 +77,24 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
         ];
         /** @var SettingsService $settingsService */
         $settingsService = pluginApp(SettingsService::class);
+        $getSettings = $settingsService->loadClientSettingsIfExist($webstoreId,$this->getLanguage());
+        if(!count($getSettings)){
+            $settingsService->updateClient($webstoreId);
+            //$settingsService->createInitialSettingsForPlentyId($webstoreId,$this->getLanguage());
+        }
         $settingsService->saveSettings($settings);
+    }
+
+    /**
+     * @return string
+     */
+    private function getLanguage()
+    {
+        if ($this->language === null) {
+            $this->language =  \Locale::getDefault();
+        }
+
+        return $this->language;
     }
 
     /**

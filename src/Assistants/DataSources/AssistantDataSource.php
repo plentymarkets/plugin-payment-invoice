@@ -40,19 +40,20 @@ class AssistantDataSource extends BaseWizardDataSource
     {
         $data = [];
         $pids = $this->settingsService->getInvoiceClients();
-        foreach($pids as $pid)
-        {
-            $data[$pid]['config_name'] = $pid;
-            $data[$pid] = $this->settingsService->getSettingsForPlentyId($pid,null);
-            if($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0){ //untoggle limits if set
-                $data[$pid]['limit_toggle'] = true;
-            }
+        foreach ($pids as $pid) {
+            $settings = $this->settingsService->loadClientSettingsIfExist($pid, null);
+            if (count($settings)) {
+                $data[$pid]['config_name'] = $pid;
+                $data[$pid] = $settings;
+                if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) { //untoggle limits if set
+                    $data[$pid]['limit_toggle'] = true;
+                }
 
-            if($data[$pid]['disallowInvoiceForGuest'] == 1){
-                $data[$pid]['allowInvoiceForGuest'] = 0;
-            }
-            elseif(empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0){
-                $data[$pid]['allowInvoiceForGuest'] = 1;
+                if ($data[$pid]['disallowInvoiceForGuest'] == 1) {
+                    $data[$pid]['allowInvoiceForGuest'] = 0;
+                } elseif (empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0) {
+                    $data[$pid]['allowInvoiceForGuest'] = 1;
+                }
             }
         }
         return $data;
@@ -80,7 +81,6 @@ class AssistantDataSource extends BaseWizardDataSource
         foreach ($pids as $pid) {
             $tileConfig[$pid] =
                 [
-                    'client' => $pid,
                     'config_name' => $pid
                 ];
         }
@@ -100,7 +100,7 @@ class AssistantDataSource extends BaseWizardDataSource
 
         // If this option already exists
         if($optionId > 0){
-        //if(array_key_exists($optionId, $entities)) {
+            //if(array_key_exists($optionId, $entities)) {
             $dataStructure['data'] = $entities[$optionId];
             $dataStructure['data']['config_name'] = $optionId;
         }
@@ -119,6 +119,16 @@ class AssistantDataSource extends BaseWizardDataSource
     public function createDataOption(array $data = [], string $optionId = 'default')
     {
         throw new \Exception('incorrect setting data');
+    }
+
+    /**
+     * @param string $optionId
+     *
+     * @throws \Exception
+     */
+    public function deleteDataOption(string $optionId)
+    {
+        $this->settingsService->deleteSettings($optionId);
     }
 
     /**
