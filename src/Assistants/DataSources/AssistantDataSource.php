@@ -43,6 +43,7 @@ class AssistantDataSource extends BaseWizardDataSource
         foreach ($pids as $pid) {
             $settings = $this->settingsService->loadClientSettingsIfExist($pid, null);
             if (count($settings)) {
+                $settings = $this->settingsService->getSettingsForPlentyId($pid, null);
                 $data[$pid]['config_name'] = $pid;
                 $data[$pid] = $settings;
                 if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) { //untoggle limits if set

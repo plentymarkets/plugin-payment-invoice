@@ -71,7 +71,6 @@ class InvoiceAssistant extends WizardProvider
                                     'type' => 'checkboxGroup',
                                     'defaultValue' => [],
                                     'options' => [
-                                        "required" => false,
                                         'name' => 'invoiceAssistant.shippingCountries',
                                         'checkboxValues' => $this->getCountriesListForm(),
                                     ],
@@ -128,7 +127,6 @@ class InvoiceAssistant extends WizardProvider
                                     'type' => 'select',
                                     'defaultValue' => '1',
                                     'options' => [
-                                        "required" => false,
                                         'name' => 'invoiceAssistant.infoPageTypeName',
                                         'listBoxValues' => [
                                             [
@@ -169,7 +167,6 @@ class InvoiceAssistant extends WizardProvider
                                     'type' => 'text',
                                     'defaultValue' => '',
                                     'options' => [
-                                        'required'=> false,
                                         'pattern'=> "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
                                         'name' => 'invoiceAssistant.infoPageNameExternal',
                                     ],
@@ -301,7 +298,6 @@ class InvoiceAssistant extends WizardProvider
                                 "showDesignatedUse" => [
                                     'type' => 'toggle',
                                     'defaultValue' => true,
-                                    'description' => "test",
                                     'options' => [
                                         'name' => 'invoiceAssistant.showDesignatedUse'
                                     ]
