@@ -33,12 +33,6 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
     {
         $data = $parameter['data'];
         $webstoreId = $data['config_name'];
-/*        if (!$this->isValidUUIDv4($parameter['optionId'])) {
-            $webstoreId = $parameter['optionId'];
-        } else {
-            $webstoreId = $data['plentyId'];
-        }*/
-
         if(!is_numeric($webstoreId) || $webstoreId <= 0){
             $webstoreId = $this->getWebstore($webstoreId)->storeIdentifier;
         }
@@ -80,7 +74,6 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
         $getSettings = $settingsService->loadClientSettingsIfExist($webstoreId,$this->getLanguage());
         if(!count($getSettings)){
             $settingsService->updateClient($webstoreId);
-            //$settingsService->createInitialSettingsForPlentyId($webstoreId,$this->getLanguage());
         }
         $settingsService->saveSettings($settings);
     }

@@ -202,6 +202,12 @@ class SettingsService
         return 0;
     }
 
+
+    /**
+     * Delete settings for one client
+     *
+     * @param integer $plentyId
+     */
     public function deleteSettings($plentyId) {
         $this->db->query(Settings::MODEL_NAMESPACE)
             ->where("plentyId",'=',$plentyId)->delete();
@@ -469,6 +475,10 @@ class SettingsService
 
     /**
      * Creates new settings for clients which are not in the DB but available in the system
+     *
+     * @param integer $plentyId
+     *
+     * @throws ValidationException
      */
     public function updateClient($plentyId)
     {

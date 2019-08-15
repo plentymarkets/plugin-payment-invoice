@@ -25,7 +25,6 @@ class AssistantDataSource extends BaseWizardDataSource
      */
     public function findData()
     {
-        //for WizardContainer ($wizardArray['isCompleted'] = $dataSource->findData()->data->default ? true : false;)
         /** @var WizardData $wizardData */
         $wizardData = pluginApp(WizardData::class);
         $wizardData->data = ['default' => false];
@@ -46,7 +45,7 @@ class AssistantDataSource extends BaseWizardDataSource
                 $settings = $this->settingsService->getSettingsForPlentyId($pid, null);
                 $data[$pid]['config_name'] = $pid;
                 $data[$pid] = $settings;
-                if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) { //untoggle limits if set
+                if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) {
                     $data[$pid]['limit_toggle'] = true;
                 }
 
@@ -101,7 +100,6 @@ class AssistantDataSource extends BaseWizardDataSource
 
         // If this option already exists
         if($optionId > 0){
-            //if(array_key_exists($optionId, $entities)) {
             $dataStructure['data'] = $entities[$optionId];
             $dataStructure['data']['config_name'] = $optionId;
         }
