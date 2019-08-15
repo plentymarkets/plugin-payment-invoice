@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.0 (2019-08-15)
+
+### Hinweis 
+- Die Einstellungen für das Kauf auf Rechnung-Plugin wurden in einen Assistenten überführt und sind nun unter **System » Assistenten » Payment** zu finden.
+
 ## 1.3.4 (2019-03-22)
 
 ### Geändert
