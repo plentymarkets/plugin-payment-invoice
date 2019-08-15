@@ -17,6 +17,10 @@ Stellen Sie zudem sicher, dass die Zahlungsart unter dem Punkt **Erlaubte Zahlun
 3. Schließen Sie den Assistenten vollständig ab.
 → Die Zahlungsart **Rechnung** ist in Ihrem Webshop verfügbar.
 
+## Sprachelemente anpassen
+
+Sie können Benennungen, die das Kauf auf Rechnung-Plugin mitbringt im Menü **CMS » Mehrsprachigkeit** nach Ihren Bedürfnissen in allen verfügbaren Systemsprachen anpassen. Gehen Sie dazu wie im Folgenden beschrieben vor.
+
 ##### Sprachdateien anpassen
 
 1. Öffnen Sie das Menü **CMS » Mehrsprachigkeit**.
