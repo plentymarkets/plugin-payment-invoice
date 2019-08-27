@@ -160,7 +160,7 @@ class InvoiceAssistant extends WizardProvider
                                 "internal_info_page" => [
                                     "type" => 'category',
                                     'defaultValue' => '',
-                                    'isVisible' => "info_page_toggle == true && info_page_type == 1",
+                                    'isVisible' => "info_page_toggle && info_page_type == 1",
                                     "displaySearch" => true,
                                     "options" => [
                                         "name" => "invoiceAssistant.infoPageNameInternal"
