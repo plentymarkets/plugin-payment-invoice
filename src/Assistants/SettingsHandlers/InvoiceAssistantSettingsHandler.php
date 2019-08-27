@@ -49,32 +49,28 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
     private function saveInvoiceSettings($webstoreId, $data)
     {
         $settings = [
-            'name' => $data['name'],
-            'infoPageType' => $data['info_page_type'],
-            'infoPageIntern' => $data['internal_info_page'],
-            'infoPageExtern' => $data['external_info_page'],
-            'logo' => $data['logo_type_external'],
-            'logoUrl' => $data['logo_url'],
-            'description' => $data['description'],
-            'designatedUse' => $data['designatedUse'],
-            'showDesignatedUse' => $data['showDesignatedUse'],
+            'name' => $data['name'] ?? '',
+            'infoPageType' => $data['info_page_type'] ?? 0,
+            'infoPageIntern' => $data['internal_info_page'] ?? '',
+            'infoPageExtern' => $data['external_info_page'] ?? '',
+            'logo' => $data['logo_type_external'] ?? 0,
+            'logoUrl' => $data['logo_url'] ?? '',
+            'description' => $data['description'] ?? '',
+            'designatedUse' => $data['designatedUse'] ?? '',
+            'showDesignatedUse' => $data['showDesignatedUse'] ?? 0,
             'plentyId' => $webstoreId,
-            'showBankData' => $data['showBankData'],
-            'invoiceEqualsShippingAddress' => $data['invoiceEqualsShippingAddress'],
-            'disallowInvoiceForGuest' => (int) !$data['allowInvoiceForGuest'],
-            'quorumOrders' => $data['limit_toggle'] ? $data['quorumOrders'] : 0,
-            'minimumAmount' => $data['limit_toggle'] ? $data['minimumAmount'] : 0,
-            'maximumAmount' => $data['limit_toggle'] ? $data['maximumAmount'] : 0,
-            'shippingCountries' => $data['shippingCountries'],
+            'showBankData' => $data['showBankData'] ?? '',
+            'invoiceEqualsShippingAddress' => $data['invoiceEqualsShippingAddress'] ?? '',
+            'disallowInvoiceForGuest' => isset($data['allowInvoiceForGuest']) ? (int) !$data['allowInvoiceForGuest'] : 0,
+            'quorumOrders' => isset($data['limit_toggle']) && $data['limit_toggle'] && isset($data['quorumOrders']) ? $data['quorumOrders'] : 0,
+            'minimumAmount' => isset($data['limit_toggle']) && $data['limit_toggle'] && isset($data['minimumAmount']) ? $data['minimumAmount'] : 0,
+            'maximumAmount' => isset($data['limit_toggle']) && $data['limit_toggle'] && isset($data['maximumAmount']) ? $data['maximumAmount'] : 0,
+            'shippingCountries' => $data['shippingCountries'] ?? [],
             'feeDomestic' => 0.00,
             'feeForeign' => 0.00
         ];
         /** @var SettingsService $settingsService */
         $settingsService = pluginApp(SettingsService::class);
-        $getSettings = $settingsService->loadClientSettingsIfExist($webstoreId,$this->getLanguage());
-        if(!count($getSettings)){
-            $settingsService->updateClient($webstoreId);
-        }
         $settingsService->saveSettings($settings);
     }
 

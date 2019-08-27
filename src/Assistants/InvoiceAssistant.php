@@ -24,6 +24,16 @@ class InvoiceAssistant extends WizardProvider
     private $webstoreRepository;
 
     /**
+     * @var Webstore
+     */
+    private $mainWebstore;
+
+    /**
+     * @var Array
+     */
+    private $webstoreValues;
+
+    /**
      * @var array
      */
     private $deliveryCountries;
@@ -348,12 +358,13 @@ class InvoiceAssistant extends WizardProvider
     }
 
     private function getMainWebstore(){
-        /** @var WebstoreRepositoryContract $webstoreRepository */
-        $webstoreRepository = pluginApp(WebstoreRepositoryContract::class);
+        if($this->mainWebstore === null) {
+            /** @var WebstoreRepositoryContract $webstoreRepository */
+            $webstoreRepository = pluginApp(WebstoreRepositoryContract::class);
 
-        $webstore = $webstoreRepository->findById(0);
-
-        return $webstore->storeIdentifier;
+            $this->mainWebstore = $webstoreRepository->findById(0)->storeIdentifier;
+        }
+        return $this->mainWebstore;
     }
 
     /**
@@ -361,20 +372,23 @@ class InvoiceAssistant extends WizardProvider
      */
     private function getWebstoreListForm()
     {
-        $webstores = $this->webstoreRepository->loadAll();
-        /** @var Webstore $webstore */
-        foreach ($webstores as $webstore) {
-            $values[] = [
-                "caption" => $webstore->name,
-                "value" => $webstore->storeIdentifier,
-            ];
+        if($this->webstoreValues === null)
+        {
+            $webstores = $this->webstoreRepository->loadAll();
+            /** @var Webstore $webstore */
+            foreach ($webstores as $webstore) {
+                $this->webstoreValues[] = [
+                    "caption" => $webstore->name,
+                    "value" => $webstore->storeIdentifier,
+                ];
+            }
+
+            usort($this->webstoreValues, function ($a, $b) {
+                return ($a['value'] <=> $b['value']);
+            });
         }
 
-        usort($values, function ($a, $b) {
-            return ($a['value'] <=> $b['value']);
-        });
-
-        return $values;
+        return $this->webstoreValues;
     }
 
     /**

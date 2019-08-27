@@ -126,16 +126,15 @@ class SettingsService
         $lang   = $data['lang'];
         unset( $data['lang']);
         unset( $data['plentyId']);
-
         if(count($data) > 0 && !empty($pid))
         {
             $settingsToSave = $this->convertSettingsToCorrectFormat($data, Settings::AVAILABLE_SETTINGS);
 
             /** @var Settings[] $settings */
-            $settings = $this->loadClientSettings($pid, $lang);
-
-            if(empty($settings)){
-                $this->createInitialSettingsForPlentyId($pid, $lang);
+            try {
+                $settings = $this->loadClientSettings($pid, $lang);
+            } catch (\Exception $e) {
+                $this->updateClient($pid);
                 $settings = $this->loadClientSettings($pid, $lang);
             }
 
@@ -349,8 +348,8 @@ class SettingsService
         /** @var Webstore $record */
         foreach ($result as $record) {
             if ($record->storeIdentifier > 0) {
-                $settings = $this->loadClientSettingsIfExist($record->storeIdentifier, null);
-                if (count($settings)) {
+                $settings = $this->clientSettingsExist($record->storeIdentifier, null);
+                if ($settings) {
                     $clients[] = $record->storeIdentifier;
                 }
             }
@@ -400,7 +399,7 @@ class SettingsService
         /** @var Settings[] $clientSettings */
         $clientSettings = $query->get();
 
-        if( !count($clientSettings) > 0)
+        if(!count($clientSettings))
         {
             $clientSettings = $query->get();
         }
@@ -414,16 +413,15 @@ class SettingsService
     }
 
     /**
-     * Load settings for specified system clients by plentyId and language if exist
+     * Check if settings exist for plentyId and language
      *
      * @param $plentyId
      * @param $lang
      *
-     * @return Settings[]
+     * @return boolean
      */
-    public function loadClientSettingsIfExist($plentyId, $lang)
+    public function clientSettingsExist($plentyId, $lang)
     {
-
         /** @var Query $query */
         $query = $this->db->query(Settings::MODEL_NAMESPACE);
         $query->where('plentyId', '=', $plentyId);
@@ -435,13 +433,7 @@ class SettingsService
 
         /** @var Settings[] $clientSettings */
         $clientSettings = $query->get();
-
-        if( !count($clientSettings) > 0)
-        {
-            $clientSettings = $query->get();
-        }
-
-        return $clientSettings;
+        return count($clientSettings) > 0;
     }
 
     /**
