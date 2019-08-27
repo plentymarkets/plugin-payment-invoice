@@ -34,7 +34,7 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
         $data = $parameter['data'];
         $webstoreId = $data['config_name'];
         if(!is_numeric($webstoreId) || $webstoreId <= 0){
-            $webstoreId = $this->getWebstore($webstoreId)->storeIdentifier;
+            $webstoreId = $this->getWebstore($parameter['optionId'])->storeIdentifier;
         }
 
         $this->saveInvoiceSettings($webstoreId, $data);
