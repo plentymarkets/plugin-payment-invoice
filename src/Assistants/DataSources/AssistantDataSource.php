@@ -3,6 +3,8 @@
 namespace Invoice\Assistants\DataSources;
 
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Plugin\Contracts\PluginLayoutContainerRepositoryContract;
+use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\Wizard\Models\WizardData;
 use Plenty\Modules\Wizard\Services\DataSources\BaseWizardDataSource;
 
@@ -49,15 +51,38 @@ class AssistantDataSource extends BaseWizardDataSource
                 if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) {
                     $data[$pid]['limit_toggle'] = true;
                 }
-
                 if ($data[$pid]['disallowInvoiceForGuest'] == 1) {
                     $data[$pid]['allowInvoiceForGuest'] = 0;
                 } elseif (empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0) {
                     $data[$pid]['allowInvoiceForGuest'] = 1;
                 }
+                $data[$pid]['logo_url'] = $data[$pid]['logoUrl'];
+                $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 0;
+                $data[$pid]['invoicePaymentMethodIcon'] = $this->logoInFooter($pid); //Containerverknüpfung
+
+                $data[$pid]['info_page_toggle'] = $data[$pid]['infoPageType'] > 0;
+                $data[$pid]['info_page_type'] = $data[$pid]['infoPageType'] == 2 ? 2 : 1;
+                $data[$pid]['external_info_page'] = $data[$pid]['infoPageExtern'];
+                $data[$pid]['internal_info_page'] = $data[$pid]['infoPageIntern'];
             }
         }
         return $data;
+    }
+    /**
+     * @param int $plentyId
+     * @return boolean
+     */
+    private function logoInFooter($plentyId)
+    {
+        /** @var WebstoreRepositoryContract $webstoreRepo */
+        $webstoreRepo = pluginApp(WebstoreRepositoryContract::class);
+        /** Webstore $webstore **/
+        $webstore = $webstoreRepo->findByPlentyId($plentyId);
+
+        /** @var PluginLayoutContainerRepositoryContract $pluginLayoutContainerRepo */
+        $pluginLayoutContainerRepo = pluginApp(PluginLayoutContainerRepositoryContract::class);
+        $containers = $pluginLayoutContainerRepo->getActiveLinkedLayoutContainersByPluginSetId([], ['Invoice\Providers\Icon\IconProvider'],$webstore->pluginSetId);
+        return true;
     }
 
     /**

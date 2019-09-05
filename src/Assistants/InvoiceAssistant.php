@@ -209,7 +209,10 @@ class InvoiceAssistant extends WizardProvider
                                 "logo_url" => [
                                     'type' => 'file',
                                     'defaultValue' => '',
-                                    'showPreview' => true
+                                    'showPreview' => true,
+                                    'options' => [
+                                        'name' => 'invoiceAssistant.logoURLTypeName'
+                                    ]
                                 ],
                             ],
                         ],
