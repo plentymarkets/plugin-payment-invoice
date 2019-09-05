@@ -57,9 +57,8 @@ class AssistantDataSource extends BaseWizardDataSource
                     $data[$pid]['allowInvoiceForGuest'] = 1;
                 }
                 $data[$pid]['logo_url'] = $data[$pid]['logoUrl'];
-                $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 0;
-                $data[$pid]['invoicePaymentMethodIcon'] = $this->logoInFooter($pid); //Containerverknüpfung
-
+                $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 1;
+                $data[$pid]['invoicePaymentMethodIcon'] = $this->logoInFooter($pid);
                 $data[$pid]['info_page_toggle'] = $data[$pid]['infoPageType'] > 0;
                 $data[$pid]['info_page_type'] = $data[$pid]['infoPageType'] == 2 ? 2 : 1;
                 $data[$pid]['external_info_page'] = $data[$pid]['infoPageExtern'];
@@ -69,6 +68,8 @@ class AssistantDataSource extends BaseWizardDataSource
         return $data;
     }
     /**
+     * Checks if the container link for the icon is set
+     *
      * @param int $plentyId
      * @return boolean
      */
@@ -78,11 +79,10 @@ class AssistantDataSource extends BaseWizardDataSource
         $webstoreRepo = pluginApp(WebstoreRepositoryContract::class);
         /** Webstore $webstore **/
         $webstore = $webstoreRepo->findByPlentyId($plentyId);
-
         /** @var PluginLayoutContainerRepositoryContract $pluginLayoutContainerRepo */
         $pluginLayoutContainerRepo = pluginApp(PluginLayoutContainerRepositoryContract::class);
-        $containers = $pluginLayoutContainerRepo->getActiveLinkedLayoutContainersByPluginSetId([], ['Invoice\Providers\Icon\IconProvider'],$webstore->pluginSetId);
-        return true;
+        $containers = $pluginLayoutContainerRepo->all($webstore->pluginSetId);
+        return $containers->pluck('dataProviderKey')->contains('Invoice\Providers\Icon\IconProvider');
     }
 
     /**
