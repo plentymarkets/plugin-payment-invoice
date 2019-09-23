@@ -135,17 +135,17 @@ class InvoiceAssistant extends WizardProvider
                             "form" => [
                                 "info_page_type" => [
                                     'type' => 'select',
-                                    'defaultValue' => '1',
+                                    'defaultValue' => 1,
                                     'options' => [
                                         'name' => 'invoiceAssistant.infoPageTypeName',
                                         'listBoxValues' => [
                                             [
                                                 "caption" => 'invoiceAssistant.infoPageInternal',
-                                                "value" => '1',
+                                                "value" => 1,
                                             ],
                                             [
                                                 "caption" => 'invoiceAssistant.infoPageExternal',
-                                                "value" => '2',
+                                                "value" => 2,
                                             ],
                                         ],
                                     ],
