@@ -50,9 +50,9 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
     {
         $settings = [
             'name' => $data['name'] ?? '',
-            'infoPageType' => $data['info_page_type'] ?? 0,
-            'infoPageIntern' => $data['internal_info_page'] ?? '',
-            'infoPageExtern' => $data['external_info_page'] ?? '',
+            'infoPageType' => $data['info_page_toggle'] ? ($data['info_page_type'] ?? 0) : 0,
+            'infoPageIntern' => $data['info_page_toggle'] ? ($data['internal_info_page'] ?? '') : '',
+            'infoPageExtern' => $data['info_page_toggle'] ? ($data['external_info_page'] ?? '') : '',
             'logo' => $data['logo_type_external'] ?? 0,
             'logoUrl' => $data['logo_url'] ?? '',
             'description' => $data['description'] ?? '',
