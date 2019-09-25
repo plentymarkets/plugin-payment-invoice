@@ -12,7 +12,7 @@ Stellen Sie zudem sicher, dass die Zahlungsart unter dem Punkt **Erlaubte Zahlun
 
 ##### Zahlungsart einrichten:
 
-1. Öffnen Sie das Menü **System&nbsp;» Assistenten**.
+1. Öffnen Sie das Menü **Einrichtung&nbsp;» Assistenten**.
 2. Wählen Sie den Assistenten **Kauf auf Rechnung**.
 3. Schließen Sie den Assistenten vollständig ab.
 → Die Zahlungsart **Rechnung** ist in Ihrem Webshop verfügbar.

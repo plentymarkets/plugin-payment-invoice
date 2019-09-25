@@ -12,7 +12,7 @@ In addition, make sure that the payment method is included among the Permitted p
 
 ##### Setting up a payment method:
 
-1. Go to **System&nbsp;» Assistants**.
+1. Go to **Setup&nbsp;» Assistants**.
 2. Select the assistant **Invoice**.
 3. Complete the setup assistant completely.
 → The payment method **Invoice** is available in your online store.
