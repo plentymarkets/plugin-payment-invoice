@@ -162,17 +162,19 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
             $containerListEntries = [];
 
             // Default entries
-            $containerListEntries[] = $this->createContainerDataListEntry(
-                $webstoreId,
-                'Ceres::MyAccount.OrderHistoryPaymentInformation',
-                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-            );
+            if(isset($data['showBankData']) && $data['showBankData']){
+                $containerListEntries[] = $this->createContainerDataListEntry(
+                    $webstoreId,
+                    'Ceres::MyAccount.OrderHistoryPaymentInformation',
+                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
+                );
 
-            $containerListEntries[] = $this->createContainerDataListEntry(
-                $webstoreId,
-                'Ceres::OrderConfirmation.AdditionalPaymentInformation',
-                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-            );
+                $containerListEntries[] = $this->createContainerDataListEntry(
+                    $webstoreId,
+                    'Ceres::OrderConfirmation.AdditionalPaymentInformation',
+                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
+                );
+            }
 
             if (isset($data['invoicePaymentMethodIcon']) && $data['invoicePaymentMethodIcon']) {
                 $containerListEntries[] = $this->createContainerDataListEntry(
