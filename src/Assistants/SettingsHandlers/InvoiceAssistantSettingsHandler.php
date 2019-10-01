@@ -59,7 +59,7 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
             'designatedUse' => $data['designatedUse'] ?? '',
             'showDesignatedUse' => $data['showDesignatedUse'] ?? 0,
             'plentyId' => $webstoreId,
-            'showBankData' => $data['showBankData'] ?? '',
+            'showBankData' => $data['showBankData'] ?? 0,
             'invoiceEqualsShippingAddress' => $data['invoiceEqualsShippingAddress'] ?? '',
             'disallowInvoiceForGuest' => isset($data['allowInvoiceForGuest']) ? (int) !$data['allowInvoiceForGuest'] : 0,
             'quorumOrders' => isset($data['limit_toggle']) && $data['limit_toggle'] && isset($data['quorumOrders']) ? $data['quorumOrders'] : 0,
@@ -162,19 +162,17 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
             $containerListEntries = [];
 
             // Default entries
-            if(isset($data['showBankData']) && $data['showBankData']){
-                $containerListEntries[] = $this->createContainerDataListEntry(
-                    $webstoreId,
-                    'Ceres::MyAccount.OrderHistoryPaymentInformation',
-                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-                );
+            $containerListEntries[] = $this->createContainerDataListEntry(
+                $webstoreId,
+                'Ceres::MyAccount.OrderHistoryPaymentInformation',
+                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
+            );
 
-                $containerListEntries[] = $this->createContainerDataListEntry(
-                    $webstoreId,
-                    'Ceres::OrderConfirmation.AdditionalPaymentInformation',
-                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-                );
-            }
+            $containerListEntries[] = $this->createContainerDataListEntry(
+                $webstoreId,
+                'Ceres::OrderConfirmation.AdditionalPaymentInformation',
+                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
+            );
 
             if (isset($data['invoicePaymentMethodIcon']) && $data['invoicePaymentMethodIcon']) {
                 $containerListEntries[] = $this->createContainerDataListEntry(
