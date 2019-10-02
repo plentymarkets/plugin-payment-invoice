@@ -378,6 +378,7 @@ class InvoiceAssistant extends WizardProvider
         if($this->webstoreValues === null)
         {
             $webstores = $this->webstoreRepository->loadAll();
+            $this->webstoreValues = [];
             /** @var Webstore $webstore */
             foreach ($webstores as $webstore) {
                 $this->webstoreValues[] = [

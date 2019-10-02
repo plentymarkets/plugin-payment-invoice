@@ -389,11 +389,7 @@ class SettingsService
 
         /** @var Query $query */
         $query = $this->db->query(Settings::MODEL_NAMESPACE);
-        $query->where('plentyId', '=', $plentyId);
-        if(!empty($lang))
-        {
-            $query->where('lang', '=', $lang);
-        }
+        $query->where('plentyId', '=', $plentyId)->where('lang', '=', $lang);
         $query->orWhere('lang',   '=', '')->where('plentyId', '=', $plentyId);
 
         /** @var Settings[] $clientSettings */
