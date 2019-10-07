@@ -348,7 +348,7 @@ class SettingsService
         /** @var Webstore $record */
         foreach ($result as $record) {
             if ($record->storeIdentifier > 0) {
-                $settings = $this->clientSettingsExist($record->storeIdentifier, null);
+                $settings = $this->clientSettingsExist($record->storeIdentifier);
                 if ($settings) {
                     $clients[] = $record->storeIdentifier;
                 }
@@ -409,14 +409,13 @@ class SettingsService
     }
 
     /**
-     * Check if settings exist for plentyId and language
+     * Check if settings exist for plentyId
      *
      * @param $plentyId
-     * @param $lang
      *
      * @return boolean
      */
-    public function clientSettingsExist($plentyId, $lang)
+    public function clientSettingsExist($plentyId)
     {
         /** @var Query $query */
         $query = $this->db->query(Settings::MODEL_NAMESPACE);
