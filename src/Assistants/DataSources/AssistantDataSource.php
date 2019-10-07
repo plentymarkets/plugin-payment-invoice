@@ -50,12 +50,7 @@ class AssistantDataSource extends BaseWizardDataSource
                 if ($data[$pid]['quorumOrders'] > 0 || $data[$pid]['minimumAmount'] > 0 || $data[$pid]['maximumAmount'] > 0) {
                     $data[$pid]['limit_toggle'] = true;
                 }
-                if ($data[$pid]['disallowInvoiceForGuest'] == 1) {
-                    $data[$pid]['allowInvoiceForGuest'] = false;
-                }
-                elseif (empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0) {
-                    $data[$pid]['allowInvoiceForGuest'] = true;
-                }
+                $data[$pid]['allowInvoiceForGuest'] = $data[$pid]['disallowInvoiceForGuest'] == 1 ? false : true;
                 $data[$pid]['logo_url'] = $data[$pid]['logoUrl'];
                 $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 0;
                 $data[$pid]['invoicePaymentMethodIcon'] = $this->logoInFooter($pid);
