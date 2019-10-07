@@ -51,9 +51,10 @@ class AssistantDataSource extends BaseWizardDataSource
                     $data[$pid]['limit_toggle'] = true;
                 }
                 if ($data[$pid]['disallowInvoiceForGuest'] == 1) {
-                    $data[$pid]['allowInvoiceForGuest'] = 0;
-                } elseif (empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0) {
-                    $data[$pid]['allowInvoiceForGuest'] = 1;
+                    $data[$pid]['allowInvoiceForGuest'] = false;
+                }
+                elseif (empty($data[$pid]['allowInvoiceForGuest']) || $data[$pid]['allowInvoiceForGuest'] == 0) {
+                    $data[$pid]['allowInvoiceForGuest'] = true;
                 }
                 $data[$pid]['logo_url'] = $data[$pid]['logoUrl'];
                 $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 0;
