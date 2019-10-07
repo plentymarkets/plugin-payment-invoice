@@ -5,6 +5,9 @@
 ### Hinweis 
 - Die Einstellungen für das Kauf auf Rechnung-Plugin wurden in einen Assistenten überführt und sind nun unter **System » Assistenten » Payment** zu finden.
 
+### Geändert
+- Die Beschreibung der Zahlungsart wird nun auch über **CMS » Mehrsprachigkeit** gepflegt.
+
 ## 1.3.4 (2019-03-22)
 
 ### Geändert

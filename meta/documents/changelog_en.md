@@ -5,6 +5,9 @@
 ### Note 
 - The settings for the Invoice plugin have been transferred to an assistant in the **System » Assistants » Payment** menu.
 
+### Changed
+- The description of the payment method is now also maintained via **CMS » Multilingualism**.
+
 ## 1.3.4 (2019-03-22)
 
 ### Changed
