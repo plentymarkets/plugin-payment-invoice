@@ -67,7 +67,8 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
             'maximumAmount' => isset($data['limit_toggle']) && $data['limit_toggle'] && isset($data['maximumAmount']) ? $data['maximumAmount'] : 0,
             'shippingCountries' => $data['shippingCountries'] ?? [],
             'feeDomestic' => 0.00,
-            'feeForeign' => 0.00
+            'feeForeign' => 0.00,
+            'lang' => $this->getLanguage()
         ];
         /** @var SettingsService $settingsService */
         $settingsService = pluginApp(SettingsService::class);

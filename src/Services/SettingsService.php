@@ -400,7 +400,7 @@ class SettingsService
             $clientSettings = $query->get();
         }
 
-        if(!count($clientSettings) > 0)
+        if(!count($clientSettings))
         {
             throw new ValidationException('Error loading Settings');
         }
