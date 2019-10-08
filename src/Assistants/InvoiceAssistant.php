@@ -222,7 +222,7 @@ class InvoiceAssistant extends WizardProvider
                             "form" => [
                                 "invoicePaymentMethodIcon" => [
                                     'type' => 'checkbox',
-                                    'defaultValue' => 'false',
+                                    'defaultValue' => false,
                                     'options' => [
                                         'name' => 'invoiceAssistant.assistantPaymentMethodIconCheckbox'
                                     ]
