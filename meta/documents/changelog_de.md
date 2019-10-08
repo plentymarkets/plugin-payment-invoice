@@ -3,7 +3,7 @@
 ## 2.0.0 (2019-08-15)
 
 ### Hinweis 
-- Die Einstellungen für das Kauf auf Rechnung-Plugin wurden in einen Assistenten überführt und sind nun unter **System » Assistenten » Payment** zu finden.
+- Die Einstellungen für das Kauf auf Rechnung-Plugin wurden in einen Assistenten überführt und sind nun unter **Einrichtung » Assistenten » Payment** zu finden.
 
 ### Geändert
 - Die Beschreibung der Zahlungsart wird nun auch über **CMS » Mehrsprachigkeit** gepflegt.
