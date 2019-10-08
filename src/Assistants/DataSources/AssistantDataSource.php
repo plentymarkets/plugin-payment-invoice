@@ -52,7 +52,7 @@ class AssistantDataSource extends BaseWizardDataSource
                 }
                 $data[$pid]['allowInvoiceForGuest'] = $data[$pid]['disallowInvoiceForGuest'] == 1 ? false : true;
                 $data[$pid]['logo_url'] = $data[$pid]['logoUrl'];
-                $data[$pid]['logo_type_external'] = $data[$pid]['logo'] > 0;
+                $data[$pid]['logo_type_external'] = $data[$pid]['logo'] == 1;
                 $data[$pid]['invoicePaymentMethodIcon'] = $this->logoInFooter($pid);
                 $data[$pid]['info_page_toggle'] = $data[$pid]['infoPageType'] > 0;
                 $data[$pid]['info_page_type'] = $data[$pid]['infoPageType'] == 2 ? 2 : 1;
