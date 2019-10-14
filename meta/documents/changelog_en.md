@@ -1,6 +1,6 @@
 # Release Notes for Invoice
 
-## 2.0.0 (2019-08-15)
+## 2.0.0 (2019-10-14)
  
 ### Note 
 - The settings for the Invoice plugin have been transferred to an assistant in the **Setup » Assistants » Payment** menu.
