@@ -17,6 +17,9 @@ use Plenty\Modules\Basket\Events\BasketItem\AfterBasketItemAdd;
 use Plenty\Modules\Basket\Events\Basket\AfterBasketCreate;
 use Plenty\Plugin\Templates\Twig;
 
+use Plenty\Modules\Wizard\Contracts\WizardContainerContract;
+use Invoice\Assistants\InvoiceAssistant;
+
 /**
  * Class InvoiceServiceProvider
  * @package Invoice\Providers
@@ -41,7 +44,7 @@ use Plenty\Plugin\Templates\Twig;
                             PaymentMethodContainer $payContainer,
                             Dispatcher $eventDispatcher)
      {
-
+         pluginApp(WizardContainerContract::class)->register('payment-invoice-assistant', InvoiceAssistant::class);
          $twig->addExtension(InvoiceTwigServiceProvider::class);
 
          // Register the Invoice payment method in the payment method container

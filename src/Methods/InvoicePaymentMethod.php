@@ -17,6 +17,7 @@ use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
+use Plenty\Plugin\Translation\Translator;
 
 /**
  * Class InvoicePaymentMethod
@@ -149,12 +150,9 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function getName($lang = 'de')
     {
-        $name = $this->settings->getSetting('name', $lang);
-        if(!strlen($name) > 0)
-        {
-            return 'Kauf auf Rechnung';
-        }
-        return $name;
+        /** @var Translator $translator */
+        $translator = pluginApp(Translator::class);
+        return $translator->trans('Invoice::PaymentMethod.paymentMethodName',[],$lang);
     }
 
     /**
@@ -243,7 +241,9 @@ class InvoicePaymentMethod extends PaymentMethodService
         /** @var FrontendSessionStorageFactoryContract $session */
         $session = pluginApp(FrontendSessionStorageFactoryContract::class);
         $lang = $session->getLocaleSettings()->language;
-        return $this->settings->getSetting('description', $lang);
+        /** @var Translator $translator */
+        $translator = pluginApp(Translator::class);
+        return $translator->trans('Invoice::PaymentMethod.paymentMethodDescription',[],$lang);
     }
 
     /**
