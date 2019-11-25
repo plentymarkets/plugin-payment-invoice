@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.1 (2019-11-28)
+
+### Fixed
+- The minimum and maximum amount is now displayed correctly in the system currency instead of a flat rate of "Euro".
+
 ## 2.0.0 (2019-11-18)
  
 ### Note 

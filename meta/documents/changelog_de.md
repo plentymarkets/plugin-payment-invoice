@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.1 (2019-11-28)
+
+### Gefixt
+- Der Mindest- und Maximalbetrag wird nun korrekt in der Systemwährung angezeigt statt pauschal "Euro" zu nehmen.
+
 ## 2.0.0 (2019-11-18)
 
 ### Hinweis 
