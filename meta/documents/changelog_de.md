@@ -4,6 +4,7 @@
 
 ### Gefixt
 - Der Mindest- und Maximalbetrag wird nun korrekt in der Systemwährung angezeigt statt pauschal "Euro" zu nehmen.
+- Der Mindest- und Maximalbetrag wird nun korrekt in die Warenkorbwährung umgerechnet, bevor dieser mit dem Bestellwert verglichen wird. 
 
 ## 2.0.0 (2019-11-18)
 
