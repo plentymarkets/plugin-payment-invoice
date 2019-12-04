@@ -5,9 +5,12 @@ use Invoice\Assistants\DataSources\AssistantDataSource;
 use Invoice\Assistants\SettingsHandlers\InvoiceAssistantSettingsHandler;
 use Invoice\Services\SettingsService;
 use Plenty\Modules\Order\Shipping\Countries\Contracts\CountryRepositoryContract;
+use Plenty\Modules\System\Contracts\SystemInformationRepositoryContract;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
+use Plenty\Modules\System\Models\Webstore;
 use Plenty\Modules\Wizard\Services\WizardProvider;
 use Plenty\Plugin\Application;
+use Plenty\Plugin\Translation\Translator;
 
 class InvoiceAssistant extends WizardProvider
 {
@@ -29,7 +32,7 @@ class InvoiceAssistant extends WizardProvider
     private $mainWebstore;
 
     /**
-     * @var Array
+     * @var array
      */
     private $webstoreValues;
 
@@ -38,16 +41,43 @@ class InvoiceAssistant extends WizardProvider
      */
     private $deliveryCountries;
 
+    /**
+     * The translator instance to translate messages with placeholder.
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * The system information repository needed to detect the system currency.
+     * @var SystemInformationRepositoryContract
+     */
+    private $systemRepo;
+
+    /**
+     * InvoiceAssistant constructor.
+     * 
+     * @param SystemInformationRepositoryContract $systemRepo
+     * @param WebstoreRepositoryContract $webstoreRepository
+     * @param SettingsService $settings
+     * @param Translator $translator
+     */
     public function __construct(
+        SystemInformationRepositoryContract $systemRepo,
         WebstoreRepositoryContract $webstoreRepository,
-        SettingsService $settings
+        SettingsService $settings,
+        Translator $translator
     ) {
+        $this->systemRepo = $systemRepo;
         $this->webstoreRepository = $webstoreRepository;
         $this->settings = $settings;
+        $this->translator = $translator;
     }
 
     protected function structure()
     {
+        $systemCurrency = $this->systemRepo->loadValue('systemCurrency');
+        $transMin = $this->translator->trans('Invoice::invoiceAssistant.minimumAmount', ['CURRENCY' => $systemCurrency], $this->getLanguage());
+        $transMax = $this->translator->trans('Invoice::invoiceAssistant.maximumAmount', ['CURRENCY' => $systemCurrency], $this->getLanguage());
         return [
             "title" => 'invoiceAssistant.assistantTitle',
             "shortDescription" => 'invoiceAssistant.assistantShortDescription',
@@ -275,7 +305,7 @@ class InvoiceAssistant extends WizardProvider
                             ],
                         ],
                         [
-                            "title" => 'invoiceAssistant.minimumAmount',
+                            "title" => $transMin,
                             "description" => 'invoiceAssistant.minimumAmountDescription',
                             "condition" => "limit_toggle",
                             "form" => [
@@ -284,13 +314,13 @@ class InvoiceAssistant extends WizardProvider
                                     'isPriceInput' => true,
                                     'defaultValue' => 0,
                                     'options' => [
-                                        'name' => 'invoiceAssistant.minimumAmount',
+                                        'name' => $transMin,
                                     ],
                                 ],
                             ],
                         ],
                         [
-                            "title" => 'invoiceAssistant.maximumAmount',
+                            "title" => $transMax,
                             "condition" => "limit_toggle",
                             "description" => 'invoiceAssistant.maximumAmountDescription',
                             "form" => [
@@ -299,7 +329,7 @@ class InvoiceAssistant extends WizardProvider
                                     'isPriceInput' => true,
                                     'defaultValue' => 0,
                                     'options' => [
-                                        'name' => 'invoiceAssistant.maximumAmount',
+                                        'name' => $transMax,
                                     ],
                                 ],
                             ],
@@ -421,4 +451,3 @@ class InvoiceAssistant extends WizardProvider
         return $this->deliveryCountries;
     }
 }
-?>

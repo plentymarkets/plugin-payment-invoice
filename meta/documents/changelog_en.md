@@ -1,5 +1,11 @@
 # Release Notes for Invoice
 
+## 2.0.1 (2019-11-28)
+
+### Fixed
+- The minimum and maximum amount is now displayed correctly in the system currency instead of a flat rate of "Euro".
+- The minimum and maximum amount is now converted correctly to the cart currency before it is compared with the order value.
+
 ## 2.0.0 (2019-11-18)
  
 ### Note 

@@ -5,10 +5,12 @@ namespace Invoice\Methods;
 use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use Plenty\Legacy\Repositories\Frontend\CurrencyExchangeRepository;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
+use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
 use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Plugin\Application;
@@ -60,6 +62,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      *
      * @param BasketRepositoryContract $basketRepositoryContract
      * @return bool
+     * @throws \Plenty\Exceptions\ValidationException
      */
     public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
@@ -92,12 +95,16 @@ class InvoicePaymentMethod extends PaymentMethodService
         } elseif ((int)$this->settings->getSetting('quorumOrders') > 0 && !$this->accountService->getIsAccountLoggedIn()) {
             return false;
         }
+        
+        /** @var CurrencyExchangeRepository $currencyService */
+        $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
+        $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
+        $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
 
         /**
          * Check the minimum amount
          */
-        if( $this->settings->getSetting('minimumAmount',$lang) > 0.00 &&
-            $basket->basketAmount < $this->settings->getSetting('minimumAmount'))
+        if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
         {
             return false;
         }
@@ -105,8 +112,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
          * Check the maximum amount
          */
-        if( $this->settings->getSetting('maximumAmount',$lang) > 0.00 &&
-            $this->settings->getSetting('maximumAmount',$lang) < $basket->basketAmount)
+        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
         {
             return false;
         }
