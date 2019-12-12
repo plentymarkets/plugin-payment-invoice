@@ -1,5 +1,9 @@
 # Release Notes for Invoice
 
+## X.X.X (2019-12-12)
+### Changed
+- Added methods for the backend visibility
+
 ## 2.0.1 (2019-11-28)
 
 ### Fixed

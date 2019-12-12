@@ -1,5 +1,9 @@
 # Release Notes für Kauf auf Rechnung
 
+## X.X.X (2019-12-12)
+### Geändert
+- Funktionalitäten hinzugefügt für Backend-Sichtbarkeiten
+
 ## 2.0.1 (2019-11-28)
 
 ### Gefixt
