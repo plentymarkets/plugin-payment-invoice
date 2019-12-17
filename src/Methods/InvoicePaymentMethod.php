@@ -291,4 +291,15 @@ class InvoicePaymentMethod extends PaymentMethodService
     {
         return true;
     }
+
+    /**
+     * Get the name for the backend
+     *
+     * @param $lang
+     * @return string
+     */
+    public function getBackendName($lang):string
+    {
+        return $this->getName($lang);
+    }
 }
