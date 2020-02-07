@@ -5,14 +5,15 @@ namespace Invoice\Methods;
 use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
+use IO\Constants\SessionStorageKeys;
 use Plenty\Legacy\Repositories\Frontend\CurrencyExchangeRepository;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
 use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
-use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -42,18 +43,23 @@ class InvoicePaymentMethod extends PaymentMethodService
     /** @var InvoiceHelper  */
     protected $invoiceHelper;
 
+    /** @var OrderRepositoryContract  */
+    protected $orderRepository;
+
     public function __construct(
         SettingsService $settings,
         SessionStorageService $session,
         Checkout $checkout,
         AccountService $accountService,
-        InvoiceHelper $invoiceHelper
+        InvoiceHelper $invoiceHelper,
+        OrderRepositoryContract $orderRepository
     ) {
         $this->settings = $settings;
         $this->session  = $session;
         $this->checkout = $checkout;
         $this->accountService = $accountService;
         $this->invoiceHelper = $invoiceHelper;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -78,11 +84,11 @@ class InvoicePaymentMethod extends PaymentMethodService
             $contact = $contactRepository->findContactById($basket->customerId);
             if(!is_null($contact) && $contact instanceof Contact) {
                 $allowed = $contact->allowedMethodsOfPayment->first(function($method) {
-                   if($method instanceof ContactAllowedMethodOfPayment) {
-                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
-                           return true;
-                       }
-                   }
+                    if($method instanceof ContactAllowedMethodOfPayment) {
+                        if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
+                            return true;
+                        }
+                    }
                 });
                 if($allowed) {
                     return true;
@@ -95,16 +101,30 @@ class InvoicePaymentMethod extends PaymentMethodService
         } elseif ((int)$this->settings->getSetting('quorumOrders') > 0 && !$this->accountService->getIsAccountLoggedIn()) {
             return false;
         }
-        
+
         /** @var CurrencyExchangeRepository $currencyService */
         $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
         $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
         $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
 
+        $basketAmount = $basket->basketAmount;
+
+        if ((int)$basket->basketAmount === 0) {
+
+            $order = $this->orderRepository->findOrderById($this->session->getSessionValue(SessionStorageKeys::LATEST_ORDER_ID));
+
+            $invoiceTotal = $order->getAttribute("invoice_total");
+
+            if ((int)$invoiceTotal !== 0) {
+                $basketAmount = $invoiceTotal;
+            }
+
+        }
+
         /**
          * Check the minimum amount
          */
-        if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
+        if( $minAmount > 0.00 && $basketAmount < $minAmount)
         {
             return false;
         }
@@ -112,7 +132,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         /**
          * Check the maximum amount
          */
-        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
+        if( $maxAmount > 0.00 && $maxAmount < $basketAmount)
         {
             return false;
         }
@@ -145,6 +165,11 @@ class InvoicePaymentMethod extends PaymentMethodService
             return false;
         }
 
+//        if (!$this->session->getSessionValue($basket->customerId . "_" . $this->invoiceHelper->getInvoiceMopId())) {
+//            return false;
+//        }
+//
+//        $this->session->setSessionValue($basket->customerId . "_" . $this->invoiceHelper->getInvoiceMopId(), true);
         return true;
     }
 
@@ -270,46 +295,5 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function isSwitchableFrom():bool
     {
         return false;
-    }
-
-    /**
-     * Check if this payment method should be searchable in the backend
-     *
-     * @return bool
-     */
-    public function isBackendSearchable():bool
-    {
-        return true;
-    }
-
-    /**
-     * Check if this payment method should be active in the backend
-     *
-     * @return bool
-     */
-    public function isBackendActive():bool
-    {
-        return true;
-    }
-
-    /**
-     * Get the name for the backend
-     *
-     * @param string $lang
-     * @return string
-     */
-    public function getBackendName(string $lang):string
-    {
-        return $this->getName($lang);
-    }
-
-    /**
-     * Check if this payment method can handle subscriptions
-     *
-     * @return bool
-     */
-    public function canHandleSubscriptions():bool
-    {
-        return true;
     }
 }
