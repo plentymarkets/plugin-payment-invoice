@@ -13,6 +13,7 @@ use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
 use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
+use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -255,10 +256,42 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Check if it is allowed to switch to this payment method
      *
+     * @param int|null $orderId
+     * 
      * @return bool
      */
-    public function isSwitchableTo():bool
+    public function isSwitchableTo(int $orderId = null):bool
     {
+        if(!is_null($orderId) && $orderId > 0) {
+            /** @var OrderRepositoryContract $orderRepo */
+            $orderRepo = pluginApp(OrderRepositoryContract::class);
+            $filters = $orderRepo->getFilters();
+            $filters['addOrderItems'] = false;
+            $orderRepo->setFilters($filters);
+            try {
+                $order = $orderRepo->findOrderById($orderId, ['amounts']);
+                $amount = $order->amount;
+                
+                /** @var CurrencyExchangeRepository $currencyService */
+                $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
+                $minAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('minimumAmount'));
+                $maxAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('maximumAmount'));
+                
+                /**
+                 * Check the minimum amount
+                 */
+                if( $minAmount > 0.00 && $amount->invoiceTotal < $minAmount) {
+                    return false;
+                }
+        
+                /**
+                 * Check the maximum amount
+                 */
+                if( $maxAmount > 0.00 && $maxAmount < $amount->invoiceTotal) {
+                    return false;
+                }
+            } catch(\Exception $e) {}
+        }
         return true;
     }
 

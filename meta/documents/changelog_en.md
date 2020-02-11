@@ -1,6 +1,10 @@
 # Release Notes for Invoice
 
-## X.X.X (2019-12-17)
+## 2.0.3 (2019-12-17)
+### Fixed
+- The minimum and maximum limit is now checked properly, when a customer wants to change the payment method in an order under My Account.
+
+## 2.0.2 (2019-12-17)
 ### Changed
 - Added methods for the backend visibility and backend name
 

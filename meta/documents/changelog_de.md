@@ -1,6 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
-## X.X.X (2019-12-17)
+## 2.0.3 (2019-12-17)
+### Gefixt
+- Der Mindest- und Maximalbetrag wird nun korrekt geprüft, wenn der Kunde die Zahlungsart in Mein Konto ändern will.
+
+## 2.0.2 (2019-12-17)
 ### Geändert
 - Funktionalitäten hinzugefügt für Backend-Sichtbarkeiten und Backend-Name
 
