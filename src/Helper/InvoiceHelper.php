@@ -8,6 +8,8 @@ use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Frontend\Services\AccountService;
+use Plenty\Modules\Order\Models\Order;
+use Plenty\Modules\Order\RelationReference\Models\OrderRelationReference;
 
 /**
  * Class InvoiceHelper
@@ -41,15 +43,15 @@ class InvoiceHelper
     public function isInvoiceAvailableForCurrentLoggedInCustomer(
         AccountService $accountService,
         SettingsService $settings,
-        Basket $basket
+        $customerId
     )
     {
 
-        if($accountService->getIsAccountLoggedIn() && $basket->customerId > 0) {
+        if($accountService->getIsAccountLoggedIn() && (int)$customerId > 0) {
 
             /** @var ContactRepositoryContract $contactRepository */
             $contactRepository = pluginApp(ContactRepositoryContract::class);
-            $contact = $contactRepository->findContactById($basket->customerId);
+            $contact = $contactRepository->findContactById((int)$customerId);
 
             if(!is_null($contact) && $contact instanceof Contact) {
 
@@ -79,5 +81,23 @@ class InvoiceHelper
 
         return null;
 
+    }
+
+    /**
+     * @param Order $order
+     * @return |null
+     */
+    public function getCustomerId(Order $order)
+    {
+        $relation = $order->relations
+            ->where('referenceType', OrderRelationReference::REFERENCE_TYPE_CONTACT)
+            ->where('relation', OrderRelationReference::RELATION_TYPE_RECEIVER)
+            ->first();
+
+        if ($relation !== null) {
+            return $relation->referenceId;
+        }
+
+        return 0;
     }
 }

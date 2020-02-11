@@ -70,7 +70,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
             $this->accountService,
             $this->settings,
-            $basket
+            $basket->customerId
         );
 
         if (null !== $isInvoiceAvailableForLoggedInCustomer) {
@@ -249,30 +249,26 @@ class InvoicePaymentMethod extends PaymentMethodService
 
             try {
 
-                $basketRepositoryContract = pluginApp(BasketRepositoryContract::class);
-
-                /** @var Basket $basket */
-                $basket = $basketRepositoryContract->load();
-
-                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
-                    $this->accountService,
-                    $this->settings,
-                    $basket
-                );
-
-                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
-                    return $isInvoiceAvailableForLoggedInCustomer;
-                }
-
                 /** @var OrderRepositoryContract $orderRepo */
                 $orderRepo = pluginApp(OrderRepositoryContract::class);
                 $filters = $orderRepo->getFilters();
                 $filters['addOrderItems'] = false;
                 $orderRepo->setFilters($filters);
 
-
-                $order = $orderRepo->findOrderById($orderId);
+                $order = $orderRepo->findOrderById($orderId, ['amounts', 'relations', 'billingAddress', 'deliveryAddress']);
                 $amount = $order->amount;
+
+                $customerId = $this->invoiceHelper->getCustomerId($order);
+
+                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
+                    $this->accountService,
+                    $this->settings,
+                    $customerId
+                );
+
+                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
+                    return $isInvoiceAvailableForLoggedInCustomer;
+                }
 
                 /** @var CurrencyExchangeRepository $currencyService */
                 $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
@@ -290,6 +286,79 @@ class InvoicePaymentMethod extends PaymentMethodService
                  * Check the maximum amount
                  */
                 if( $maxAmount > 0.00 && $maxAmount < $amount->invoiceTotal) {
+                    return false;
+                }
+
+                $lang = $this->session->getLang();
+
+                /**
+                 * Check whether the invoice address is the same as the shipping address
+                 */
+                if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
+                {
+                    $invoiceAddressId = $order->billingAddress->id;
+                    $shippingAddressId = $order->deliveryAddress->id;
+
+                    if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
+                    {
+                        return false;
+                    }
+                }
+
+                /**
+                 * Check whether the user is logged in
+                 */
+                if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
+                {
+                    return false;
+                }
+
+                if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
+                {
+                    return false;
+                }
+
+                return true;
+
+            } catch(\Exception $e) {}
+
+        } else {
+
+            try {
+
+                $basketRepositoryContract = pluginApp(BasketRepositoryContract::class);
+
+                /** @var Basket $basket */
+                $basket = $basketRepositoryContract->load();
+
+                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
+                    $this->accountService,
+                    $this->settings,
+                    $basket->customerId
+                );
+
+                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
+                    return $isInvoiceAvailableForLoggedInCustomer;
+                }
+
+                /** @var CurrencyExchangeRepository $currencyService */
+                $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
+                $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
+                $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
+
+                /**
+                 * Check the minimum amount
+                 */
+                if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
+                {
+                    return false;
+                }
+
+                /**
+                 * Check the maximum amount
+                 */
+                if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
+                {
                     return false;
                 }
 
@@ -322,11 +391,14 @@ class InvoicePaymentMethod extends PaymentMethodService
                     return false;
                 }
 
+                return true;
 
             } catch(\Exception $e) {}
+
         }
 
         return true;
+
     }
 
     /**
