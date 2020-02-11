@@ -6,12 +6,8 @@ use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
 use Plenty\Legacy\Repositories\Frontend\CurrencyExchangeRepository;
-use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
-use Plenty\Modules\Account\Contact\Models\Contact;
-use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
-use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
 use Plenty\Plugin\Application;
@@ -71,30 +67,14 @@ class InvoicePaymentMethod extends PaymentMethodService
         /** @var Basket $basket */
         $basket = $basketRepositoryContract->load();
 
-        $lang = $this->session->getLang();
+        $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
+            $this->accountService,
+            $this->settings,
+            $basket
+        );
 
-        if($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0) {
-            /** @var ContactRepositoryContract $contactRepository */
-            $contactRepository = pluginApp(ContactRepositoryContract::class);
-            $contact = $contactRepository->findContactById($basket->customerId);
-            if(!is_null($contact) && $contact instanceof Contact) {
-                $allowed = $contact->allowedMethodsOfPayment->first(function($method) {
-                   if($method instanceof ContactAllowedMethodOfPayment) {
-                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
-                           return true;
-                       }
-                   }
-                });
-                if($allowed) {
-                    return true;
-                }
-
-                if((int)$this->settings->getSetting('quorumOrders') > 0 && $contact->orderSummary->orderCount < $this->settings->getSetting('quorumOrders')) {
-                    return false;
-                }
-            }
-        } elseif ((int)$this->settings->getSetting('quorumOrders') > 0 && !$this->accountService->getIsAccountLoggedIn()) {
-            return false;
+        if (null !== $isInvoiceAvailableForLoggedInCustomer) {
+            return $isInvoiceAvailableForLoggedInCustomer;
         }
         
         /** @var CurrencyExchangeRepository $currencyService */
@@ -118,6 +98,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             return false;
         }
 
+        $lang = $this->session->getLang();
 
         /**
          * Check whether the invoice address is the same as the shipping address
@@ -186,6 +167,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      * Get the path of the icon
      *
      * @return string
+     * @throws \Plenty\Exceptions\ValidationException
      */
     public function getIcon( ):string
     {
@@ -208,6 +190,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      * Get InvoiceSourceUrl
      *
      * @return string
+     * @throws \Plenty\Exceptions\ValidationException
      */
     public function getSourceUrl()
     {
@@ -257,26 +240,45 @@ class InvoicePaymentMethod extends PaymentMethodService
      * Check if it is allowed to switch to this payment method
      *
      * @param int|null $orderId
-     * 
+     *
      * @return bool
      */
     public function isSwitchableTo(int $orderId = null):bool
     {
         if(!is_null($orderId) && $orderId > 0) {
-            /** @var OrderRepositoryContract $orderRepo */
-            $orderRepo = pluginApp(OrderRepositoryContract::class);
-            $filters = $orderRepo->getFilters();
-            $filters['addOrderItems'] = false;
-            $orderRepo->setFilters($filters);
+
             try {
-                $order = $orderRepo->findOrderById($orderId, ['amounts']);
+
+                $basketRepositoryContract = pluginApp(BasketRepositoryContract::class);
+
+                /** @var Basket $basket */
+                $basket = $basketRepositoryContract->load();
+
+                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
+                    $this->accountService,
+                    $this->settings,
+                    $basket
+                );
+
+                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
+                    return $isInvoiceAvailableForLoggedInCustomer;
+                }
+
+                /** @var OrderRepositoryContract $orderRepo */
+                $orderRepo = pluginApp(OrderRepositoryContract::class);
+                $filters = $orderRepo->getFilters();
+                $filters['addOrderItems'] = false;
+                $orderRepo->setFilters($filters);
+
+
+                $order = $orderRepo->findOrderById($orderId);
                 $amount = $order->amount;
-                
+
                 /** @var CurrencyExchangeRepository $currencyService */
                 $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
                 $minAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('minimumAmount'));
                 $maxAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('maximumAmount'));
-                
+
                 /**
                  * Check the minimum amount
                  */
@@ -290,8 +292,40 @@ class InvoicePaymentMethod extends PaymentMethodService
                 if( $maxAmount > 0.00 && $maxAmount < $amount->invoiceTotal) {
                     return false;
                 }
+
+                $lang = $this->session->getLang();
+
+                /**
+                 * Check whether the invoice address is the same as the shipping address
+                 */
+                if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
+                {
+                    $invoiceAddressId = $basket->customerInvoiceAddressId;
+                    $shippingAddressId = $basket->customerShippingAddressId;
+
+                    if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
+                    {
+                        return false;
+                    }
+                }
+
+                /**
+                 * Check whether the user is logged in
+                 */
+                if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
+                {
+                    return false;
+                }
+
+                if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
+                {
+                    return false;
+                }
+
+
             } catch(\Exception $e) {}
         }
+
         return true;
     }
 
