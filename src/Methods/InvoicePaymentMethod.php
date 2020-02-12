@@ -6,6 +6,9 @@ use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
 use Plenty\Legacy\Repositories\Frontend\CurrencyExchangeRepository;
+use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
+use Plenty\Modules\Account\Contact\Models\Contact;
+use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
@@ -67,63 +70,53 @@ class InvoicePaymentMethod extends PaymentMethodService
         /** @var Basket $basket */
         $basket = $basketRepositoryContract->load();
 
-        $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
-            $this->accountService,
-            $this->settings,
-            $basket->customerId
-        );
 
-        if (null !== $isInvoiceAvailableForLoggedInCustomer) {
-            return $isInvoiceAvailableForLoggedInCustomer;
+        /** @var ContactRepositoryContract $contactRepository */
+        $contactRepository = pluginApp(ContactRepositoryContract::class);
+        $contact = $contactRepository->findContactById((int)$basket->customerId);
+
+        if (!$this->$this->hasActiveShippingCountries()) {
+            if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                return false;
+            }
         }
-        
+
+        $lang = $this->session->getLang();
+
+        if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+            return false;
+        }
+
+        if (
+            $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+            && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+        ) {
+            return false;
+        }
+
+        $minOrder = (int)$this->settings->getSetting('quorumOrders');
+
+        if($minOrder > 0) {
+            if ($this->isGuest($basket->customerId) && $minOrder > 1) {
+                return false;
+            } else if (!$this->isGuest($basket->customerId) && $minOrder > $contact->orderSummary->orderCount) {
+                return false;
+            }
+        }
+
         /** @var CurrencyExchangeRepository $currencyService */
         $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
         $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
         $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
 
-        /**
-         * Check the minimum amount
-         */
-        if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
-        {
+        if( $minAmount > 0.00 && $minAmount > $basket->basketAmount) {
             return false;
         }
 
         /**
          * Check the maximum amount
          */
-        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
-        {
-            return false;
-        }
-
-        $lang = $this->session->getLang();
-
-        /**
-         * Check whether the invoice address is the same as the shipping address
-         */
-        if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
-        {
-            $invoiceAddressId = $basket->customerInvoiceAddressId;
-            $shippingAddressId = $basket->customerShippingAddressId;
-
-            if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
-            {
-                return false;
-            }
-        }
-
-        /**
-         * Check whether the user is logged in
-         */
-        if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
-        {
-            return false;
-        }
-
-        if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
-        {
+        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount) {
             return false;
         }
 
@@ -255,19 +248,42 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $filters['addOrderItems'] = false;
                 $orderRepo->setFilters($filters);
 
-                $order = $orderRepo->findOrderById($orderId, ['amounts', 'relations', 'billingAddress', 'deliveryAddress']);
+                $order = $orderRepo->findOrderById($orderId, ['amounts', 'billingAddress', 'deliveryAddress']);
                 $amount = $order->amount;
 
-                $customerId = $this->invoiceHelper->getCustomerId($order);
+                $customerId = $order->contactReceiver !== null ? $order->contactReceiver->id : 0;
 
-                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
-                    $this->accountService,
-                    $this->settings,
-                    $customerId
-                );
+                /** @var ContactRepositoryContract $contactRepository */
+                $contactRepository = pluginApp(ContactRepositoryContract::class);
+                $contact = $contactRepository->findContactById((int)$customerId);
 
-                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
-                    return $isInvoiceAvailableForLoggedInCustomer;
+                if (!$this->$this->hasActiveShippingCountries()) {
+                    if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                        return false;
+                    }
+                }
+
+                $lang = $this->session->getLang();
+
+                if ($this->isGuest($customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+                    return false;
+                }
+
+                if (
+                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                    && $this->addressesAreNotTheSame($order->billingAddress->id, $order->deliveryAddress->id)
+                ) {
+                    return false;
+                }
+
+                $minOrder = (int)$this->settings->getSetting('quorumOrders');
+
+                if($minOrder > 0) {
+                    if ($this->isGuest($customerId) && $minOrder > 1) {
+                        return false;
+                    } else if (!$this->isGuest($customerId) && $minOrder > $contact->orderSummary->orderCount) {
+                        return false;
+                    }
                 }
 
                 /** @var CurrencyExchangeRepository $currencyService */
@@ -275,10 +291,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $minAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('minimumAmount'));
                 $maxAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('maximumAmount'));
 
-                /**
-                 * Check the minimum amount
-                 */
-                if( $minAmount > 0.00 && $amount->invoiceTotal < $minAmount) {
+                if( $minAmount > 0.00 && $minAmount > $amount->invoiceTotal) {
                     return false;
                 }
         
@@ -286,35 +299,6 @@ class InvoicePaymentMethod extends PaymentMethodService
                  * Check the maximum amount
                  */
                 if( $maxAmount > 0.00 && $maxAmount < $amount->invoiceTotal) {
-                    return false;
-                }
-
-                $lang = $this->session->getLang();
-
-                /**
-                 * Check whether the invoice address is the same as the shipping address
-                 */
-                if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
-                {
-                    $invoiceAddressId = $order->billingAddress->id;
-                    $shippingAddressId = $order->deliveryAddress->id;
-
-                    if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
-                    {
-                        return false;
-                    }
-                }
-
-                /**
-                 * Check whether the user is logged in
-                 */
-                if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
-                {
-                    return false;
-                }
-
-                if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
-                {
                     return false;
                 }
 
@@ -331,14 +315,38 @@ class InvoicePaymentMethod extends PaymentMethodService
                 /** @var Basket $basket */
                 $basket = $basketRepositoryContract->load();
 
-                $isInvoiceAvailableForLoggedInCustomer = $this->invoiceHelper->isInvoiceAvailableForCurrentLoggedInCustomer(
-                    $this->accountService,
-                    $this->settings,
-                    $basket->customerId
-                );
 
-                if (null !== $isInvoiceAvailableForLoggedInCustomer) {
-                    return $isInvoiceAvailableForLoggedInCustomer;
+                /** @var ContactRepositoryContract $contactRepository */
+                $contactRepository = pluginApp(ContactRepositoryContract::class);
+                $contact = $contactRepository->findContactById((int)$basket->customerId);
+
+                if (!$this->$this->hasActiveShippingCountries()) {
+                    if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                        return false;
+                    }
+                }
+
+                $lang = $this->session->getLang();
+
+                if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+                    return false;
+                }
+
+                if (
+                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                    && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+                ) {
+                    return false;
+                }
+
+                $minOrder = (int)$this->settings->getSetting('quorumOrders');
+
+                if($minOrder > 0) {
+                    if ($this->isGuest($basket->customerId) && $minOrder > 1) {
+                        return false;
+                    } else if (!$this->isGuest($basket->customerId) && $minOrder > $contact->orderSummary->orderCount) {
+                        return false;
+                    }
                 }
 
                 /** @var CurrencyExchangeRepository $currencyService */
@@ -346,48 +354,14 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
                 $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
 
-                /**
-                 * Check the minimum amount
-                 */
-                if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
-                {
+                if( $minAmount > 0.00 && $minAmount > $basket->basketAmount) {
                     return false;
                 }
 
                 /**
                  * Check the maximum amount
                  */
-                if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
-                {
-                    return false;
-                }
-
-                $lang = $this->session->getLang();
-
-                /**
-                 * Check whether the invoice address is the same as the shipping address
-                 */
-                if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
-                {
-                    $invoiceAddressId = $basket->customerInvoiceAddressId;
-                    $shippingAddressId = $basket->customerShippingAddressId;
-
-                    if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
-                    {
-                        return false;
-                    }
-                }
-
-                /**
-                 * Check whether the user is logged in
-                 */
-                if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
-                {
-                    return false;
-                }
-
-                if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
-                {
+                if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount) {
                     return false;
                 }
 
@@ -450,5 +424,87 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function canHandleSubscriptions():bool
     {
         return true;
+    }
+
+    /**
+     * @return bool
+     * @throws \Plenty\Exceptions\ValidationException
+     */
+    private function hasActiveShippingCountries()
+    {
+       return empty($this->settings->getShippingCountries())
+           ? false
+           : true;
+    }
+
+    /**
+     * @param int $customerId
+     * @return bool
+     */
+    private function isGuest($customerId)
+    {
+        return !$this->accountService->getIsAccountLoggedIn() && (int)$customerId === 0;
+    }
+
+    /**
+     * @param Contact $contact
+     * @return bool
+     */
+    private function isExplicitlyAllowedForThisCustomer(Contact $contact)
+    {
+        if(!$this->isGuest($contact->id)) {
+
+            if (!is_null($contact) && $contact instanceof Contact) {
+
+                $allowed = $contact->allowedMethodsOfPayment->first(function ($method) {
+                    if ($method instanceof ContactAllowedMethodOfPayment) {
+                        if ($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
+                            return true;
+                        }
+                    }
+                });
+
+                if ($allowed) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+
+            }
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param $lang
+     * @return bool
+     * @throws \Plenty\Exceptions\ValidationException
+     */
+    private function doNotAllowInvoiceForGuests($lang)
+    {
+        return (int)$this->settings->getSetting('disallowInvoiceForGuest',$lang) === 1;
+    }
+
+    /**
+     * @param $lang
+     * @return bool
+     * @throws \Plenty\Exceptions\ValidationException
+     */
+    private function invoiceAddressMustBeEqualsWithShippingAddress($lang)
+    {
+        return (int)$this->settings->getSetting('invoiceEqualsShippingAddress',$lang) === 1;
+    }
+
+    public function addressesAreNotTheSame($billingAddressId, $shippingAddressId)
+    {
+        if($shippingAddressId !== null && (int)$billingAddressId !== (int)$shippingAddressId) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
