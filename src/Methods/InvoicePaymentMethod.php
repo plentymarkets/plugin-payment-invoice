@@ -67,58 +67,75 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
 
-        /** @var Basket $basket */
-        $basket = $basketRepositoryContract->load();
+        try {
+
+            /** @var Basket $basket */
+            $basket = $basketRepositoryContract->load();
+            $lang = $this->session->getLang();
+            $minOrder = (int)$this->settings->getSetting('quorumOrders');
 
 
-        /** @var ContactRepositoryContract $contactRepository */
-        $contactRepository = pluginApp(ContactRepositoryContract::class);
-        $contact = $contactRepository->findContactById((int)$basket->customerId);
+            if (!$this->isGuest($basket->customerId)) {
 
-        if (!$this->$this->hasActiveShippingCountries()) {
-            if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+
+                /** @var ContactRepositoryContract $contactRepository */
+                $contactRepository = pluginApp(ContactRepositoryContract::class);
+                $contact = $contactRepository->findContactById((int)$basket->customerId);
+
+                if (!$this->hasActiveShippingCountries()) {
+                    if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                        return false;
+                    }
+                }
+
+                if (
+                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                    && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+                ) {
+                    return false;
+                }
+
+                if ($minOrder > 0 && $minOrder > $contact->orderSummary->orderCount) {
+                    return false;
+                }
+
+            } else {
+
+
+                if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+                    return false;
+                }
+
+                if (
+                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                    && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+                ) {
+                    return false;
+                }
+
+                if ($minOrder > 0 && $minOrder > 1) {
+                    return false;
+                }
+
+            }
+
+            /** @var CurrencyExchangeRepository $currencyService */
+            $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
+            $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
+            $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
+
+            if ($minAmount > 0.00 && $minAmount > $basket->basketAmount) {
                 return false;
             }
-        }
 
-        $lang = $this->session->getLang();
-
-        if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
-            return false;
-        }
-
-        if (
-            $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
-            && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
-        ) {
-            return false;
-        }
-
-        $minOrder = (int)$this->settings->getSetting('quorumOrders');
-
-        if($minOrder > 0) {
-            if ($this->isGuest($basket->customerId) && $minOrder > 1) {
-                return false;
-            } else if (!$this->isGuest($basket->customerId) && $minOrder > $contact->orderSummary->orderCount) {
+            /**
+             * Check the maximum amount
+             */
+            if ($maxAmount > 0.00 && $maxAmount < $basket->basketAmount) {
                 return false;
             }
-        }
 
-        /** @var CurrencyExchangeRepository $currencyService */
-        $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
-        $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
-        $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
-
-        if( $minAmount > 0.00 && $minAmount > $basket->basketAmount) {
-            return false;
-        }
-
-        /**
-         * Check the maximum amount
-         */
-        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount) {
-            return false;
-        }
+        } catch(\Exception $e) {}
 
         return true;
     }
@@ -248,40 +265,53 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $filters['addOrderItems'] = false;
                 $orderRepo->setFilters($filters);
 
-                $order = $orderRepo->findOrderById($orderId, ['amounts', 'billingAddress', 'deliveryAddress']);
+                $order = $orderRepo->findOrderById($orderId, ['amounts', 'billingAddress', 'deliveryAddress', 'contactReceiver']);
                 $amount = $order->amount;
-
                 $customerId = $order->contactReceiver !== null ? $order->contactReceiver->id : 0;
 
-                /** @var ContactRepositoryContract $contactRepository */
-                $contactRepository = pluginApp(ContactRepositoryContract::class);
-                $contact = $contactRepository->findContactById((int)$customerId);
-
-                if (!$this->$this->hasActiveShippingCountries()) {
-                    if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
-                        return false;
-                    }
-                }
-
                 $lang = $this->session->getLang();
-
-                if ($this->isGuest($customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
-                    return false;
-                }
-
-                if (
-                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
-                    && $this->addressesAreNotTheSame($order->billingAddress->id, $order->deliveryAddress->id)
-                ) {
-                    return false;
-                }
-
                 $minOrder = (int)$this->settings->getSetting('quorumOrders');
 
-                if($minOrder > 0) {
-                    if ($this->isGuest($customerId) && $minOrder > 1) {
+
+                if (!$this->isGuest($customerId)) {
+
+
+                    /** @var ContactRepositoryContract $contactRepository */
+                    $contactRepository = pluginApp(ContactRepositoryContract::class);
+                    $contact = $contactRepository->findContactById((int)$customerId);
+
+                    if (!$this->hasActiveShippingCountries()) {
+                        if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                            return false;
+                        }
+                    }
+
+                    if (
+                        $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                        && $this->addressesAreNotTheSame($order->billingAddress->id, $order->deliveryAddress->id)
+                    ) {
                         return false;
-                    } else if (!$this->isGuest($customerId) && $minOrder > $contact->orderSummary->orderCount) {
+                    }
+
+                    if ($minOrder > 0 && $minOrder > $contact->orderSummary->orderCount) {
+                        return false;
+                    }
+
+                } else {
+
+
+                    if ($this->isGuest($customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+                        return false;
+                    }
+
+                    if (
+                        $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                        && $this->addressesAreNotTheSame($order->billingAddress->id, $order->deliveryAddress->id)
+                    ) {
+                        return false;
+                    }
+
+                    if ($minOrder > 0 && $minOrder > 1) {
                         return false;
                     }
                 }
@@ -294,7 +324,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 if( $minAmount > 0.00 && $minAmount > $amount->invoiceTotal) {
                     return false;
                 }
-        
+
                 /**
                  * Check the maximum amount
                  */
@@ -314,37 +344,49 @@ class InvoicePaymentMethod extends PaymentMethodService
 
                 /** @var Basket $basket */
                 $basket = $basketRepositoryContract->load();
-
-
-                /** @var ContactRepositoryContract $contactRepository */
-                $contactRepository = pluginApp(ContactRepositoryContract::class);
-                $contact = $contactRepository->findContactById((int)$basket->customerId);
-
-                if (!$this->$this->hasActiveShippingCountries()) {
-                    if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
-                        return false;
-                    }
-                }
-
                 $lang = $this->session->getLang();
-
-                if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
-                    return false;
-                }
-
-                if (
-                    $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
-                    && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
-                ) {
-                    return false;
-                }
-
                 $minOrder = (int)$this->settings->getSetting('quorumOrders');
 
-                if($minOrder > 0) {
-                    if ($this->isGuest($basket->customerId) && $minOrder > 1) {
+
+                if (!$this->isGuest($basket->customerId)) {
+
+
+                    /** @var ContactRepositoryContract $contactRepository */
+                    $contactRepository = pluginApp(ContactRepositoryContract::class);
+                    $contact = $contactRepository->findContactById((int)$basket->customerId);
+
+                    if (!$this->hasActiveShippingCountries()) {
+                        if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
+                            return false;
+                        }
+                    }
+
+                    if (
+                        $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                        && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+                    ) {
                         return false;
-                    } else if (!$this->isGuest($basket->customerId) && $minOrder > $contact->orderSummary->orderCount) {
+                    }
+
+                    if ($minOrder > 0 && $minOrder > $contact->orderSummary->orderCount) {
+                        return false;
+                    }
+
+                } else {
+
+
+                    if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
+                        return false;
+                    }
+
+                    if (
+                        $this->invoiceAddressMustBeEqualsWithShippingAddress($lang)
+                        && $this->addressesAreNotTheSame($basket->customerInvoiceAddressId, $basket->customerShippingAddressId)
+                    ) {
+                        return false;
+                    }
+
+                    if ($minOrder > 0 && $minOrder > 1) {
                         return false;
                     }
                 }
