@@ -74,9 +74,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             $lang = $this->session->getLang();
             $minOrder = (int)$this->settings->getSetting('quorumOrders');
 
-
             if (!$this->isGuest($basket->customerId)) {
-
 
                 /** @var ContactRepositoryContract $contactRepository */
                 $contactRepository = pluginApp(ContactRepositoryContract::class);
@@ -100,7 +98,6 @@ class InvoicePaymentMethod extends PaymentMethodService
                 }
 
             } else {
-
 
                 if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
                     return false;
@@ -272,9 +269,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $lang = $this->session->getLang();
                 $minOrder = (int)$this->settings->getSetting('quorumOrders');
 
-
                 if (!$this->isGuest($customerId)) {
-
 
                     /** @var ContactRepositoryContract $contactRepository */
                     $contactRepository = pluginApp(ContactRepositoryContract::class);
@@ -298,7 +293,6 @@ class InvoicePaymentMethod extends PaymentMethodService
                     }
 
                 } else {
-
 
                     if ($this->isGuest($customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
                         return false;
