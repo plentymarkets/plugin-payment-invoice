@@ -80,7 +80,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $contactRepository = pluginApp(ContactRepositoryContract::class);
                 $contact = $contactRepository->findContactById((int)$basket->customerId);
 
-                if (!$this->hasActiveShippingCountries()) {
+                if (!$this->hasActiveShippingCountry()) {
                     if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
                         return false;
                     }
@@ -98,6 +98,10 @@ class InvoicePaymentMethod extends PaymentMethodService
                 }
 
             } else {
+
+                if (!$this->hasActiveShippingCountry()) {
+                    return false;
+                }
 
                 if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
                     return false;
@@ -275,7 +279,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                     $contactRepository = pluginApp(ContactRepositoryContract::class);
                     $contact = $contactRepository->findContactById((int)$customerId);
 
-                    if (!$this->hasActiveShippingCountries()) {
+                    if (!$this->hasActiveShippingCountry()) {
                         if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
                             return false;
                         }
@@ -293,6 +297,10 @@ class InvoicePaymentMethod extends PaymentMethodService
                     }
 
                 } else {
+
+                    if (!$this->hasActiveShippingCountry()) {
+                        return false;
+                    }
 
                     if ($this->isGuest($customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
                         return false;
@@ -349,7 +357,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                     $contactRepository = pluginApp(ContactRepositoryContract::class);
                     $contact = $contactRepository->findContactById((int)$basket->customerId);
 
-                    if (!$this->hasActiveShippingCountries()) {
+                    if (!$this->hasActiveShippingCountry()) {
                         if (!$this->isExplicitlyAllowedForThisCustomer($contact)) {
                             return false;
                         }
@@ -368,6 +376,9 @@ class InvoicePaymentMethod extends PaymentMethodService
 
                 } else {
 
+                    if (!$this->hasActiveShippingCountry()) {
+                        return false;
+                    }
 
                     if ($this->isGuest($basket->customerId) && $this->doNotAllowInvoiceForGuests($lang)) {
                         return false;
@@ -466,11 +477,14 @@ class InvoicePaymentMethod extends PaymentMethodService
      * @return bool
      * @throws \Plenty\Exceptions\ValidationException
      */
-    private function hasActiveShippingCountries()
+    private function hasActiveShippingCountry()
     {
-       return empty($this->settings->getShippingCountries())
-           ? false
-           : true;
+        if (empty($this->settings->getShippingCountries()) || !in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries())) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**
