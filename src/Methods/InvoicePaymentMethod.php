@@ -3,17 +3,16 @@
 namespace Invoice\Methods;
 
 use Invoice\Helper\InvoiceHelper;
+use Invoice\Helper\SettingsHelper;
+use Invoice\Services\InvoiceLimitationsService;
 use Invoice\Services\SessionStorageService;
 use Invoice\Services\SettingsService;
-use Plenty\Legacy\Repositories\Frontend\CurrencyExchangeRepository;
 use Plenty\Modules\Account\Contact\Contracts\ContactRepositoryContract;
-use Plenty\Modules\Account\Contact\Models\Contact;
-use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
-use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
-use Plenty\Modules\Frontend\PaymentMethod\Contracts\FrontendPaymentMethodRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
+use Plenty\Modules\Frontend\Services\SystemService;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
+use Plenty\Modules\Order\Models\OrderAmount;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -28,6 +27,9 @@ use Plenty\Plugin\Translation\Translator;
  */
 class InvoicePaymentMethod extends PaymentMethodService
 {
+    /** @var SystemService */
+    protected $systemService;
+    
     /** @var SettingsService */
     protected $settings;
 
@@ -44,12 +46,14 @@ class InvoicePaymentMethod extends PaymentMethodService
     protected $invoiceHelper;
 
     public function __construct(
+        SystemService $systemService,
         SettingsService $settings,
         SessionStorageService $session,
         Checkout $checkout,
         AccountService $accountService,
         InvoiceHelper $invoiceHelper
     ) {
+        $this->systemService = $systemService;
         $this->settings = $settings;
         $this->session  = $session;
         $this->checkout = $checkout;
@@ -67,86 +71,32 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
-
+        /** @var InvoiceLimitationsService $helper */
+        $helper = pluginApp(InvoiceLimitationsService::class);
+        
+        /** @var ContactRepositoryContract $contactRepo */
+        $contactRepo = pluginApp(ContactRepositoryContract::class);
+        
         /** @var Basket $basket */
         $basket = $basketRepositoryContract->load();
-
-        $lang = $this->session->getLang();
-
-        if($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0) {
-            /** @var ContactRepositoryContract $contactRepository */
-            $contactRepository = pluginApp(ContactRepositoryContract::class);
-            $contact = $contactRepository->findContactById($basket->customerId);
-            if(!is_null($contact) && $contact instanceof Contact) {
-                $allowed = $contact->allowedMethodsOfPayment->first(function($method) {
-                   if($method instanceof ContactAllowedMethodOfPayment) {
-                       if($method->methodOfPaymentId == $this->invoiceHelper->getInvoiceMopId() && $method->allowed) {
-                           return true;
-                       }
-                   }
-                });
-                if($allowed) {
-                    return true;
-                }
-
-                if((int)$this->settings->getSetting('quorumOrders') > 0 && $contact->orderSummary->orderCount < $this->settings->getSetting('quorumOrders')) {
-                    return false;
-                }
-            }
-        } elseif ((int)$this->settings->getSetting('quorumOrders') > 0 && !$this->accountService->getIsAccountLoggedIn()) {
-            return false;
-        }
         
-        /** @var CurrencyExchangeRepository $currencyService */
-        $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
-        $minAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('minimumAmount'));
-        $maxAmount = (float)$currencyService->convertFromDefaultCurrency($basket->currency, $this->settings->getSetting('maximumAmount'));
-
-        /**
-         * Check the minimum amount
-         */
-        if( $minAmount > 0.00 && $basket->basketAmount < $minAmount)
-        {
-            return false;
+        $isGuest = !($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0);
+        $contact = null;
+        if(!$isGuest && $basket->customerId > 0) {
+            try {
+                $contact = $contactRepo->findContactById($basket->customerId, ['orderSummary']);
+            } catch(\Exception $ex) {}
         }
-
-        /**
-         * Check the maximum amount
-         */
-        if( $maxAmount > 0.00 && $maxAmount < $basket->basketAmount)
-        {
-            return false;
-        }
-
-
-        /**
-         * Check whether the invoice address is the same as the shipping address
-         */
-        if( $this->settings->getSetting('invoiceEqualsShippingAddress',$lang) == 1)
-        {
-            $invoiceAddressId = $basket->customerInvoiceAddressId;
-            $shippingAddressId = $basket->customerShippingAddressId;
-
-            if($shippingAddressId != null && $invoiceAddressId != $shippingAddressId)
-            {
-                return false;
-            }
-        }
-
-        /**
-         * Check whether the user is logged in
-         */
-        if( $this->settings->getSetting('disallowInvoiceForGuest',$lang) == 1 && !$this->accountService->getIsAccountLoggedIn())
-        {
-            return false;
-        }
-
-        if(!in_array($this->checkout->getShippingCountryId(), $this->settings->getShippingCountries()))
-        {
-            return false;
-        }
-
-        return true;
+        $amount = $amount = pluginApp(OrderAmount::class);
+        $amount->currency = $basket->currency;
+        $amount->invoiceTotal = $basket->basketAmount;
+        
+        return $helper->isActiveFor(
+            pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]), 
+            (int)$basket->shippingCountryId,
+            $isGuest,
+            $contact 
+        );
     }
 
     /**
@@ -171,15 +121,6 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function getFee( BasketRepositoryContract $basketRepositoryContract):float
     {
         return 0.00;
-        $basket = $basketRepositoryContract->load();
-        if($basket->shippingCountryId == 1)
-        {
-            return $this->settings->getSetting('feeDomestic', $this->session->getLang());
-        }
-        else
-        {
-            return $this->settings->getSetting('feeForeign', $this->session->getLang());
-        }
     }
 
     /**
@@ -262,37 +203,63 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isSwitchableTo(int $orderId = null):bool
     {
+        /** @var InvoiceLimitationsService $helper */
+        $helper = pluginApp(InvoiceLimitationsService::class);
+        
+        //  If order ID is given check the order data
         if(!is_null($orderId) && $orderId > 0) {
             /** @var OrderRepositoryContract $orderRepo */
             $orderRepo = pluginApp(OrderRepositoryContract::class);
             $filters = $orderRepo->getFilters();
             $filters['addOrderItems'] = false;
             $orderRepo->setFilters($filters);
+            
             try {
-                $order = $orderRepo->findOrderById($orderId, ['amounts']);
-                $amount = $order->amount;
+                $order = $orderRepo->findOrderById($orderId, ['amounts', 'addresses']);
+                $contact = $order->contactReceiver;
                 
-                /** @var CurrencyExchangeRepository $currencyService */
-                $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
-                $minAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('minimumAmount'));
-                $maxAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $this->settings->getSetting('maximumAmount'));
-                
-                /**
-                 * Check the minimum amount
-                 */
-                if( $minAmount > 0.00 && $amount->invoiceTotal < $minAmount) {
-                    return false;
-                }
-        
-                /**
-                 * Check the maximum amount
-                 */
-                if( $maxAmount > 0.00 && $maxAmount < $amount->invoiceTotal) {
-                    return false;
-                }
-            } catch(\Exception $e) {}
+                return $helper->respectsAllLimitations(
+                    pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]), 
+                    $contact === null, 
+                    $order->billingAddress->id, 
+                    $order->deliveryAddress->id,
+                    $order->deliveryAddress->countryId,
+                    $order->amount, 
+                    $contact
+                );
+            } catch(\Exception $e) {
+                return false;
+            }
         }
-        return true;
+        //  Else check the basket data
+        else {
+            /** @var BasketRepositoryContract $basketRepo */
+            $basketRepo = pluginApp(BasketRepositoryContract::class);
+            /** @var ContactRepositoryContract $contactRepo */
+            $contactRepo = pluginApp(ContactRepositoryContract::class);
+            
+            $basket = $basketRepo->load();
+            $isGuest = !($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0);
+            $contact = null;
+            if(!$isGuest && $basket->customerId > 0) {
+                try {
+                    $contact = $contactRepo->findContactById($basket->customerId, ['orderSummary']);
+                } catch(\Exception $ex) {}
+            }
+            $amount = pluginApp(OrderAmount::class);
+            $amount->currency = $basket->currency;
+            $amount->invoiceTotal = $basket->basketAmount;
+            
+            return $helper->respectsAllLimitations(
+                pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]), 
+                $isGuest, 
+                $this->checkout->getCustomerInvoiceAddressId(), 
+                $this->checkout->getCustomerShippingAddressId(),
+                $this->checkout->getShippingCountryId(),
+                $amount, 
+                $contact
+            );
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Invoice\Providers;
 
 use Invoice\Extensions\InvoiceTwigServiceProvider;
+use Invoice\Helper\SettingsHelper;
 use Plenty\Modules\Payment\Events\Checkout\ExecutePayment;
 use Plenty\Modules\Payment\Events\Checkout\GetPaymentMethodContent;
 use Plenty\Plugin\ServiceProvider;
@@ -29,6 +30,7 @@ use Invoice\Assistants\InvoiceAssistant;
      public function register()
      {
          $this->getApplication()->register(InvoiceRouteServiceProvider::class);
+         $this->getApplication()->bind(SettingsHelper::class);
      }
 
      /**
