@@ -18,36 +18,6 @@ use Plenty\Modules\Order\Models\OrderAmount;
 class InvoiceLimitationsService
 {
     /**
-     * Check whether the payment is active for country or not.
-     * 
-     * @param SettingsHelper $settingsHelper    The setting helper 
-     * @param int            $shippingCountryId The ID of the shipping country
-     * @param bool           $isGuest           Whether or not the current customer is a guest or not
-     * @param Contact|null   $contact           The contact instance, if customer is not a quest
-     * 
-     * @return bool
-     */
-    public function isActiveFor(
-        SettingsHelper $settingsHelper,
-        int $shippingCountryId,
-        bool $isGuest,
-        Contact $contact = null
-    ): bool
-    {
-        if(!$settingsHelper->isCountryActive($shippingCountryId)) {
-            //  Payment has not activated the requested country
-            //  Possible reasons are:
-            //  1. No country is configured at all
-            //  2. The requested country is not activated
-            //  => if guest return false, else check payment allowance for contact
-            if($isGuest || !$this->explicitlyAllowedFor($contact)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    /**
      * Get whether all payment method limitations are respected or not.
      * 
      * @param SettingsHelper $settingsHelper    The setting helper 

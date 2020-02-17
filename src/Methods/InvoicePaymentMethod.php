@@ -91,11 +91,15 @@ class InvoicePaymentMethod extends PaymentMethodService
         $amount->currency = $basket->currency;
         $amount->invoiceTotal = $basket->basketAmount;
         
-        return $helper->isActiveFor(
+            
+        return $helper->respectsAllLimitations(
             pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]), 
-            (int)$basket->shippingCountryId,
-            $isGuest,
-            $contact 
+            $isGuest, 
+            $this->checkout->getCustomerInvoiceAddressId(), 
+            $this->checkout->getCustomerShippingAddressId(),
+            $this->checkout->getShippingCountryId(),
+            $amount, 
+            $contact
         );
     }
 
