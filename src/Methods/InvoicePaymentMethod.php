@@ -93,12 +93,12 @@ class InvoicePaymentMethod extends PaymentMethodService
         
             
         return $helper->respectsAllLimitations(
-            pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]), 
-            $isGuest, 
-            $this->checkout->getCustomerInvoiceAddressId(), 
-            $this->checkout->getCustomerShippingAddressId(),
+            pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
+            $isGuest,
+            $amount,
             $this->checkout->getShippingCountryId(),
-            $amount, 
+            $this->checkout->getCustomerInvoiceAddressId(),
+            $this->checkout->getCustomerShippingAddressId(),
             $contact
         );
     }
@@ -223,12 +223,12 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $contact = $order->contactReceiver;
                 
                 return $helper->respectsAllLimitations(
-                    pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]), 
-                    $contact === null, 
-                    $order->billingAddress->id, 
-                    $order->deliveryAddress->id,
+                    pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]),
+                    $contact === null,
+                    $order->amount,
                     $order->deliveryAddress->countryId,
-                    $order->amount, 
+                    $order->billingAddress->id,
+                    $order->deliveryAddress->id,
                     $contact
                 );
             } catch(\Exception $e) {
@@ -255,12 +255,12 @@ class InvoicePaymentMethod extends PaymentMethodService
             $amount->invoiceTotal = $basket->basketAmount;
             
             return $helper->respectsAllLimitations(
-                pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]), 
-                $isGuest, 
-                $this->checkout->getCustomerInvoiceAddressId(), 
-                $this->checkout->getCustomerShippingAddressId(),
+                pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
+                $isGuest,
+                $amount,
                 $this->checkout->getShippingCountryId(),
-                $amount, 
+                $this->checkout->getCustomerInvoiceAddressId(),
+                $this->checkout->getCustomerShippingAddressId(),
                 $contact
             );
         }

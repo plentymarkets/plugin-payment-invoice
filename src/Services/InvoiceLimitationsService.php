@@ -22,10 +22,10 @@ class InvoiceLimitationsService
      * 
      * @param SettingsHelper $settingsHelper    The setting helper 
      * @param bool           $isGuest           Whether or not the current customer is a guest or not
+     * @param OrderAmount    $amount            The total amount
+     * @param int            $shippingCountryId The ID of the shipping country
      * @param int            $billingAddressId  The ID of the billing address
      * @param int            $deliveryAddressId The ID of the delivery address
-     * @param int            $shippingCountryId The ID of the shipping country
-     * @param OrderAmount    $amount            The total amount
      * @param Contact|null   $contact           The contact instance, if customer is not a quest
      * 
      * @return bool
@@ -33,10 +33,10 @@ class InvoiceLimitationsService
     public function respectsAllLimitations(
         SettingsHelper $settingsHelper,
         bool $isGuest,
+        OrderAmount $amount,
+        int $shippingCountryId,
         int $billingAddressId = null,
         int $deliveryAddressId = null,
-        int $shippingCountryId,
-        OrderAmount $amount,
         Contact $contact = null
     ): bool
     {
