@@ -6,7 +6,6 @@ use Invoice\Helper\SettingsHelper;
 use Plenty\Modules\Account\Contact\Models\Contact;
 use Plenty\Modules\Account\Contact\Models\ContactAllowedMethodOfPayment;
 use Plenty\Modules\Frontend\Contracts\CurrencyExchangeRepositoryContract;
-use Plenty\Modules\Order\Models\OrderAmount;
 
 /**
  * Class InvoiceLimitationsService
@@ -21,9 +20,10 @@ class InvoiceLimitationsService
      * Get whether all payment method limitations are respected or not.
      * 
      * @param SettingsHelper $settingsHelper    The setting helper 
-     * @param bool           $isGuest           Whether or not the current customer is a guest or not
-     * @param OrderAmount    $amount            The total amount
      * @param int            $shippingCountryId The ID of the shipping country
+     * @param bool           $isGuest           Whether or not the current customer is a guest or not
+     * @param float          $amount            The total amount
+     * @param string         $currency          The current currency
      * @param int            $billingAddressId  The ID of the billing address
      * @param int            $deliveryAddressId The ID of the delivery address
      * @param Contact|null   $contact           The contact instance, if customer is not a quest
@@ -32,9 +32,10 @@ class InvoiceLimitationsService
      */
     public function respectsAllLimitations(
         SettingsHelper $settingsHelper,
-        bool $isGuest,
-        OrderAmount $amount,
         int $shippingCountryId,
+        bool $isGuest,
+        float $amount,
+        string $currency = 'EUR',
         int $billingAddressId = null,
         int $deliveryAddressId = null,
         Contact $contact = null
@@ -58,7 +59,7 @@ class InvoiceLimitationsService
         }
         
         //  Third: Check the addresses
-        //          Addresses are equal when: $deliveryAddressId === null || $billingAddressId === $deliveryAddressId
+        //         Addresses are equal when: $deliveryAddressId === null || $billingAddressId === $deliveryAddressId
         if($settingsHelper->shouldHaveIdenticalAddresses() && $deliveryAddressId !== null && $billingAddressId !== $deliveryAddressId) {
             return false;
         }
@@ -76,19 +77,19 @@ class InvoiceLimitationsService
             }
         }
         
-        if($amount->invoiceTotal > 0.0) {
+        if($amount > 0.0) {
             /** @var CurrencyExchangeRepositoryContract $currencyService */
             $currencyService = pluginApp(CurrencyExchangeRepositoryContract::class);
             
             //  Fifth: Check minimum amount
-            $minAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $settingsHelper->minimumAmount());
-            if($minAmount > 0.0 && $minAmount > $amount->invoiceTotal) {
+            $minAmount = (float)$currencyService->convertFromDefaultCurrency($currency, $settingsHelper->minimumAmount());
+            if($minAmount > 0.0 && $minAmount > $amount) {
                 return false;
             }
             
             //  Sixth: Check maximum amount
-            $maxAmount = (float)$currencyService->convertFromDefaultCurrency($amount->currency, $settingsHelper->maximumAmount());
-            if($maxAmount > 0.0 && $maxAmount < $amount->invoiceTotal) {
+            $maxAmount = (float)$currencyService->convertFromDefaultCurrency($currency, $settingsHelper->maximumAmount());
+            if($maxAmount > 0.0 && $maxAmount < $amount) {
                 return false;
             }
         }

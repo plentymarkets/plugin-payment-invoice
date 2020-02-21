@@ -70,7 +70,7 @@ class SettingsHelper
      */
     public function minimumAmount(): float
     {
-        return (float)$this->getSettingFloatValue('minimumAmount');
+        return $this->getSettingFloatValue('minimumAmount');
     }
     
     /**
@@ -80,17 +80,17 @@ class SettingsHelper
      */
     public function maximumAmount(): float
     {
-        return (float)$this->getSettingFloatValue('maximumAmount');
+        return $this->getSettingFloatValue('maximumAmount');
     }
     
     /**
-     * Get the minimum amount for using the payment method.
+     * Get the minimum order count for using the payment method.
      * 
-     * @return float
+     * @return int
      */
     public function minimumOrderCount(): int
     {
-        return (int)$this->getSettingIntValue('quorumOrders');
+        return $this->getSettingIntValue('quorumOrders');
     }
 
     /**

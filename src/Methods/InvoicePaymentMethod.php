@@ -12,7 +12,6 @@ use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Modules\Frontend\Services\SystemService;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
-use Plenty\Modules\Order\Models\OrderAmount;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
 use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
@@ -82,21 +81,18 @@ class InvoicePaymentMethod extends PaymentMethodService
         
         $isGuest = !($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0);
         $contact = null;
-        if(!$isGuest && $basket->customerId > 0) {
+        if(!$isGuest) {
             try {
                 $contact = $contactRepo->findContactById($basket->customerId, ['orderSummary']);
             } catch(\Exception $ex) {}
         }
-        $amount = $amount = pluginApp(OrderAmount::class);
-        $amount->currency = $basket->currency;
-        $amount->invoiceTotal = $basket->basketAmount;
         
-            
         return $helper->respectsAllLimitations(
             pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
-            $isGuest,
-            $amount,
             $this->checkout->getShippingCountryId(),
+            $isGuest,
+            $basket->basketAmount,
+            $basket->currency,
             $this->checkout->getCustomerInvoiceAddressId(),
             $this->checkout->getCustomerShippingAddressId(),
             $contact
@@ -224,9 +220,10 @@ class InvoicePaymentMethod extends PaymentMethodService
                 
                 return $helper->respectsAllLimitations(
                     pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]),
-                    $contact === null,
-                    $order->amount,
                     $order->deliveryAddress->countryId,
+                    $contact === null || $contact->singleAccess === "1",
+                    $order->amount->invoiceTotal,
+                    $order->amount->currency,
                     $order->billingAddress->id,
                     $order->deliveryAddress->id,
                     $contact
@@ -245,20 +242,18 @@ class InvoicePaymentMethod extends PaymentMethodService
             $basket = $basketRepo->load();
             $isGuest = !($this->accountService->getIsAccountLoggedIn() && $basket->customerId > 0);
             $contact = null;
-            if(!$isGuest && $basket->customerId > 0) {
+            if(!$isGuest) {
                 try {
                     $contact = $contactRepo->findContactById($basket->customerId, ['orderSummary']);
                 } catch(\Exception $ex) {}
             }
-            $amount = pluginApp(OrderAmount::class);
-            $amount->currency = $basket->currency;
-            $amount->invoiceTotal = $basket->basketAmount;
             
             return $helper->respectsAllLimitations(
                 pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
-                $isGuest,
-                $amount,
                 $this->checkout->getShippingCountryId(),
+                $isGuest,
+                $basket->basketAmount,
+                $basket->currency,
                 $this->checkout->getCustomerInvoiceAddressId(),
                 $this->checkout->getCustomerShippingAddressId(),
                 $contact
