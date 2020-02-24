@@ -1,6 +1,6 @@
 # Release Notes für Kauf auf Rechnung
 
-## 2.0.4 (2020-02-17)
+## 2.0.4 (2020-02-25)
 ### Gefixt
 - Alle Einstellungen / Beschränkungen werden nun korrekt abgefragt.
 

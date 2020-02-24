@@ -70,8 +70,8 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
     {
-        /** @var InvoiceLimitationsService $helper */
-        $helper = pluginApp(InvoiceLimitationsService::class);
+        /** @var InvoiceLimitationsService $service */
+        $service = pluginApp(InvoiceLimitationsService::class);
         
         /** @var ContactRepositoryContract $contactRepo */
         $contactRepo = pluginApp(ContactRepositoryContract::class);
@@ -87,7 +87,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             } catch(\Exception $ex) {}
         }
         
-        return $helper->respectsAllLimitations(
+        return $service->respectsAllLimitations(
             pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
             $this->checkout->getShippingCountryId(),
             $isGuest,
@@ -203,8 +203,8 @@ class InvoicePaymentMethod extends PaymentMethodService
      */
     public function isSwitchableTo(int $orderId = null):bool
     {
-        /** @var InvoiceLimitationsService $helper */
-        $helper = pluginApp(InvoiceLimitationsService::class);
+        /** @var InvoiceLimitationsService $service */
+        $service = pluginApp(InvoiceLimitationsService::class);
         
         //  If order ID is given check the order data
         if(!is_null($orderId) && $orderId > 0) {
@@ -218,7 +218,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $order = $orderRepo->findOrderById($orderId, ['amounts', 'addresses']);
                 $contact = $order->contactReceiver;
                 
-                return $helper->respectsAllLimitations(
+                return $service->respectsAllLimitations(
                     pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]),
                     $order->deliveryAddress->countryId,
                     $contact === null || $contact->singleAccess === "1",
@@ -248,7 +248,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 } catch(\Exception $ex) {}
             }
             
-            return $helper->respectsAllLimitations(
+            return $service->respectsAllLimitations(
                 pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
                 $this->checkout->getShippingCountryId(),
                 $isGuest,
