@@ -1,7 +1,7 @@
 # Release Notes for Invoice
 
 ## 2.0.4 (2020-02-17)
-### Gefixt
+### Fixed
 - All settings / restrictions are now queried correctly.
 
 ## 2.0.3 (20120-02-10)
