@@ -1,6 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
-## 2.0.3 (2019-12-17)
+## 2.0.4 (2020-02-25)
+### Gefixt
+- Alle Einstellungen / Beschränkungen werden nun korrekt abgefragt.
+
+## 2.0.3 (2020-02-10)
 ### Gefixt
 - Der Mindest- und Maximalbetrag wird nun korrekt geprüft, wenn der Kunde die Zahlungsart in Mein Konto ändern will.
 

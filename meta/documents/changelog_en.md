@@ -1,6 +1,10 @@
 # Release Notes for Invoice
 
-## 2.0.3 (2019-12-17)
+## 2.0.4 (2020-02-25)
+### Fixed
+- All settings / restrictions are now queried correctly.
+
+## 2.0.3 (20120-02-10)
 ### Fixed
 - The minimum and maximum limit is now checked properly, when a customer wants to change the payment method in an order under My Account.
 
