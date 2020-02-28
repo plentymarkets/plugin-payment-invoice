@@ -2,7 +2,7 @@
 
 ## 2.0.5 (2020-02-28)
 ### Geändert
-- Code Optimierung um viele Datenbankabfragen zu vermeiden.
+- Performance-Optimierung für den Ladevorgang der Plugin-Einstellungen und verfügbaren Lieferländer.
 
 ## 2.0.4 (2020-02-25)
 ### Gefixt

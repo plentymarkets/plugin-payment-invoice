@@ -31,10 +31,11 @@ class SettingsHelper
      * 
      * @param SettingsService $settings The settings service
      * @param int             $plentyId The plenty ID
+     * @param string          $language The settings language.
      */
-    public function __construct(SettingsService $settings, int $plentyId)
+    public function __construct(SettingsService $settings, int $plentyId, string $language)
     {
-        $this->settings = $settings->getSettingsForPlentyId($plentyId, 'de');
+        $this->settings = $settings->getSettingsForPlentyId($plentyId, $language);
         $this->countries = $settings->getShippingCountriesByPlentyId($plentyId);
     }
 

@@ -88,7 +88,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         }
         
         return $service->respectsAllLimitations(
-            pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
+            pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId(), $this->session->getLang()]),
             $this->checkout->getShippingCountryId(),
             $isGuest,
             $basket->basketAmount,
@@ -219,7 +219,7 @@ class InvoicePaymentMethod extends PaymentMethodService
                 $contact = $order->contactReceiver;
                 
                 return $service->respectsAllLimitations(
-                    pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId]),
+                    pluginApp(SettingsHelper::class, [$this->settings, $order->plentyId, $this->session->getLang()]),
                     $order->deliveryAddress->countryId,
                     $contact === null || $contact->singleAccess === "1",
                     $order->amount->invoiceTotal,
@@ -249,7 +249,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             }
             
             return $service->respectsAllLimitations(
-                pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
+                pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId(), $this->session->getLang()]),
                 $this->checkout->getShippingCountryId(),
                 $isGuest,
                 $basket->basketAmount,
