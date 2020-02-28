@@ -1,5 +1,9 @@
 # Release Notes for Invoice
 
+## 2.0.5 (2020-02-28)
+### Changed
+- Code optimization to avoid many database queries.
+
 ## 2.0.4 (2020-02-25)
 ### Fixed
 - All settings / restrictions are now queried correctly.

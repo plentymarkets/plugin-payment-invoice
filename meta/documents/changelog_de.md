@@ -1,5 +1,9 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.5 (2020-02-28)
+### Geändert
+- Code Optimierung um viele Datenbankabfragen zu vermeiden.
+
 ## 2.0.4 (2020-02-25)
 ### Gefixt
 - Alle Einstellungen / Beschränkungen werden nun korrekt abgefragt.
