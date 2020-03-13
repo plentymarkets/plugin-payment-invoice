@@ -13,30 +13,30 @@ use Invoice\Services\SettingsService;
  */
 class SettingsHelper
 {
+
     /**
-     * The current settings
-     * 
-     * @var SettingsService
+     * The settings for the current plenty id.
+     * @var array|\Invoice\Models\Settings[]
      */
-    private $settings;
-    
+    private $settings = [];
+
     /**
-     * The current plenty id.
-     * 
-     * @var int
+     * The activated shipping countries for the current plenty id.
+     * @var array|mixed
      */
-    private $plentyId;
+    private $countries = [];
 
     /**
      * SettingsHelper constructor.
      * 
      * @param SettingsService $settings The settings service
      * @param int             $plentyId The plenty ID
+     * @param string          $language The settings language.
      */
-    public function __construct(SettingsService $settings, int $plentyId)
+    public function __construct(SettingsService $settings, int $plentyId, string $language)
     {
-        $this->settings = $settings;
-        $this->plentyId = $plentyId;
+        $this->settings = $settings->getSettingsForPlentyId($plentyId, $language);
+        $this->countries = $settings->getShippingCountriesByPlentyId($plentyId);
     }
 
     /**
@@ -48,8 +48,7 @@ class SettingsHelper
      */
     public function isCountryActive(int $countryId): bool
     {
-        $countries = $this->settings->getShippingCountriesByPlentyId($this->plentyId);
-        return in_array($countryId, $countries);
+        return in_array($countryId, $this->countries);
     }
 
     /**
@@ -59,8 +58,7 @@ class SettingsHelper
      */
     public function hasActiveCountries(): bool
     {
-        $countries = $this->settings->getShippingCountriesByPlentyId($this->plentyId);
-        return count($countries) > 0;
+        return count($this->countries) > 0;
     }
 
     /**
@@ -124,8 +122,7 @@ class SettingsHelper
      */
     private function getSettingIntValue(string $setting, int $default = 0): int
     {
-        $settings = $this->settings->getSettingsForPlentyId($this->plentyId, 'de');
-        return isset($settings[$setting]) ? (int)$settings[$setting] : $default;
+        return isset($this->settings[$setting]) ? (int)$this->settings[$setting] : $default;
     }
 
     /**
@@ -138,8 +135,7 @@ class SettingsHelper
      */
     private function getSettingFloatValue(string $setting, float $default = 0.0): float
     {
-        $settings = $this->settings->getSettingsForPlentyId($this->plentyId, 'de');
-        return isset($settings[$setting]) ? (float)$settings[$setting] : $default;
+        return isset($this->settings[$setting]) ? (float)$this->settings[$setting] : $default;
     }
 }
 
