@@ -89,7 +89,7 @@ class InvoicePaymentMethod extends PaymentMethodService
         
         return $service->respectsAllLimitations(
             pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
-            $this->checkout->getShippingCountryId(),
+            (INT) $this->checkout->getShippingCountryId(),
             $isGuest,
             $basket->basketAmount,
             $basket->currency,
@@ -250,7 +250,7 @@ class InvoicePaymentMethod extends PaymentMethodService
             
             return $service->respectsAllLimitations(
                 pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId()]),
-                $this->checkout->getShippingCountryId(),
+                (INT) $this->checkout->getShippingCountryId(),
                 $isGuest,
                 $basket->basketAmount,
                 $basket->currency,
