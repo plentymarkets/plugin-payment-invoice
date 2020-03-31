@@ -1,6 +1,6 @@
 # Release Notes für Kauf auf Rechnung
 
-## 2.0.5 (2020-02-28)
+## 2.0.5 (2020-04-03)
 ### Geändert
 - Performance-Optimierung für den Ladevorgang der Plugin-Einstellungen und verfügbaren Lieferländer.
 

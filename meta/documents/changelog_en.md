@@ -1,6 +1,6 @@
 # Release Notes for Invoice
 
-## 2.0.5 (2020-02-28)
+## 2.0.5 (2020-04-03)
 ### Changed
 - Performance optimization for loading the plugin settings and available delivery countries.
 
