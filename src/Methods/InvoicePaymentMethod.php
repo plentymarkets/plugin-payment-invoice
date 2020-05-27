@@ -311,4 +311,16 @@ class InvoicePaymentMethod extends PaymentMethodService
     {
         return true;
     }
+
+    /**
+     * Get the url for the backend icon
+     *
+     * @return string
+     */
+    public function getBackendIcon(): string
+    {
+        $app = pluginApp(Application::class);
+        $icon = $app->getUrlPath('invoice').'/images/logos/invoice_backend_icon.svg';
+        return $icon;
+    }
 }

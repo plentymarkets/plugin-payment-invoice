@@ -1,5 +1,9 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.6 (2020-27-05)
+### Geändert
+- Icon für das Backend hinzugefügt
+
 ## 2.0.5 (2020-04-03)
 ### Geändert
 - Performance-Optimierung für den Ladevorgang der Plugin-Einstellungen und verfügbaren Lieferländer.
