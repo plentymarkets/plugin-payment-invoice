@@ -107,7 +107,7 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
      * @param string $lang
      * @return string
      */
-    public function getName(string $lang): string
+    public function getName(string $lang = 'de'): string
     {
         /** @var Translator $translator */
         $translator = pluginApp(Translator::class);
@@ -130,7 +130,7 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
      * @param string $lang
      * @return string
      */
-    public function getIcon(string $lang):string
+    public function getIcon(string $lang = 'de'):string
     {
         if( $this->settings->getSetting('logo') == 1)
         {
@@ -153,7 +153,7 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
      * @param string $lang
      * @return string
      */
-    public function getSourceUrl(string $lang): string
+    public function getSourceUrl(string $lang = 'de'): string
     {
         /** @var FrontendSessionStorageFactoryContract $session */
         $session = pluginApp(FrontendSessionStorageFactoryContract::class);
@@ -188,7 +188,7 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
      * @param string $lang
      * @return string
      */
-    public function getDescription(string $lang):string
+    public function getDescription(string $lang = 'de'):string
     {
         /** @var FrontendSessionStorageFactoryContract $session */
         $session = pluginApp(FrontendSessionStorageFactoryContract::class);
@@ -301,7 +301,7 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
      * @param string $lang
      * @return string
      */
-    public function getBackendName(string $lang):string
+    public function getBackendName(string $lang = 'de'):string
     {
         return $this->getName($lang);
     }
