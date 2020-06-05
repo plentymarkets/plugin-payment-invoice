@@ -12,9 +12,9 @@ use Plenty\Modules\Category\Contracts\CategoryRepositoryContract;
 use Plenty\Modules\Frontend\Services\AccountService;
 use Plenty\Modules\Frontend\Services\SystemService;
 use Plenty\Modules\Order\Contracts\OrderRepositoryContract;
+use Plenty\Modules\Payment\Method\Services\PaymentMethodBaseService;
 use Plenty\Plugin\Application;
 use Plenty\Modules\Frontend\Contracts\Checkout;
-use Plenty\Modules\Payment\Method\Contracts\PaymentMethodService;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
@@ -24,7 +24,7 @@ use Plenty\Plugin\Translation\Translator;
  * Class InvoicePaymentMethod
  * @package Invoice\Methods
  */
-class InvoicePaymentMethod extends PaymentMethodService
+class InvoicePaymentMethod extends PaymentMethodBaseService
 {
     /** @var SystemService */
     protected $systemService;
@@ -64,12 +64,14 @@ class InvoicePaymentMethod extends PaymentMethodService
      * Check the configuration if the payment method is active
      * Return true if the payment method is active, else return false
      *
-     * @param BasketRepositoryContract $basketRepositoryContract
      * @return bool
      * @throws \Plenty\Exceptions\ValidationException
      */
-    public function isActive( BasketRepositoryContract $basketRepositoryContract):bool
+    public function isActive():bool
     {
+        /** @var BasketRepositoryContract $basketRepositoryContract */
+        $basketRepositoryContract = pluginApp(BasketRepositoryContract::class);
+
         /** @var InvoiceLimitationsService $service */
         $service = pluginApp(InvoiceLimitationsService::class);
         
@@ -102,10 +104,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get shown name
      *
-     * @param $lang
+     * @param string $lang
      * @return string
      */
-    public function getName($lang = 'de')
+    public function getName(string $lang = 'de'): string
     {
         /** @var Translator $translator */
         $translator = pluginApp(Translator::class);
@@ -115,10 +117,9 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get additional costs for the payment method. Additional costs can be entered in the config.json.
      *
-     * @param BasketRepositoryContract $basketRepositoryContract
      * @return float
      */
-    public function getFee( BasketRepositoryContract $basketRepositoryContract):float
+    public function getFee():float
     {
         return 0.00;
     }
@@ -126,9 +127,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get the path of the icon
      *
+     * @param string $lang
      * @return string
      */
-    public function getIcon( ):string
+    public function getIcon(string $lang = 'de'):string
     {
         if( $this->settings->getSetting('logo') == 1)
         {
@@ -148,9 +150,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get InvoiceSourceUrl
      *
+     * @param string $lang
      * @return string
      */
-    public function getSourceUrl()
+    public function getSourceUrl(string $lang = 'de'): string
     {
         /** @var FrontendSessionStorageFactoryContract $session */
         $session = pluginApp(FrontendSessionStorageFactoryContract::class);
@@ -182,9 +185,10 @@ class InvoicePaymentMethod extends PaymentMethodService
     /**
      * Get the description of the payment method. The description can be entered in the config.json.
      *
+     * @param string $lang
      * @return string
      */
-    public function getDescription():string
+    public function getDescription(string $lang = 'de'):string
     {
         /** @var FrontendSessionStorageFactoryContract $session */
         $session = pluginApp(FrontendSessionStorageFactoryContract::class);
@@ -297,7 +301,7 @@ class InvoicePaymentMethod extends PaymentMethodService
      * @param string $lang
      * @return string
      */
-    public function getBackendName(string $lang):string
+    public function getBackendName(string $lang = 'de'):string
     {
         return $this->getName($lang);
     }
@@ -310,5 +314,17 @@ class InvoicePaymentMethod extends PaymentMethodService
     public function canHandleSubscriptions():bool
     {
         return true;
+    }
+
+    /**
+     * Get the url for the backend icon
+     *
+     * @return string
+     */
+    public function getBackendIcon(): string
+    {
+        $app = pluginApp(Application::class);
+        $icon = $app->getUrlPath('invoice').'/images/logos/invoice_backend_icon.svg';
+        return $icon;
     }
 }

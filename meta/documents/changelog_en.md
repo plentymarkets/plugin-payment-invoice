@@ -1,5 +1,9 @@
 # Release Notes for Invoice
 
+## 2.0.6 (2020-27-05)
+### Changed
+- Added Icon for the backend
+
 ## 2.0.5 (2020-04-03)
 ### Changed
 - Performance optimization for loading the plugin settings and available delivery countries.
