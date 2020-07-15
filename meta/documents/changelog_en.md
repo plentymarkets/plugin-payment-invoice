@@ -1,8 +1,11 @@
 # Release Notes for Invoice
 
-## 2.0.6 (2020-27-05)
+## 2.0.6 (2020-15-07)
 ### Changed
 - Added Icon for the backend
+
+### Fixed
+- The setting "Invoice address equals delivery address" is now applied correctly.
 
 ## 2.0.5 (2020-04-03)
 ### Changed
