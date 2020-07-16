@@ -1,8 +1,11 @@
 # Release Notes für Kauf auf Rechnung
 
-## 2.0.6 (2020-27-05)
+## 2.0.6 (2020-15-07)
 ### Geändert
 - Icon für das Backend hinzugefügt
+
+### Gefixt
+- Die Einstellung "Rechnungsadresse gleich Lieferadresse" wird nun korrekt angewendet.
 
 ## 2.0.5 (2020-04-03)
 ### Geändert

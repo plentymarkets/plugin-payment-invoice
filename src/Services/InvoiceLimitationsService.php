@@ -59,8 +59,7 @@ class InvoiceLimitationsService
         }
         
         //  Third: Check the addresses
-        //         Addresses are equal when: $deliveryAddressId === null || $billingAddressId === $deliveryAddressId
-        if($settingsHelper->shouldHaveIdenticalAddresses() && $deliveryAddressId !== null && $billingAddressId !== $deliveryAddressId) {
+        if($settingsHelper->shouldHaveIdenticalAddresses() && $deliveryAddressId > 0 && $billingAddressId !== $deliveryAddressId) {
             return false;
         }
         
