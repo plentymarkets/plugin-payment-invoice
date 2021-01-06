@@ -1,6 +1,8 @@
 <?php
 namespace Invoice\Assistants\SettingsHandlers;
+use Invoice\Helper\InvoiceHelper;
 use Invoice\Services\SettingsService;
+use Plenty\Modules\Order\Payment\Method\Contracts\PaymentMethodRepositoryContract;
 use Plenty\Modules\Plugin\Contracts\PluginLayoutContainerRepositoryContract;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\Wizard\Contracts\WizardSettingsHandler;
@@ -39,6 +41,8 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
 
         $this->saveInvoiceSettings($webstoreId, $data);
         $this->createContainer($webstoreId, $data);
+        $this->activateLegacyPaymentMethod();
+        
         return true;
     }
 
@@ -218,5 +222,18 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
         $dataListEntry['containerPluginSetEntryId'] = $ceresPlugin->pluginSetEntries[0]->id;
 
         return $dataListEntry;
+    }
+
+    /**
+     * Activate the legacy payment method. This is needed to use the invoice payment method.
+     */
+    private function activateLegacyPaymentMethod()
+    {
+        /** @var InvoiceHelper $invoiceHelper */
+        $invoiceHelper = pluginApp(InvoiceHelper::class);
+        /** @var PaymentMethodRepositoryContract $paymentMethodRepository */
+        $paymentMethodRepository = pluginApp(PaymentMethodRepositoryContract::class);
+        
+        $paymentMethodRepository->activatePaymentMethod($invoiceHelper->getInvoiceMopId());
     }
 }
