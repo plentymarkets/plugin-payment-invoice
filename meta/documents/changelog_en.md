@@ -1,6 +1,10 @@
 # Release Notes for Invoice
 
-## 2.0.6 (2020-15-07)
+## 2.0.7 (2021-01-06)
+### Gefixt
+- On completing the assistant the old invoice payment method is now activated.
+
+## 2.0.6 (2020-07-15)
 ### Changed
 - Added Icon for the backend
 

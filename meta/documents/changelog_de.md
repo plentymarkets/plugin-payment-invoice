@@ -1,6 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
-## 2.0.6 (2020-15-07)
+## 2.0.7 (2021-01-06)
+### Gefixt
+- Beim Abschluss des Assistenten wird nun auch die alte Rechnungs-Zahlungsart aktiviert.
+
+## 2.0.6 (2020-07-15)
 ### Geändert
 - Icon für das Backend hinzugefügt
 
