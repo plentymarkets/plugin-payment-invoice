@@ -168,9 +168,11 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
                 $categoryId = (int) $this->settings->getSetting('infoPageIntern', $lang);
                 if($categoryId  > 0)
                 {
+                    /** @var InvoiceHelper $invoiceHelper */
+                    $invoiceHelper = pluginApp(InvoiceHelper::class);
                     /** @var CategoryRepositoryContract $categoryContract */
                     $categoryContract = pluginApp(CategoryRepositoryContract::class);
-                    return $categoryContract->getUrl($categoryId, $lang);
+                    return $invoiceHelper->getDomain() . '/' . $categoryContract->getUrl($categoryId, $lang);
                 }
                 return '';
             case 2:
