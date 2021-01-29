@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.9
+
+### Fixed
+- The URL for the internal info page is now generated correctly.
+
 ## 2.0.8
 
 ### Fixed
