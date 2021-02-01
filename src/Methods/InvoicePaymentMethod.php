@@ -19,6 +19,7 @@ use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Frontend\Session\Storage\Contracts\FrontendSessionStorageFactoryContract;
 use Plenty\Plugin\Translation\Translator;
+use Plenty\Modules\Webshop\Contracts\UrlBuilderRepositoryContract;
 
 /**
  * Class InvoicePaymentMethod
@@ -170,9 +171,17 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
                 {
                     /** @var InvoiceHelper $invoiceHelper */
                     $invoiceHelper = pluginApp(InvoiceHelper::class);
-                    /** @var CategoryRepositoryContract $categoryContract */
-                    $categoryContract = pluginApp(CategoryRepositoryContract::class);
-                    return $invoiceHelper->getDomain() . '/' . $categoryContract->getUrl($categoryId, $lang);
+                    $urlBuilderRepository = pluginApp(UrlBuilderRepositoryContract::class);
+                    
+                    $urlQuery = $urlBuilderRepository->buildCategoryUrl($categoryId, $lang);
+                    
+                    $defaultLanguage = $invoiceHelper->getWebstoreConfig()->defaultLanguage;
+                    $includeLanguage = false;
+                    if ($lang != $defaultLanguage) {
+                        $includeLanguage = true;
+                    }
+                    
+                    return $invoiceHelper->getDomain() . $urlQuery->toRelativeUrl($includeLanguage);
                 }
                 return '';
             case 2:
