@@ -1,39 +1,5 @@
-# plentymarkets Payment&nbsp;– Invoice
+# User Guide Invoice
 
-With this plugin, you integrate the payment method **Invoice** into your online store.
-
-## Setting up a payment method
-
-To make the payment method available in your online store, you have to carry out settings in the back end of your plentymarkets system.
-
-First of all, activate the payment method once in the **Setup » Orders » Payment » Methods** menu. More information about carrying out this setting is available on the <strong><a href="https://knowledge.plentymarkets.com/en/payment/managing-payment-methods#20" target="_blank">Managing payment methods</a></strong> page of the manual.
-_Note_ that only the activation of the payment method is needed. All further settings, e.g. for clients or delivery countries, have no effects.
-
-In addition, make sure that the payment method is included in the **Permitted payment methods** in the <strong><a href="https://knowledge.plentymarkets.com/en/crm/managing-contacts#15" target="_blank">customer classes</a></strong> and that it is not listed among the **Blocked payment methods** in the <strong><a href="https://knowledge.plentymarkets.com/en/order-processing/fulfilment/preparing-the-shipment#1000" target="_blank">shipping profiles</a></strong>.
-
-##### Setting up a payment method:
-
-1. Go to **Setup » Assistants » Plugins** _select Plugin-Set_.
-2. Select the assistant **Invoice**.
-3. Complete the setup assistant completely.<br />
-→ The payment method **Invoice** is available in your online store.
-
-## Editing texts
-
-You can adjust the text elements provided by the Invoice plugin in the **CMS » Multilingualism** menu. You can store translations for all plentymarkets system languages. To do so, proceed as follows.
-
-##### Editing individual text elements
-
-1. Go to **CMS » Multilingualism**.
-2. Select the Source language from the drop-down list on the left side.
-3. Select the Target language from the drop-down list on the right side.
-4. Expand the sections **bank data**, **designated use** and **payment method** in the **Invoice** area.
-5. Enter the desired text for the individual text elements in the area of the target language.
-6. **Save** the settings.
-
-You can find further information about editing texts displayed in your online store on the <a href="https://knowledge.plentymarkets.com/en/online-store/setting-up-ceres#231" target="_blank">Setting up your Ceres online store</a> page of the manual.
-
-
-## Generating invoice documents
-
-Invoice documents can be generated [manually](https://knowledge.plentymarkets.com/en/orders/order-documents/generating-invoices#200) or automatically by setting up an [event procedure](https://knowledge.plentymarkets.com/en/automation/best-practices-automation#_generating_and_sending_an_invoice). Learn how to create [templates for invoice documents](https://knowledge.plentymarkets.com/en/orders/order-documents#300).
+<div class="alert alert-info" role="alert">
+ To find out how to set up the Invoice plugin, visit the <a href="https://knowledge.plentymarkets.com/en/payment/payment-plugins/invoice" target="_blank">plentymarkets manual</a>.
+</div>
