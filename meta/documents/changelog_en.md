@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.10
+
+### Fixed
+- Adjusted the link in the user guide.
+
 ## 2.0.9
 
 ### Fixed

@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.10 
+
+### Behoben
+- Die Verlinkung im User Guide wurde angepasst.
+
 ## 2.0.9
 
 ### Behoben
