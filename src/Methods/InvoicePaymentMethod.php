@@ -94,8 +94,8 @@ class InvoicePaymentMethod extends PaymentMethodBaseService
             pluginApp(SettingsHelper::class, [$this->settings, $this->systemService->getPlentyId(), $this->session->getLang()]),
             $this->checkout->getShippingCountryId() ?? 1,
             $isGuest,
-            $basket->basketAmount,
-            $basket->currency,
+            $basket->basketAmount ?? 0,
+            $basket->currency ?? "EUR",
             $this->checkout->getCustomerInvoiceAddressId(),
             $this->checkout->getCustomerShippingAddressId(),
             $contact

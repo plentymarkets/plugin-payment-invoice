@@ -51,13 +51,11 @@ class SettingsService
     {
         $plentyId = $this->app->getPlentyId();
 
-        if(empty($this->loadedSettings))
-        {
+        if(empty($this->loadedSettings)) {
             $this->loadedSettings = $this->getSettingsForPlentyId($plentyId, $lang);
         }
 
-        if(array_key_exists($name, $this->loadedSettings))
-        {
+        if(array_key_exists($name, $this->loadedSettings)) {
             return $this->loadedSettings[$name];
         }
 
@@ -75,42 +73,29 @@ class SettingsService
      */
     public function getSettingsForPlentyId($plentyId, $lang, bool $convertToArray = true)
     {
-
         $lang = $this->checkLanguage($lang);
 
-        /** @var Settings $settings */
         $settings = $this->loadClientSettings($plentyId, $lang);
-
         $shippingSettings = $this->getShippingCountriesByPlentyId($plentyId);
         if($convertToArray && (count($settings) || count($shippingSettings))) {
             $outputArray = array();
 
             $availableSettings = Settings::AVAILABLE_SETTINGS;
 
-            /** @var Settings $setting */
-            foreach ($settings as $setting)
-            {
-
-                if (array_key_exists($setting->name, $availableSettings))
-                {
+            foreach ($settings as $setting) {
+                if (array_key_exists($setting->name, $availableSettings)) {
                     $outputArray[$setting->name] = $setting->value;
                 }
-
             }
 
             $outputArray['plentyId']    = $settings[0]->plentyId;
             $outputArray['lang']        = $settings[count($settings) - 1]->lang;
-
             $outputArray = $this->convertSettingsToCorrectFormat($outputArray,$availableSettings);
-
             $outputArray['shippingCountries'] = $shippingSettings;
-
             return $outputArray;
-
         }
 
         return $settings;
-
     }
 
     /**
@@ -118,16 +103,15 @@ class SettingsService
      *
      * @param $data
      *
-     * @return int
+     * @return bool
      */
-    public function saveSettings($data)
+    public function saveSettings($data): bool
     {
         $pid    = $data['plentyId'];
         $lang   = $data['lang'];
         unset( $data['lang']);
         unset( $data['plentyId']);
-        if(count($data) > 0 && !empty($pid))
-        {
+        if(count($data) > 0 && !empty($pid)) {
             $settingsToSave = $this->convertSettingsToCorrectFormat($data, Settings::AVAILABLE_SETTINGS);
 
             /** @var Settings[] $settings */
@@ -141,13 +125,10 @@ class SettingsService
             $newLang = true;
 
             /** @var Settings $setting */
-            foreach ($settings as $setting)
-            {
-                if (array_key_exists($setting->name, $settingsToSave))
-                {
+            foreach ($settings as $setting) {
+                if (array_key_exists($setting->name, $settingsToSave)) {
                     $setting->value     = (string)$settingsToSave[$setting->name];
                     $setting->updatedAt = date('Y-m-d H:i:s');
-
                     $this->db->save($setting);
 
                     if($setting->name == 'name'){
@@ -194,11 +175,9 @@ class SettingsService
                     }
                 }
             }
-
-            return 1;
+            return true;
         }
-
-        return 0;
+        return false;
     }
 
 
@@ -227,31 +206,23 @@ class SettingsService
     {
         $generatedSettings    = $this->createLangIndependentInitialSettings($plentyId);
 
-        foreach( Settings::AVAILABLE_SETTINGS as $setting => $type)
-        {
-            if($setting != 'plentyId' && $setting != 'lang' && !in_array($setting, Settings::LANG_INDEPENDENT_SETTINGS))
-            {
+        foreach( Settings::AVAILABLE_SETTINGS as $setting => $type) {
+            if($setting != 'plentyId' && $setting != 'lang' && !in_array($setting, Settings::LANG_INDEPENDENT_SETTINGS)) {
                 /** @var Settings $newSetting */
                 $newSetting            = pluginApp(Settings::class);
                 $newSetting->plentyId  = $plentyId;
                 $newSetting->lang      = $lang;
                 $newSetting->name      = $setting;
 
-                if(array_key_exists($lang, Settings::SETTINGS_DEFAULT_VALUES))
-                {
+                if(array_key_exists($lang, Settings::SETTINGS_DEFAULT_VALUES)) {
                     $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[$lang][$setting];
-                }
-                elseif(array_key_exists(Settings::DEFAULT_LANGUAGE, Settings::SETTINGS_DEFAULT_VALUES))
-                {
+                } elseif(array_key_exists(Settings::DEFAULT_LANGUAGE, Settings::SETTINGS_DEFAULT_VALUES)) {
                     $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[Settings::DEFAULT_LANGUAGE][$setting];
-                }
-                else
-                {
+                } else {
                     throw new ValidationException('No such default values for language: ' . $lang);
                 }
 
                 $newSetting->updatedAt = date('Y-m-d H:i:s');
-
                 $generatedSettings[] = $this->db->save($newSetting);
             }
         }
@@ -275,20 +246,15 @@ class SettingsService
             ->where('lang', '=', '')->get();
 
         $settingIds = array();
-        /** @var Settings $storedSetting */
-        foreach($storedSettings as $storedSetting)
-        {
+        foreach($storedSettings as $storedSetting) {
             $settingIds[$storedSetting->name] = $storedSetting->id;
         }
 
-        foreach(Settings::LANG_INDEPENDENT_SETTINGS as $setting)
-        {
-            if($setting != 'plentyId' && $setting != 'lang')
-            {
+        foreach(Settings::LANG_INDEPENDENT_SETTINGS as $setting) {
+            if($setting != 'plentyId' && $setting != 'lang') {
                 /** @var Settings $newSetting */
                 $newSetting            = pluginApp(Settings::class);
-                if(array_key_exists($setting, $settingIds) && !empty($settingIds[$setting]))
-                {
+                if(array_key_exists($setting, $settingIds) && !empty($settingIds[$setting])) {
                     $newSetting->id = $settingIds[$setting];
                 }
 
@@ -297,7 +263,6 @@ class SettingsService
                 $newSetting->name      = $setting;
                 $newSetting->value     = (string)Settings::SETTINGS_DEFAULT_VALUES[$setting];
                 $newSetting->updatedAt = date('Y-m-d H:i:s');
-
                 $generatedSettings[] = $this->db->save($newSetting);
             }
         }
@@ -321,10 +286,10 @@ class SettingsService
         $result = $wsRepo->loadAll();
 
         /** @var Webstore $record */
-        foreach($result as $record)
-        {
-            if($record->storeIdentifier > 0)
+        foreach($result as $record) {
+            if($record->storeIdentifier > 0) {
                 $clients[] = $record->storeIdentifier;
+            }
         }
 
         return $clients;
@@ -368,8 +333,7 @@ class SettingsService
      */
     private function checkLanguage($lang)
     {
-        if(!in_array($lang, Settings::AVAILABLE_LANGUAGES))
-        {
+        if(!in_array($lang, Settings::AVAILABLE_LANGUAGES)) {
             $lang = Settings::DEFAULT_LANGUAGE;
         }
         return $lang;
@@ -386,7 +350,6 @@ class SettingsService
      */
     private function loadClientSettings($plentyId, $lang)
     {
-
         /** @var Query $query */
         $query = $this->db->query(Settings::MODEL_NAMESPACE);
         $query->where('plentyId', '=', $plentyId)->where('lang', '=', $lang);
@@ -395,13 +358,11 @@ class SettingsService
         /** @var Settings[] $clientSettings */
         $clientSettings = $query->get();
 
-        if(!count($clientSettings))
-        {
+        if(!count($clientSettings)) {
             $clientSettings = $query->get();
         }
 
-        if(!count($clientSettings))
-        {
+        if(!count($clientSettings)) {
             throw new ValidationException('Error loading Settings');
         }
 
@@ -418,7 +379,6 @@ class SettingsService
      */
     private function loadAllClientSettings($plentyId)
     {
-
         /** @var Query $query */
         $query = $this->db->query(Settings::MODEL_NAMESPACE);
         $query->where('plentyId', '=', $plentyId);
@@ -426,13 +386,11 @@ class SettingsService
         /** @var Settings[] $clientSettings */
         $clientSettings = $query->get();
 
-        if(!count($clientSettings))
-        {
+        if(!count($clientSettings)) {
             $clientSettings = $query->get();
         }
 
-        if(!count($clientSettings))
-        {
+        if(!count($clientSettings)) {
             throw new ValidationException('Error loading Settings');
         }
 
@@ -460,21 +418,15 @@ class SettingsService
     public function updateClients()
     {
         $clients = $this->getClients();
-
-        foreach($clients as $plentyId)
-        {
+        foreach($clients as $plentyId) {
             /** @var Settings[] $query */
             $query = $this->db->query(Settings::MODEL_NAMESPACE)
                 ->where('plentyId', '=', $plentyId )->get();
 
-            if( !count($query) > 0 || !$this->areAllLanguagesAvailable($query))
-            {
+            if( !count($query) > 0 || !$this->areAllLanguagesAvailable($query)) {
                 $storedLangs = $this->detectStoredLanguages($query);
-
-                foreach(Settings::AVAILABLE_LANGUAGES as $lang)
-                {
-                    if(!in_array($lang, $storedLangs))
-                    {
+                foreach(Settings::AVAILABLE_LANGUAGES as $lang) {
+                    if(!in_array($lang, $storedLangs)) {
                         $this->createInitialSettingsForPlentyId($plentyId, $lang);
                     }
                 }
@@ -496,14 +448,10 @@ class SettingsService
         $query = $this->db->query(Settings::MODEL_NAMESPACE)
             ->where('plentyId', '=', $plentyId )->get();
 
-        if( !count($query) > 0 || !$this->areAllLanguagesAvailable($query))
-        {
+        if( !count($query) > 0 || !$this->areAllLanguagesAvailable($query)) {
             $storedLangs = $this->detectStoredLanguages($query);
-
-            foreach(Settings::AVAILABLE_LANGUAGES as $lang)
-            {
-                if(!in_array($lang, $storedLangs))
-                {
+            foreach(Settings::AVAILABLE_LANGUAGES as $lang) {
+                if(!in_array($lang, $storedLangs)) {
                     $this->createInitialSettingsForPlentyId($plentyId, $lang);
                 }
             }
@@ -521,11 +469,8 @@ class SettingsService
     private function areAllLanguagesAvailable(array $settings)
     {
         $languages = $this->detectStoredLanguages($settings);
-
-        foreach(Settings::AVAILABLE_LANGUAGES as $lang)
-        {
-            if(!in_array($lang, $languages))
-            {
+        foreach(Settings::AVAILABLE_LANGUAGES as $lang) {
+            if(!in_array($lang, $languages)) {
                 return false;
             }
         }
@@ -542,12 +487,9 @@ class SettingsService
     private function detectStoredLanguages(array $settings)
     {
         $storedLanguages = array();
-
         /** @var Settings $setting */
-        foreach($settings as $setting)
-        {
-            if(!in_array($setting->lang, $storedLanguages))
-            {
+        foreach($settings as $setting) {
+            if(!in_array($setting->lang, $storedLanguages)) {
                 $storedLanguages[] = $setting->lang;
             }
         }
@@ -568,10 +510,8 @@ class SettingsService
     private function convertSettingsToCorrectFormat(array $settings, array $format)
     {
         $convertedSettings = array();
-        foreach( $format as $setting => $type)
-        {
-            if(!is_array($type))
-            {
+        foreach( $format as $setting => $type) {
+            if(!is_array($type)) {
                 $convertedSettings[$setting] = $this->setType($settings[$setting], $type);
             }
         }
@@ -589,15 +529,19 @@ class SettingsService
      */
     private function setType($value, $type)
     {
-        switch($type)
-        {
-            case "boolean": return $value == 0 ? false : true;
-            case "bool":    return $value == 0 ? false : true;
-            case "integer": return (int)$value;
-            case "int":     return (int)$value;
-            case "float":   return (float)$value;
-            case "string":  return (string)$value;
+        switch($type) {
+            case "boolean":
+            case "bool":
+                return !((!strlen($value) || $value == 0));
+            case "integer":
+            case "int":
+                return (int)$value;
+            case "float":
+                return (float)$value;
+            case "string":
+                return (string)$value;
         }
+        return $value;
     }
 
     /**
@@ -629,5 +573,4 @@ class SettingsService
         }
         return $shippingCountriesArray;
     }
-
 }
