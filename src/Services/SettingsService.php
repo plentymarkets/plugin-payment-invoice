@@ -127,7 +127,7 @@ class SettingsService
             /** @var Settings $setting */
             foreach ($settings as $setting) {
                 if (array_key_exists($setting->name, $settingsToSave)) {
-                    $setting->value     = (string)$settingsToSave[$setting->name];
+                    $setting->value     = $settingsToSave[$setting->name] === false ? '0' : (string)$settingsToSave[$setting->name];
                     $setting->updatedAt = date('Y-m-d H:i:s');
                     $this->db->save($setting);
 
