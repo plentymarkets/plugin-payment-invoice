@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.11
+
+### Fixed
+- PHP 8 issue in the assistant.
+
 ## 2.0.10
 
 ### Fixed
