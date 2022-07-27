@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.11
+
+### Behoben
+- PHP 8 Problem im Asssistenten.
+
 ## 2.0.10 
 
 ### Behoben
