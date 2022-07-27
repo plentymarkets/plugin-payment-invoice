@@ -37,5 +37,8 @@
         "Invoice\\Migrations\\CreateSettings_1_1_0",
         "Invoice\\Migrations\\CreateShippingCountrySettings_1_0",
         "Invoice\\Migrations\\MigrateShippingCountries_1_0"
-    ]
+    ],
+    "platform": {
+        "php": ">=7.3 <8.1"
+    }
 }
