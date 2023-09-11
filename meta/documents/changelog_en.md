@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.12
+
+### Fixed
+- Error when try to save the settings
+
 ## 2.0.11
 
 ### Fixed
