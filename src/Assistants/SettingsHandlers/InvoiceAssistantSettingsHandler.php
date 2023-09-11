@@ -6,9 +6,12 @@ use Plenty\Modules\Order\Payment\Method\Contracts\PaymentMethodRepositoryContrac
 use Plenty\Modules\Plugin\Contracts\PluginLayoutContainerRepositoryContract;
 use Plenty\Modules\System\Contracts\WebstoreRepositoryContract;
 use Plenty\Modules\Wizard\Contracts\WizardSettingsHandler;
+use Plenty\Plugin\Log\Loggable;
 
 class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
 {
+    use Loggable;
+
     /**
      * @var Webstore
      */
@@ -156,46 +159,52 @@ class InvoiceAssistantSettingsHandler implements WizardSettingsHandler
      */
     private function createContainer($webstoreId, $data)
     {
-        $webstore = $this->getWebstore($webstoreId);
-        $invoicePlugin = $this->getInvoicePlugin($webstoreId);
-        $ceresPlugin = $this->getCeresPlugin($webstoreId);
+        try {
 
-        if( ($webstore && $webstore->pluginSetId) &&  $invoicePlugin !== null && $ceresPlugin !== null) {
-            /** @var PluginLayoutContainerRepositoryContract $pluginLayoutContainerRepo */
-            $pluginLayoutContainerRepo = pluginApp(PluginLayoutContainerRepositoryContract::class);
+            $webstore = $this->getWebstore($webstoreId);
+            $invoicePlugin = $this->getInvoicePlugin($webstoreId);
+            $ceresPlugin = $this->getCeresPlugin($webstoreId);
 
-            $containerListEntries = [];
+            if( ($webstore && $webstore->pluginSetId) &&  $invoicePlugin !== null && $ceresPlugin !== null) {
+                /** @var PluginLayoutContainerRepositoryContract $pluginLayoutContainerRepo */
+                $pluginLayoutContainerRepo = pluginApp(PluginLayoutContainerRepositoryContract::class);
 
-            // Default entries
-            $containerListEntries[] = $this->createContainerDataListEntry(
-                $webstoreId,
-                'Ceres::MyAccount.OrderHistoryPaymentInformation',
-                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-            );
+                $containerListEntries = [];
 
-            $containerListEntries[] = $this->createContainerDataListEntry(
-                $webstoreId,
-                'Ceres::OrderConfirmation.AdditionalPaymentInformation',
-                'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
-            );
-
-            if (isset($data['invoicePaymentMethodIcon']) && $data['invoicePaymentMethodIcon']) {
+                // Default entries
                 $containerListEntries[] = $this->createContainerDataListEntry(
                     $webstoreId,
-                    'Ceres::Homepage.PaymentMethods',
-                    'Invoice\Providers\Icon\IconProvider'
+                    'Ceres::MyAccount.OrderHistoryPaymentInformation',
+                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
                 );
-            } else {
-                $pluginLayoutContainerRepo->removeOne(
-                    $webstore->pluginSetId,
-                    'Ceres::Homepage.PaymentMethods',
-                    'Invoice\Providers\Icon\IconProvider',
-                    $ceresPlugin->id,
-                    $invoicePlugin->id
+
+                $containerListEntries[] = $this->createContainerDataListEntry(
+                    $webstoreId,
+                    'Ceres::OrderConfirmation.AdditionalPaymentInformation',
+                    'Invoice\Providers\InvoiceOrderConfirmationDataProvider'
                 );
+
+                if (isset($data['invoicePaymentMethodIcon']) && $data['invoicePaymentMethodIcon']) {
+                    $containerListEntries[] = $this->createContainerDataListEntry(
+                        $webstoreId,
+                        'Ceres::Homepage.PaymentMethods',
+                        'Invoice\Providers\Icon\IconProvider'
+                    );
+                } else {
+                    $pluginLayoutContainerRepo->removeOne(
+                        $webstore->pluginSetId,
+                        'Ceres::Homepage.PaymentMethods',
+                        'Invoice\Providers\Icon\IconProvider',
+                        $ceresPlugin->id,
+                        $invoicePlugin->id
+                    );
+                }
+
+                $pluginLayoutContainerRepo->addNew($containerListEntries, $webstore->pluginSetId);
             }
 
-            $pluginLayoutContainerRepo->addNew($containerListEntries, $webstore->pluginSetId);
+        } catch(\Throwable $e){
+            $this->getLogger(__CLASS__.'::'.__FUNCTION__)->error("Error creating containers webstore: $webstoreId", $e->getMessage());
         }
     }
 

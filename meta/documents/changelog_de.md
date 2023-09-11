@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.12
+
+### Behoben
+- Fehler beim Speichern der Einstellungen
+
 ## 2.0.11
 
 ### Behoben
