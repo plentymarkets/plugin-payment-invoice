@@ -76,7 +76,7 @@ class SettingsService
     public function getSettingsForPlentyId($plentyId, $lang, bool $convertToArray = true)
     {
         $lang = $this->checkLanguage($lang);
-        try  {
+        try {
             $settings = $this->loadClientSettings($plentyId, $lang);
         } catch (\Throwable $t) {
             $this->getLogger(__METHOD__)->debug('Invoice::Logging.settingsError', [
