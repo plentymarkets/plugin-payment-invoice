@@ -1,5 +1,10 @@
 # Release Notes for Invoice
 
+## 2.0.13
+
+### Fixed
+- Error when missing settings for a specific client.
+
 ## 2.0.12
 
 ### Fixed

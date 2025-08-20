@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.13
+
+### Behoben
+- Fehler wenn Einstellungen für einen speziellen Kunden fehlen.
+
 ## 2.0.12
 
 ### Behoben
