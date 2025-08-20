@@ -1,5 +1,10 @@
 # Release Notes für Kauf auf Rechnung
 
+## 2.0.13
+
+### Behoben
+- Error when missing settings for a specific client.
+
 ## 2.0.12
 
 ### Behoben
@@ -23,7 +28,7 @@
 ## 2.0.8
 
 ### Behoben
-- Der Link zu einer internen Infoseite wird nun wieder korrekt angezeigt.
+- Fehler wenn Einstellungen für einen speziellen Kunden fehlen.
 
 ## 2.0.7 
 
