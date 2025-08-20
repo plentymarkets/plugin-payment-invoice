@@ -3,7 +3,7 @@
 ## 2.0.13
 
 ### Behoben
-- Error when missing settings for a specific client.
+- Fehler wenn Einstellungen für einen speziellen Kunden fehlen.
 
 ## 2.0.12
 
@@ -28,7 +28,7 @@
 ## 2.0.8
 
 ### Behoben
-- Fehler wenn Einstellungen für einen speziellen Kunden fehlen.
+- Der Link zu einer internen Infoseite wird nun wieder korrekt angezeigt.
 
 ## 2.0.7 
 
