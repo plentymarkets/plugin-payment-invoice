@@ -82,6 +82,10 @@ class SettingsService
             $this->getLogger(__METHOD__)->debug('Invoice::Logging.settingsError', [
                 'error' => $t->getMessage()
             ]);
+            if ($convertToArray) {
+                return [];
+            }
+            return null;
         }
         $shippingSettings = $this->getShippingCountriesByPlentyId($plentyId);
         if($convertToArray && (count($settings) || count($shippingSettings))) {
