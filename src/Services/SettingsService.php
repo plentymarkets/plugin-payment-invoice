@@ -18,10 +18,12 @@ use Plenty\Plugin\Application;
 
 use Invoice\Models\Settings;
 use Invoice\Models\ShippingCountrySettings;
+use Plenty\Plugin\Log\Loggable;
 
 
 class SettingsService
 {
+    use Loggable;
 
     /** @var Application  */
     private $app;
@@ -74,8 +76,13 @@ class SettingsService
     public function getSettingsForPlentyId($plentyId, $lang, bool $convertToArray = true)
     {
         $lang = $this->checkLanguage($lang);
-
-        $settings = $this->loadClientSettings($plentyId, $lang);
+        try  {
+            $settings = $this->loadClientSettings($plentyId, $lang);
+        } catch (\Throwable $t) {
+            $this->getLogger(__METHOD__)->debug('Invoice::Logging.settingsError', [
+                'error' => $t->getMessage()
+            ]);
+        }
         $shippingSettings = $this->getShippingCountriesByPlentyId($plentyId);
         if($convertToArray && (count($settings) || count($shippingSettings))) {
             $outputArray = array();
